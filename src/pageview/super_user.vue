@@ -1,0 +1,1456 @@
+<template>
+  <div id="super_user">
+    <el-container>
+      <el-header>
+        <Top></Top>
+      </el-header>
+      <br>
+      <br>
+      <br>
+      <el-container style="min-height: 500px">
+        <el-aside style="margin-top: 50px" width="170px">
+          <div class="toggle-btn" >|||</div>
+          <el-menu default-active="active" style="width: 160px" @select="handleSelect">
+            <el-submenu index="11">
+              <template slot="title">
+                <i class="el-icon-user"></i>
+                <span>用户管理</span>
+              </template>
+              <el-menu-item-group style="background-color: #f0f0f0" align="left">
+                <el-menu-item index="1" ><i class="el-icon-user-solid"></i>查看所有用户</el-menu-item>
+                <el-menu-item index="2" ><i class="el-icon-s-custom"></i>查看所有教师</el-menu-item>
+                <el-menu-item index="3"><i class="el-icon-s-check"></i>待审核教师 </el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="22">
+              <template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>题库管理</span>
+              </template>
+              <el-menu-item-group style="background-color: #f0f0f0" align="left">
+                <el-menu-item index="4"><i class="el-icon-document-remove"></i>待审核题目 </el-menu-item>
+                <el-menu-item index="5"><i class="el-icon-document"></i>题库管理 </el-menu-item>
+                <el-menu-item index="6"><i class="el-icon-circle-plus"></i>习题上传 </el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+
+          </el-menu>
+        </el-aside>
+        <el-main style="margin-top: 50px">
+          <div v-if="active=='1'">
+            <el-table
+              :data="users"
+            >
+              <el-table-column
+                prop="userId"
+                label="用户ID"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="userName"
+                label="姓名"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="sex"
+                label="性别"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="email"
+                label="邮箱"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                align="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    @click="operate(scope.$index,scope.row)">操作</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="block">
+              <el-pagination
+                @current-change="change1"
+                :hide-on-single-page="true"
+                layout="prev, pager, next"
+                :total="totalUser">
+              </el-pagination>
+            </div>
+          </div>
+          <div v-if="active=='2'">
+            <el-table
+              :data="teacher"
+              >
+              <el-table-column
+                prop="userId"
+                label="用户ID"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="userName"
+                label="姓名"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="sex"
+                label="性别"
+                width="80">
+              </el-table-column>
+              <el-table-column
+                prop="email"
+                label="邮箱"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                prop="license"
+                label="教师资格证编号">
+              </el-table-column>
+              <el-table-column
+                align="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    @click="operate(scope.$index,scope.row)">操作</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="block">
+              <el-pagination
+                @current-change="change2"
+                :hide-on-single-page="true"
+                layout="prev, pager, next"
+                :total="totalTeacher">
+              </el-pagination>
+            </div>
+          </div>
+          <div v-if="active=='3'">
+            <el-table
+              :data="teacher2Check"
+              >
+              <el-table-column
+                prop="userId"
+                label="用户ID"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="userName"
+                label="姓名"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="sex"
+                label="性别"
+                width="80">
+              </el-table-column>
+              <el-table-column
+                prop="email"
+                label="邮箱"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                prop="license"
+                label="教师资格证编号"
+              >
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                label="是否审核通过"
+                width="150">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    @click="teacherAgree(scope.row.id)">是</el-button>
+                  <el-button
+                    size="mini"
+                    @click="teacherNot(scope.row.id)">否</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="block">
+              <el-pagination
+                @current-change="change3"
+                :hide-on-single-page="true"
+                layout="prev, pager, next"
+                :total="totalTocheck">
+              </el-pagination>
+            </div>
+          </div>
+          <div v-if="active==4">
+            <el-tabs type="border-card" >
+              <el-tab-pane label="单选题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table1"
+                  ref="problems2Check"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="275">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerA"
+                    label="选项A"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerB"
+                    label="选项B"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerC"
+                    label="选项C"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerD"
+                    label="选项D"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerE"
+                    label="选项E"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="passproblem(scope.row.id)">通过</el-button>
+                      <el-button
+                        size="mini"
+                        @click="notpassproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change4"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalTocheckSingle">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="多选题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table2"
+                  ref="problems2Check"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="275">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerA"
+                    label="选项A"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerB"
+                    label="选项B"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerC"
+                    label="选项C"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerD"
+                    label="选项D"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerE"
+                    label="选项E"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="passproblem(scope.row.id)">通过</el-button>
+                      <el-button
+                        size="mini"
+                        @click="notpassproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change5"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalTocheckMulti">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="填空题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table3"
+                  ref="problems2Check"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="350">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="passproblem(scope.row.id)">通过</el-button>
+                      <el-button
+                        size="mini"
+                        @click="notpassproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change6"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalTocheckFill">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="问答题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table4"
+                  ref="problems2Check"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="350">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="passproblem(scope.row.id)">通过</el-button>
+                      <el-button
+                        size="mini"
+                        @click="notpassproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change7"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalTocheckQa">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+
+          </div>
+          <div v-if="active=='5'">
+            <el-tabs type="border-card" >
+              <el-tab-pane label="单选题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table1"
+                  ref="problems"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="275">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerA"
+                    label="选项A"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerB"
+                    label="选项B"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerC"
+                    label="选项C"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerD"
+                    label="选项D"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerE"
+                    label="选项E"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="modifyproblem(scope.row)">修改</el-button>
+                      <el-button
+                        size="mini"
+                        @click="deleteproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change8"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalAllSingle">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="多选题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table2"
+                  ref="problems"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="275">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerA"
+                    label="选项A"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerB"
+                    label="选项B"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerC"
+                    label="选项C"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerD"
+                    label="选项D"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answerE"
+                    label="选项E"
+                    width="160">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="modifyproblem(scope.row)">修改</el-button>
+                      <el-button
+                        size="mini"
+                        @click="deleteproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change9"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalAllMulti">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="填空题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table3"
+                  ref="problems"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="350">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="modifyproblem(scope.row)">修改</el-button>
+                      <el-button
+                        size="mini"
+                        @click="deleteproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change10"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalAllFill">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="问答题">
+                <el-row>
+                  <el-col :span="3">
+                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                </el-row>
+                <el-table
+                  :data="table4"
+                  ref="problems"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="题号"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    prop="subject"
+                    label="学科"
+                    width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="contentType"
+                    label="内容"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="question"
+                    label="题目"
+                    width="350">
+                  </el-table-column>
+                  <el-table-column
+                    prop="answer"
+                    label="答案"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="difficultScore"
+                    label="难度"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    prop="source"
+                    label="来源"
+                    width="55">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    width="150">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        @click="modifyproblem(scope.row)">修改</el-button>
+                      <el-button
+                        size="mini"
+                        @click="deleteproblem(scope.row.id)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block">
+                  <el-pagination
+                    @current-change="change11"
+                    :hide-on-single-page="true"
+                    layout="prev, pager, next"
+                    :total="totalAllQa">
+                  </el-pagination>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+            <el-dialog
+              title="修改题目"
+              :visible.sync="modify">
+              <el-form :model="modifyProblem">
+                <el-form-item label="题号">
+                  <el-input v-model="modifyProblem.id"></el-input>
+                </el-form-item>
+                <el-form-item label="学科">
+                  <el-input v-model="modifyProblem.subject"></el-input>
+                </el-form-item>
+                <el-form-item label="内容">
+                  <el-input v-model="modifyProblem.contentType"></el-input>
+                </el-form-item>
+                <el-form-item label="题目">
+                  <el-input v-model="modifyProblem.question"></el-input>
+                </el-form-item>
+                <el-form-item label="选项" v-if="modifyProblem.type=='单项选择题'||modifyProblem.type=='多项选择题'">
+                  <el-input v-model="modifyProblem.options"></el-input>
+                </el-form-item>
+                <el-form-item label="答案">
+                  <el-input v-model="modifyProblem.answer"></el-input>
+                </el-form-item>
+                <el-form-item label="难度">
+                  <el-input v-model="modifyProblem.degree"></el-input>
+                </el-form-item>
+                <el-button type="primary" @click="submitmodify"></el-button>
+              </el-form>
+            </el-dialog>
+          </div>
+          <div v-if="active=='6'">
+            <el-card  style="width: 600px">
+              <div slot="header" align="left">
+                <span>导入题库</span>
+              </div>
+              <el-upload
+                class="upload-demo"
+                ref="upload"
+                :limit="1"
+                :on-change="handleChange"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :file-list="fileList"
+                accept=".xlsx"
+                :auto-upload="false"
+                align="left">
+                <el-button  size="small" type="primary">点击上传</el-button>
+                <div slot="tip" align="left" class="el-upload__tip">只能上传.xslx文件，仅限单选题、多选题、填空题和多选题四种题型,其中单选题类型对应编号为1，多选题类型对应编号为2，填空题对应编号为3，问答题对应编号为4</div>
+                <el-button @click="download" size="small" type="plain">下载模板</el-button>
+              </el-upload>
+              <el-button type="primary" size="small" style="margin-top: 60px;margin-bottom: 20px;float: left" @click="uploadFile">导入题库</el-button>
+            </el-card>
+          </div>
+        </el-main>
+      </el-container>
+      <el-footer>
+        <Down></Down>
+      </el-footer>
+
+    </el-container>
+  </div>
+</template>
+
+<script>
+import Top from '../components/navigation/top.vue'
+import Down from '../components/navigation/down.vue'
+import axios from "axios";
+export default {
+  name: "super_user",
+
+  data(){
+    return{
+      active:'1',
+      totalUser:1,
+      pageUser:1,
+      totalTeacher:1,
+      pageTeacher:1,
+      totalTocheck:1,
+      pageTocheck:1,
+      totalAllSingle:1,
+      pageAllSingle:1,
+      totalAllMulti:1,
+      pageAllMulti:1,
+      totalAllFill:1,
+      pageAllFill:1,
+      totalAllQa:1,
+      pageAllQa:1,
+      totalTocheckSingle:1,
+      pageTocheckSingle:1,
+      totalTocheckMulti:1,
+      pageTocheckMulti:1,
+      totalTocheckFill:1,
+      pageTocheckFill:1,
+      totalTocheckQa:1,
+      pageTocheckQa:1,
+      searchcontent1:'',
+      searchcontent2:'',
+      users:[{
+        id:'1',
+        name:"张三",
+        sex:'男',
+        email:'1092743@qq.com'
+      }],
+      teacher:[{
+        id:'1',
+        name:"张三",
+        sex:'男',
+        email:'1092743@qq.com'
+      }],
+      teacher2Check:[{
+        id:'1',
+        name:"张三",
+        sex:'男',
+        email:'1092743@qq.com'
+      }],
+      fileList:[],
+      problems2CheckSingle:[
+        {
+          id:'1',
+          subject:'中医学基础',
+          contentType:'绪论',
+          type:'单项选择题',
+          question:'我国现存最早的医学专著是（  ）',
+          option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》',
+          answer:'A'
+        },
+      ],
+      problems2CheckMulti:[
+        {
+          id:'2',
+          subject:'中医学基础',
+          contentType:'绪论22',
+          type:'多项选择题',
+          question:'',
+          option:'',
+          answer:'A'
+        },
+      ],
+      problems2CheckFill:[
+        {
+          id:'3',
+          subject: '中药',
+          contentType: '第二章',
+          type: '填空题',
+          question: '',
+          option: '',
+          answer: ''
+        }
+      ],
+      problems2CheckQa:[
+
+      ],
+      problemsSingle:[
+        {
+          id:'1',
+          subject:'中医学基础',
+          contentType:'绪论',
+          type:'单项选择题',
+          question:'我国现存最早的医学专著是（  ）',
+          option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》',
+          answer:'A'
+        },
+      ],
+      problemsMulti:[
+        {
+          id:'2',
+          subject:'中医学基础',
+          contentType:'绪论22',
+          type:'多项选择题',
+          question:'',
+          option:'',
+          answer:'A'
+        },
+      ],
+      problemsFill:[
+        {
+          id:'3',
+          subject: '中药',
+          contentType: '第二章',
+          type: '填空题',
+          question: '',
+          option: '',
+          answer: ''
+        }
+      ],
+      problemsQa:[
+
+      ],
+      modify:false,
+      modifyProblem:{
+        id:'',
+        question:'',
+        options:'',
+        answer:'',
+        subject:'',
+        contentType:'',
+        type:'',
+        degree:''
+      }
+    }
+  },
+  components:{
+    Top,Down
+  },
+  methods:{
+    handleSelect:function (key,keyPath){
+      switch (key){
+        case '1':
+          this.active='1';
+          this.getAllUsers();
+          console.log(this.active);
+          break;
+        case '2':
+          this.active='2';
+          this.getAllTeachers();
+          console.log(this.active);
+          break;
+        case '3':
+          this.active='3';
+          this.getTocheckTeachers();
+          console.log(this.active);
+          break;
+        case '4':
+          this.active='4';
+          this.getTocheckProblems();
+          console.log(this.active);
+          break;
+        case '5':
+          this.active='5';
+          this.getAllproblems();
+          console.log(this.active);
+          break;
+        case '6':
+          this.active='6';
+          console.log(6);
+          break;
+      }
+    },
+    getAllUsers(){
+      axios({
+        url:"/user/alluser",
+        params:{
+          page:this.pageUser,
+        }
+      })
+        .then(res=>{
+          this.users=res.data.data;
+          this.totalUser=res.data.size;
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+    },
+    getAllTeachers(){
+      axios({
+        url:"/user/teachers",
+        params:{
+          page:this.pageTeacher,
+        }
+      })
+        .then(res=>{
+          this.teacher=res.data.data;
+          this.totalTeacher=res.data.size;
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+    },
+    getTocheckTeachers(){
+      axios({
+        url:"/user/tocheck",
+        params:{
+          page:this.pageTocheck,
+        }
+      })
+        .then(res=>{
+          this.teacher2Check=res.data.data;
+          this.totalTocheck=res.data.size;
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+    },
+    getTocheckProblems(){
+      axios.all([
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckSingle,keyWords:null,subject:null,contentType:null,type:'单项选择题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckMulti,keyWords:null,subject:null,contentType:null,type:'多项选择题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckFill,keyWords:null,subject:null,contentType:null,type:'填空题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckQa,keyWords:null,subject:null,contentType:null,type:'问答题'}}),
+      ]).then(axios.spread((single,multi,fill,qa)=>{
+        this.problems2CheckSingle=single.data.data;
+        this.problems2CheckMulti=multi.data.data;
+        this.problems2CheckFill=fill.data.data;
+        this.problems2CheckQa=qa.data.data;
+      }))
+    },
+    getAllproblems(){
+      axios.all([
+        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:null,subject:null,contentType:null,type:'单项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:null,subject:null,contentType:null,type:'多项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:null,subject:null,contentType:null,type:'填空题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:null,subject:null,contentType:null,type:'问答题'}}),
+      ]).then(axios.spread((single,multi,fill,qa)=>{
+        this.problemsSingle=single.data.data;
+        this.problemsMulti=multi.data.data;
+        this.problemsFill=fill.data.data;
+        this.problemsQa=qa.data.data;
+      }))
+    },
+    teacherAgree(id){
+      axios({
+        url:"/user/checkApply",
+        params:{
+          check:1,
+          teacherId:id,
+        }
+      })
+      .then(res=>{
+        this.$message('审核通过！');
+        this.getTocheckTeachers();
+      })
+        .catch(err=>{
+          console.log(err);
+        })
+    },
+    teacherNot(val){
+      axios({
+        url:"/user/checkApply",
+        params:{
+          check:0,
+          teacherId:val.id,
+        }
+      })
+        .then(res=>{
+          this.$message('审核不通过！');
+          this.getTocheckTeachers();
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+    },
+    passproblem(pid){
+      axios({
+        url:"/problem/checkProblem",
+        params:{
+          check:1,
+          pid:pid,
+        }
+      })
+        .then(res=>{
+          this.$message('审核通过！');
+          this.problems2Check=res.data;
+          this.getTocheckProblems();
+        })
+      .catch(err=>{
+        console.log(err);
+      })
+    },
+    notpassproblem(pid){
+      axios({
+        url:"/problem/checkProblem",
+        params:{
+          check:0,
+          id:pid,
+        }
+      })
+        .then(res=>{
+          this.$message('审核不通过！');
+          this.problems2Check=res.data;
+          this.getTocheckProblems();
+        })
+        .catch(err=>{
+          console.log(err);
+        })
+    },
+    modifyproblem(row){
+      this.modify=true;
+      this.modifyProblem.id=row.id;
+      this.modifyProblem.question=row.question;
+      if(row.type=='单项选择题'||row.type=='多项选择题'){
+        this.modifyProblem.options=row.option;
+      }
+      this.modifyProblem.answer=row.answer
+      this.modifyProblem.type=row.type;
+      this.modifyProblem.subject=row.subject;
+      this.modifyProblem.contentType=row.contentType
+    },
+    submitmodify(){
+      this.modify=false;
+      axios({
+        url:"/problem/modifyProblem",
+        data:{
+          modify:this.modifyProblem,
+        }
+      }).then(res=>{
+        this.getAllproblems();
+        this.$message('修改成功');
+      }).catch(err=>{
+        this.$message('修改失败');
+      })
+    },
+    deleteproblem(id){
+      axios({
+        url:"/problem/deleteProblem",
+        params:{
+          problemId:id,
+        }
+      }).then(res=>{
+        this.getAllproblems();
+        this.$message('删除成功');
+      }).catch(err=>{
+        this.$message('删除失败');
+      })
+    },
+    change1(val){
+      this.pageUser=val;
+    },
+    change2(val){
+      this.pageTeacher=val;
+    },
+    change3(val){
+      this.pageTocheck=val;
+    },
+    change4(val){
+      this.pageTocheckSingle=val;
+    },
+    change5(val){
+      this.pageTocheckMulti=val;
+    },
+    change6(val){
+      this.pageTocheckFill=val;
+    },
+    change7(val){
+      this.pageTocheckQa=val;
+    },
+    change8(val){
+      this.pageAllSingle=val;
+    },
+    change9(val){
+      this.pageAllMulti=val;
+    },
+    change10(val){
+      this.pageAllFill=val;
+    },
+    change11(val){
+      this.pageAllQa=val;
+    },
+
+
+    operate(index,row){
+
+      console.log(index,row);
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
+    },
+    download() {
+      window.location.href='/static/problemTemplate.xlsx'
+    },
+    handleChange(file, fileList) {
+      this.fileList.push(file.raw);
+    },
+    uploadFile(){
+      if(this.fileList.length===0){
+        this.$message.warning('请上传文件');
+      }
+      else{
+        let form=new FormData();
+        form.append('file',this.fileList);
+        this.$axios({
+          method:"POST",
+          url:"/static/add",
+          headers:{
+            'Content-type':'multipart/form-data'
+          },
+          data:form
+        }).then(res=>{
+
+        }).catch(err=>{
+
+        });
+      }
+    }
+  },
+  computed: {
+    table1() {
+      //const search = '单项选择题'
+      const search1=this.searchcontent1;
+      const search2=this.searchcontent2;
+      if(this.active=='4'){
+        if(search1!=''){
+          return this.problems2CheckSingle.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search1) > -1
+            })
+          })
+        }
+        return this.problems2CheckSingle;
+      }
+      if(this.active=='5'){
+        if(search2!=''){
+          return this.problemsSingle.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search2) > -1
+            })
+          })
+        }
+        return this.problemsSingle;
+      }
+    },
+    table2() {
+      //const search = '多项选择题'
+      const search1=this.searchcontent1;
+      const search2=this.searchcontent2;
+      if(this.active=='4'){
+        if(search1!=''){
+          return this.problems2CheckMulti.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search1) > -1
+            })
+          })
+        }
+        return this.problems2CheckMulti;
+      }
+      if(this.active=='5'){
+        if(search2!=''){
+          return this.problemsMulti.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search2) > -1
+            })
+          })
+        }
+        return this.problemsMulti;
+      }
+    },
+    table3() {
+      //const search = '填空题'
+      const search1=this.searchcontent1;
+      const search2=this.searchcontent2;
+      if(this.active=='4'){
+        if(search1!=''){
+          return this.problems2CheckFill.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search1) > -1
+            })
+          })
+        }
+        return this.problems2CheckFill;
+      }
+      if(this.active=='5'){
+        if(search2!=''){
+          return this.problemsFill.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search2) > -1
+            })
+          })
+        }
+        return this.problemsFill;
+      }
+    },
+    table4() {
+      //const search = '问答题'
+      const search1=this.searchcontent1;
+      const search2=this.searchcontent2;
+      if(this.active=='4'){
+        if(search1!=''){
+          return this.problems2CheckQa.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search1) > -1
+            })
+          })
+        }
+        return this.problems2CheckQa;
+      }
+      if(this.active=='5'){
+        if(search2!=''){
+          return this.problemsQa.filter(data => {
+            return Object.keys(data).some(key => {
+              return String(data[key]).toLowerCase().indexOf(search2) > -1
+            })
+          })
+        }
+        return this.problemsQa;
+      }
+    },
+  }
+}
+</script>
+
+<style scoped>
+#super_user{
+  background: url("../assets/images/img.png") no-repeat;
+  background-size: cover;
+  overflow: auto;
+}
+.toggle-btn{
+  width: 160px;
+  background: dimgrey;
+  font-size:10px;
+  line-height:24px;
+  color:#fff;
+  text-align: center;
+  letter-spacing: 0.2em;
+  cursor:pointer;
+}
+</style>

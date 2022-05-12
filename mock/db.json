@@ -1,0 +1,53 @@
+{
+  "people": [
+    { "id": 1, "name": "people1", "sex": "1" },
+    { "id": 2, "name": "people2", "sex": "2" }
+  ],
+  "book": [
+    { "id": 1, "bookName": "JavaScript高级程序设计", "author": "Nicholas C.Zakas" }
+  ],
+  "setDetail":{
+    "setname":"中医药基础卷1",
+    "id":"1",
+    "problems":{
+      "single":[{
+        "id":"1",
+        "subject":"中医学基础",
+        "content_type":"绪论",
+        "question_type":"单项选择题",
+        "question":"我国现存最早的医学专著是（  ）",
+        "option":"A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》",
+        "answer":"A",
+        "score":"2"
+      }],
+      "multi":[{
+        "id":"700",
+        "subject":"温病学",
+        "content_type":"温病的辩证",
+        "question_type":"多项选择题",
+        "question":"肾阴耗损证的辨证要点是：",
+        "option":"A．手指蠕动或瘛疭，舌干绛而萎，脉虚\nB．夜热早凉，热退无汗，能食消瘦，舌红苔少\nC．手足心热甚于手足背，口燥咽干，舌绛不鲜，干枯而萎，脉虚\nD．神昏肢厥，舌绛\nE．神志时清时寐，舌苔垢腻",
+        "answer":"A",
+        "score": "2"
+      }],
+      "fill":[],
+      "quesans":[]
+    },
+    "groups":[
+      {
+        "group_name":"用户组1",
+        "id":"1",
+        "users":[
+          {
+            "id":"1",
+            "name":"tom",
+            "score":"100",
+            "sex":"男",
+            "email":"123@qq.com"
+          }
+        ]
+      }
+    ],
+    "endTime":"2022-4-30"
+  }
+}
