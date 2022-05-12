@@ -694,8 +694,14 @@ export default {
     submitTestRequirement(){
       this.exercise.startTimeS='2022-5-8 22:30:00'
       this.exercise.endTimeS='2022-5-9 20:00:00'
-      axios
-        .post("/exercise/createExercise",{exercise:this.exercise})
+      axios({
+        url:"/exercise/createExercise",
+        method:"POST",
+        data:this.exercise,
+        headers:{
+          'Content-type':'application/json'
+        },
+      })
         .then(res=>{
           //this.$router.push({path:'/test',params:{}})
         })

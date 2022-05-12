@@ -161,10 +161,10 @@
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
-                    @click="teacherAgree(scope.row.id)">是</el-button>
+                    @click="teacherAgree(scope.row.userId)">是</el-button>
                   <el-button
                     size="mini"
-                    @click="teacherNot(scope.row.id)">否</el-button>
+                    @click="teacherNot(scope.row.userId)">否</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -182,7 +182,14 @@
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -276,7 +283,14 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -370,7 +384,14 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -440,7 +461,14 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -515,7 +543,14 @@
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -609,7 +644,14 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -703,7 +745,14 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -773,7 +822,14 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                      <el-option
+                        v-for="sub in subjects"
+                        :key="sub.value"
+                        :label="sub.label"
+                        :value="sub.value">
+                      </el-option>
+                    </el-select>
                   </el-col>
                   <el-col :span="8">
                     <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
@@ -844,27 +900,39 @@
             <el-dialog
               title="修改题目"
               :visible.sync="modify">
-              <el-form :model="modifyProblem">
-                <el-form-item label="题号">
-                  <el-input v-model="modifyProblem.id"></el-input>
+              <el-form :model="modifyProblem" label-width="60px">
+                <el-form-item label="题号:">
+                  <span style="float: left">{{modifyProblem.id}}</span>
                 </el-form-item>
-                <el-form-item label="学科">
+                <el-form-item label="学科:">
                   <el-input v-model="modifyProblem.subject"></el-input>
                 </el-form-item>
-                <el-form-item label="内容">
+                <el-form-item label="内容:">
                   <el-input v-model="modifyProblem.contentType"></el-input>
                 </el-form-item>
-                <el-form-item label="题目">
+                <el-form-item label="题目:">
                   <el-input v-model="modifyProblem.question"></el-input>
                 </el-form-item>
-                <el-form-item label="选项" v-if="modifyProblem.type=='单项选择题'||modifyProblem.type=='多项选择题'">
-                  <el-input v-model="modifyProblem.options"></el-input>
+                <el-form-item label="选项A:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                  <el-input v-model="modifyProblem.answerA"></el-input>
                 </el-form-item>
-                <el-form-item label="答案">
+                <el-form-item label="选项B:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                  <el-input v-model="modifyProblem.answerB"></el-input>
+                </el-form-item>
+                <el-form-item label="选项C:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                  <el-input v-model="modifyProblem.answerC"></el-input>
+                </el-form-item>
+                <el-form-item label="选项D:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                  <el-input v-model="modifyProblem.answerD"></el-input>
+                </el-form-item>
+                <el-form-item label="选项E:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                  <el-input v-model="modifyProblem.answerE"></el-input>
+                </el-form-item>
+                <el-form-item label="答案:">
                   <el-input v-model="modifyProblem.answer"></el-input>
                 </el-form-item>
-                <el-form-item label="难度">
-                  <el-input v-model="modifyProblem.degree"></el-input>
+                <el-form-item label="难度:">
+                  <el-input v-model="modifyProblem.difficultScore"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="submitmodify"></el-button>
               </el-form>
@@ -911,7 +979,7 @@ export default {
 
   data(){
     return{
-      active:'1',
+      active:'',
       totalUser:1,
       pageUser:1,
       totalTeacher:1,
@@ -936,6 +1004,8 @@ export default {
       pageTocheckQa:1,
       searchcontent1:'',
       searchcontent2:'',
+      subject1:'',
+      subject2:'',
       users:[{
         id:'1',
         name:"张三",
@@ -1031,13 +1101,19 @@ export default {
       modifyProblem:{
         id:'',
         question:'',
-        options:'',
+        answerA:'',
+        answerB:'',
+        answerC:'',
+        answerD:'',
+        answerE:'',
         answer:'',
         subject:'',
         contentType:'',
-        type:'',
-        degree:''
-      }
+        questionType:'',
+        difficultScore:'',
+        source:''
+      },
+      subjects:[]
     }
   },
   components:{
@@ -1149,27 +1225,34 @@ export default {
       }))
     },
     teacherAgree(id){
+      let tid=id;
       axios({
         url:"/user/checkApply",
         params:{
           check:1,
-          teacherId:id,
+          teacherId:tid,
         }
       })
       .then(res=>{
-        this.$message('审核通过！');
+        if(res.data==="通过"){
+          this.$message('审核通过！');
+        }
+        else{
+          this.$message('审核不通过！');
+        }
         this.getTocheckTeachers();
       })
         .catch(err=>{
           console.log(err);
         })
     },
-    teacherNot(val){
+    teacherNot(id){
+      let tid=id
       axios({
         url:"/user/checkApply",
         params:{
           check:0,
-          teacherId:val.id,
+          teacherId:tid,
         }
       })
         .then(res=>{
@@ -1218,18 +1301,24 @@ export default {
       this.modify=true;
       this.modifyProblem.id=row.id;
       this.modifyProblem.question=row.question;
-      if(row.type=='单项选择题'||row.type=='多项选择题'){
-        this.modifyProblem.options=row.option;
+      if(row.questionType=='单项选择题'||row.questionType=='多项选择题'){
+        this.modifyProblem.answerA=row.answerA;
+        this.modifyProblem.answerB=row.answerB;
+        this.modifyProblem.answerC=row.answerC;
+        this.modifyProblem.answerD=row.answerD;
+        this.modifyProblem.answerE=row.answerE;
       }
-      this.modifyProblem.answer=row.answer
-      this.modifyProblem.type=row.type;
+      this.modifyProblem.answer=row.answer;
+      this.modifyProblem.questionType=row.questionType;
       this.modifyProblem.subject=row.subject;
-      this.modifyProblem.contentType=row.contentType
+      this.modifyProblem.contentType=row.contentType;
+      this.modifyProblem.difficultScore=row.difficultScore;
     },
     submitmodify(){
       this.modify=false;
       axios({
         url:"/problem/modifyProblem",
+        method:"POST",
         data:{
           modify:this.modifyProblem,
         }
@@ -1433,6 +1522,13 @@ export default {
         return this.problemsQa;
       }
     },
+  },
+  created() {
+    axios({
+      url:"/problem/allsubjects",
+    }).then(res=>{
+      this.subjects=res.data;
+    })
   }
 }
 </script>
