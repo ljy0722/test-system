@@ -30,7 +30,7 @@
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
                 <p>选择科目</p>
-                <el-select v-model="exercise.subject">
+                <el-select v-model="exercise.subject" @change="getRange">
                   <el-option
                     v-for="item in subjects"
                     :key="item.value"
@@ -119,7 +119,7 @@
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -211,7 +211,7 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -301,7 +301,7 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -366,7 +366,7 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -496,23 +496,9 @@ export default {
       pageWrongMulti:1,
       pageWrongFill:1,
       pageWrongQa:1,
-      selectSubject:'',
-      subjects:[
-        {
-          value:'zhongyixue',
-          label:'中医学'
-        }
-      ],
-      ranges:[
-        {
-          value:'jingluo',
-          label:'经络'
-        },
-        {
-          value:'tizhi',
-          label: '体质'
-        }
-      ],
+      selectSubject:null,
+      subjects:[],
+      ranges:[],
       exercise:{
         danxuan:'',
         duoxuan:'',
@@ -716,10 +702,10 @@ export default {
     },
     getWrongQuestion(){
       axios.all([
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongSingle,keyWords:null,subject:null,contentType:null,type:'单项选择题'}}),
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongMulti,keyWords:null,subject:null,contentType:null,type:'多项选择题'}}),
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongFill,keyWords:null,subject:null,contentType:null,type:'填空题'}}),
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongQa,keyWords:null,subject:null,contentType:null,type:'问答题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongSingle,keyWords:null,subject:this.selectSubject,contentType:null,type:'单项选择题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongMulti,keyWords:null,subject:this.selectSubject,contentType:null,type:'多项选择题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongFill,keyWords:null,subject:this.selectSubject,contentType:null,type:'填空题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongQa,keyWords:null,subject:this.selectSubject,contentType:null,type:'问答题'}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
         this.wrongProblemSingle=single.data.data;
         this.wrongProblemMulti=multi.data.data;
@@ -728,6 +714,7 @@ export default {
         console.log("返回错题")
       }))
     },
+
     change0(val){
       this.pageSets=val;
     },
@@ -804,6 +791,16 @@ export default {
       arr[arr.length - i - 1] = item;
     }
   },
+    getRange(){
+      axios({
+        url:"/problem/ranges",
+        params:{
+          subject:this.exercise.subject
+        }
+      }).then(res=>{
+        this.ranges=res.data;
+      })
+    }
 
   },
   components:{Top,Down,Chart3,Chart4,Chart5},
@@ -863,6 +860,13 @@ export default {
       }
       return this.wrongProblemQa;
     },
+  },
+  created() {
+    axios({
+      url:"/problem/allsubjects",
+    }).then(res=>{
+      this.subjects=res.data;
+    })
   }
 }
 </script>
