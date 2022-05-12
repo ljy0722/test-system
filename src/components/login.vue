@@ -5,8 +5,8 @@
         <el-form ref="loginForm" :model="user" :rules="rules" status-icon label-width="80px">
           <h3>登录</h3>
           <hr>
-          <el-form-item prop="email" label="邮箱">
-            <el-input v-model="user.userId" placeholder="请使用注册邮箱登录" prefix-icon></el-input>
+          <el-form-item prop="email" label="用户名">
+            <el-input v-model="user.userId" placeholder="请使用注册用户名登录" prefix-icon></el-input>
           </el-form-item>
           <el-form-item id="password" prop="password" label="密码">
             <el-input v-model="user.password" show-password placeholder="请输入密码"></el-input>

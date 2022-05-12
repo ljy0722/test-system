@@ -72,14 +72,14 @@
                 <el-col :span="6"><el-input v-model="user_info.address" type="text" placeholder="address" style="width:250px"></el-input></el-col>
               </el-row>
               <br>
-              <br>
-              <el-row>
-                <el-checkbox v-model="user_info.applyTeacher" style="margin-left: -400px">申请成为教师</el-checkbox>
-              </el-row>
-              <br>
-              <el-row>
-                <el-input v-model="license" v-if="user_info.applyTeacher==true" style="width: 80%" placeholder="请输入教师资格证编号"></el-input>
-              </el-row>
+<!--              <br>-->
+<!--              <el-row>-->
+<!--                <el-checkbox v-model="user_info.applyTeacher" style="margin-left: -400px">申请成为教师</el-checkbox>-->
+<!--              </el-row>-->
+<!--              <br>-->
+<!--              <el-row>-->
+<!--                <el-input v-model="license" v-if="user_info.applyTeacher==true" style="width: 80%" placeholder="请输入教师资格证编号"></el-input>-->
+<!--              </el-row>-->
               <el-button type="primary" style="margin-top: 30px" @click="modifyInfo">确定</el-button>
               <el-button type="plain">取消</el-button>
             </el-dialog>
@@ -157,18 +157,18 @@ export default {
       }).catch(err=>{
 
       });
-      if(this.user_info.applyTeacher==true){
-        axios({
-          url:'/user/applyTeacher',
-          params:{
-            license:this.license,
-          }
-        }).then(res=>{
-          this.$message('成功提交教师申请');
-        }).catch(err=>{
-
-        })
-      }
+      // if(this.user_info.applyTeacher==true){
+      //   axios({
+      //     url:'/user/applyTeacher',
+      //     params:{
+      //       license:this.license,
+      //     }
+      //   }).then(res=>{
+      //     this.$message('成功提交教师申请');
+      //   }).catch(err=>{
+      //
+      //   })
+      // }
     },
     back(){
       this.$router.go(-1);

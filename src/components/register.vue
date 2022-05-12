@@ -2,7 +2,7 @@
   <div class="login clearfix">
     <div class="login-wrap">
       <el-row type="flex" justify="center">
-        <el-form ref="loginForm" :model="user" :rules="rules" status-icon label-width="80px">
+        <el-form ref="loginForm" :model="user" :rules="rules" status-icon label-width="110px">
           <h3>注册</h3>
           <hr>
           <el-form-item prop="username" label="用户名">
@@ -13,6 +13,12 @@
           </el-form-item>
           <el-form-item prop="password" label="设置密码">
             <el-input v-model="user.password" show-password placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item prop="applyTeacher" label="申请教师资格">
+            <el-checkbox v-model="user.applyTeacher" style="float: left"></el-checkbox>
+          </el-form-item>
+          <el-form-item pro="license" label="教师资格证编号" v-if="user.applyTeacher==true">
+            <el-input v-model="user.license" placeholder="请输入教师资格证编号"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon @click="doRegister()">注册账号</el-button>
@@ -33,7 +39,9 @@ export default {
       user: {
         userId: "",
         email: "",
-        password: ""
+        password: "",
+        applyTeacher: false,
+        license:""
       },
       rules:{
         email:[{
@@ -60,9 +68,9 @@ export default {
           message:'密码不能为空',
           trigger:'blur',
           },{
-          min:8,
+          min:6,
           max:13,
-          message: '密码长度为8到13个字符',
+          message: '密码长度为6到13个字符',
           trigger: 'blur'
         }
         ]
@@ -90,19 +98,25 @@ export default {
           return;
         } else {
           //this.$router.push({ path: "/" }); //无需向后台提交数据，方便前台调试
-          axios
-            .post("/user/signup", {
+          axios({
+            url:"/user/signup",
+            method:"POST",
+            data:{
               userId: this.user.userId,
               userName:"",
               password: this.user.password,
-              type:"",
+              type:this.user.applyTeacher?'T':'S',
               createTime:new Date(),
               email: this.user.email,
               sex:"",
               phone:"",
               state:"",
-              address:""
-            })
+              address:"",
+              applyTeacher:this.user.applyTeacher
+              },
+            params:{
+              license:this.user.license
+            }})
             .then(res => {
               // console.log("输出response.data", res.data);
               // console.log("输出response.data.status", res.data.status);
@@ -133,7 +147,7 @@ export default {
   border-color: black;
   background-size: cover;
   width: 400px;
-  height: 350px;
+  height: auto;
   margin: 215px auto;
   overflow: hidden;
   padding-top: 10px;
