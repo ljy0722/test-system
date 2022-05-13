@@ -678,8 +678,8 @@ export default {
       }
     },
     submitTestRequirement(){
-      this.exercise.startTimeS='2022-5-8 22:30:00'
-      this.exercise.endTimeS='2022-5-9 20:00:00'
+      this.exercise.startTimeS='2022-1-1 22:30:00'
+      this.exercise.endTimeS='2030-1-1 20:00:00'
       axios({
         url:"/exercise/createExercise",
         method:"POST",
