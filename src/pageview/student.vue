@@ -689,7 +689,12 @@ export default {
         },
       })
         .then(res=>{
-          //this.$router.push({path:'/test',params:{}})
+
+          var now=new Date();
+          var hh=now.getHours()+parseInt(parseInt(this.exercise.time)/60);
+          var mm=now.getMinutes()+parseInt(this.exercise.time)%60;
+          var endTime=hh+":"+mm+":00";
+          this.$router.push({path:'/test',query:{endTime:endTime,exerciseId:res.data}});
         })
       console.log(this.exercise)
       //this.$router.push({path:'/test',query:{time:this.exercise.time}})

@@ -174,10 +174,10 @@ export default {
     return {
       resTime: "", // 剩余时间
       startTime: "2022-5-8 12:00:00", // 开始时间，自己设置或数据库获取
-      endTime: "2022-5-8 22:00:00", // 结束时间，自己设置或数据库获取
+      endTime: "2022-5-30 22:00:00", // 结束时间，自己设置或数据库获取
       showModal: false,
       grades: 0,
-      time1:this.$route.query.time,
+      //time1:this.$route.query.time,
       singleChoiceList: [{
         question: '中医四大经典著作是（  ）',
         answer: 'C',
@@ -429,7 +429,7 @@ export default {
         }
       }).then(res=>{
         this.$message("提交成功");
-        this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
+        //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
       })
       this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
     },
@@ -536,17 +536,45 @@ export default {
         // 清除定时器
         clearInterval(this.timer)
         // 在这里编写考试交卷的功能
-        this.submit();
+        //this.submit();
       }
+    },
+    getTimeS(){
+      var now=new Date();
+      let mm=now.getMonth()+1;
+      this.startTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+      this.endTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+this.$route.query.endTime;
     }
   },
   created() {
+    axios({
+      url:"/exercise/getExerciseProblems",
+      params:{
+        exerciseId:this.$route.query.exerciseId
+      }
+    }).then(res=>{
+      this.singleChoiceList=[];
+      for(let i=0;i<res.data.exerciseSets.singleChoiceList.length;i++){
+        var pro=res.data.exerciseSets.singleChoiceList[i];
+        pro["radio"]='';
+        pro["show"]='';
+        this.singleChoiceList.push(pro);
+      }
+      this.multiChoiceList=[];
+      for(let i=0;i<res.data.exerciseSets.multiChoiceList.length;i++){
+        var pro=res.data.exerciseSets.multiChoiceList[i];
+        pro["radio"]=[];
+        pro["show"]='';
+        this.multiChoiceList.push(pro);
+      }
+      console.log(this.multiChoiceList);
+      // this.singleChoiceList=res.data.exerciseSets.singleChoiceList;
+      // this.multiChoiceList=res.data.exerciseSets.multiChoiceList;
+    })
+    this.getTimeS();
     this.getRestTime();
   },
   mounted() {
-    // console.log(this.time1);
-    // this.countDown(this.time1*60);
-    //this.resetTime(256);
     this.timer = setInterval(this.getRestTime,1000)
   },
   components:{Top,Down}
