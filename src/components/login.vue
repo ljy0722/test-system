@@ -1,6 +1,10 @@
 <template>
   <div class="login" clearfix>
+    <div style="margin-bottom: 50px">
+      <span style="font-size: xx-large;font-weight: bolder">中医药在线考试系统</span>
+    </div>
     <div class="login-wrap">
+
       <el-row type="flex" justify="center">
         <el-form ref="loginForm" :model="user" :rules="rules" status-icon label-width="80px">
           <h3>登录</h3>
@@ -11,8 +15,8 @@
           <el-form-item id="password" prop="password" label="密码">
             <el-input v-model="user.password" show-password placeholder="请输入密码"></el-input>
           </el-form-item>
-          <router-link to="/">找回密码</router-link>
-          <router-link to="/register">注册账号</router-link>
+<!--          <router-link to="/">找回密码</router-link>-->
+          <router-link to="/register">没有账号？注册一个</router-link>
           <el-form-item>
             <el-button type="primary" icon="el-icon-upload" @click="doLogin()">登 录</el-button>
           </el-form-item>
@@ -137,7 +141,7 @@ export default {
   background-size: cover;
   width: 400px;
   height: 300px;
-  margin: 215px auto;
+  margin-left: 35%;
   overflow: hidden;
   padding-top: 10px;
   line-height: 40px;

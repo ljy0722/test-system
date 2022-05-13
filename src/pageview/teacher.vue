@@ -2344,7 +2344,6 @@ export default {
 #teacher{
   background: url("../assets/images/img.png") no-repeat;
   background-size: cover;
-  overflow: auto;
 }
 .toggle-btn{
   width: 130px;

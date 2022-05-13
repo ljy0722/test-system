@@ -615,6 +615,5 @@ export default {
 #test-create{
   background: url("../assets/images/img.png") no-repeat;
   background-size: cover;
-  overflow: auto;
 }
 </style>

@@ -643,7 +643,6 @@ export default {
 #test{
   background: url("../assets/images/img.png") no-repeat;
   background-size: cover;
-  overflow: auto;
 }
 </style>
 

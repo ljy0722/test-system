@@ -211,6 +211,5 @@ export default {
 #user_info{
   background: url("../assets/images/img.png") no-repeat;
   background-size: cover;
-  overflow: auto;
 }
 </style>

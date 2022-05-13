@@ -96,7 +96,7 @@
                      v-bind:key="index"
                      v-if="shaixuan==''||i.state==shaixuan">
               <el-row style="margin-top: -15px">
-                <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.id,i.state)"> {{ i.setname }}</el-button>
+                <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.id,i.state)"> {{ i.exerciseName }}</el-button>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='1'">未开始</span></i>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='2'">正在进行</span></i>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='3'">已结束</span></i>
@@ -110,6 +110,7 @@
                 @current-change="change0"
                 :hide-on-single-page="true"
                 layout="prev, pager, next"
+                :page-size=20
                 :total="totalSets">
               </el-pagination>
             </div>
@@ -622,15 +623,7 @@ export default {
         case '2':
           this.active='2';
           console.log(2);
-          axios({
-            url:"/exercise/getStudentExercise",
-            params:{
-              pageNum:this.pageSets
-            }
-          }).then(res=>{
-            this.exerciseSets=res.data.data;
-            this.totalSets=res.data.size;
-          })
+          this.getStudentExercise();
           break;
         case '3':
           this.active='3';
@@ -649,6 +642,26 @@ export default {
           console.log(4);
           break;
       }
+    },
+    getStudentExercise(){
+      axios({
+        url:"/exercise/getStudentExercise",
+        params:{
+          pageNum:this.pageSets
+        }
+      }).then(res=>{
+        this.exerciseSets=res.data.data;
+        for(let i=0;i<this.exerciseSets.length;i++){
+          if(this.exerciseSets[i].test===false){
+            this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-9);
+          }
+          this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
+          if(this.exerciseSets[i].state==='D'){
+            this.exerciseSets[i].state='3';
+          }
+        }
+        this.totalSets=res.data.total;
+      })
     },
     viewSet(id,state) {
       if(state=='1'){
@@ -722,6 +735,7 @@ export default {
 
     change0(val){
       this.pageSets=val;
+      this.getStudentExercise();
     },
     change1(val){
       this.pageWrongSingle=val;
@@ -880,7 +894,7 @@ export default {
 #student{
   background: url("../assets/images/img.png") no-repeat;
   background-size: cover;
-  overflow: auto;
+
 }
 .toggle-btn{
   width: 130px;

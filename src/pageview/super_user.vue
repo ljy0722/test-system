@@ -1537,7 +1537,6 @@ export default {
 #super_user{
   background: url("../assets/images/img.png") no-repeat;
   background-size: cover;
-  overflow: auto;
 }
 .toggle-btn{
   width: 160px;

@@ -1,5 +1,8 @@
 <template>
   <div class="login clearfix">
+    <div style="margin-bottom: 50px">
+      <span style="font-size: xx-large;font-weight: bolder">中医药在线考试系统</span>
+    </div>
     <div class="login-wrap">
       <el-row type="flex" justify="center">
         <el-form ref="loginForm" :model="user" :rules="rules" status-icon label-width="110px">
@@ -148,7 +151,7 @@ export default {
   background-size: cover;
   width: 400px;
   height: auto;
-  margin: 215px auto;
+  margin-left: 35%;
   overflow: hidden;
   padding-top: 10px;
   line-height: 20px;
