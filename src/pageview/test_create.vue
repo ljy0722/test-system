@@ -48,20 +48,36 @@
             </el-card>
             <br>
             <el-card v-if="method1=='zidong'||method1=='shoudong'">
-              <div class="step2.1" v-if="method1=='zidong'">
-                <el-row><p></p></el-row>
-                <el-row><p></p></el-row>
-                <el-row>
-                  <el-col :span="3"><a>自动选题方案：</a></el-col>
-                  <el-col :span="6" align="left"><el-select v-model="method2">
+              <div class="step2.1" v-if="method1=='zidong'" style="margin-left: -500px">
+                <div style="width: 30%" align="left">
+                  <p style="font-size: large">题量设置</p>
+                  <el-input v-model="danxuan" placeholder="单选题"></el-input>
+                  <el-input v-model="duoxuan" placeholder="多选题"></el-input>
+                  <el-input v-model="tiankong" placeholder="填空题"></el-input>
+                  <el-input v-model="wenda" placeholder="问答题"></el-input>
+                </div>
+                <el-divider></el-divider>
+                <div style="width: 30%" align="left">
+                  <p>选择科目</p>
+                  <el-select v-model="autoSubject" @change="getRanges">
                     <el-option
-                      v-for="item in options2"
+                      v-for="item in subjects"
                       :key="item.value"
                       :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select></el-col>
-                </el-row>
+                      :value="item.value"></el-option>
+                  </el-select>
+                </div>
+                <el-divider></el-divider>
+                <div style="width: 30%" align="left">
+                  <p>选择范围</p>
+                  <el-select v-model="autoRange">
+                    <el-option
+                      v-for="item in ranges"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"></el-option>
+                  </el-select>
+                </div>
               </div>
               <br>
               <br>
@@ -71,20 +87,39 @@
                   <el-tab-pane label="单选题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                        <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                          <el-option
+                            v-for="item in subjects"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
+                      </el-col>
+                      <el-col :span="3" :offset="1">
+                        <el-select v-model="selectRange" placeholder="选择范围" style="float: left" align="left">
+                          <el-option
+                            v-for="item in ranges"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
                       </el-col>
                       <el-col :span="8">
                         <el-input v-model="search" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
+                      <el-col :span="1" :offset="1">
+                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                      </el-col>
                     </el-row>
 
                     <el-table
-                      :data="table1"
+                      :data="SingleProblem"
                       ref="list1"
                       style="width: 100%"
                       row-key="id"
                       >
                       <el-table-column
+                        fixed="left"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
@@ -100,7 +135,7 @@
                         width="130">
                       </el-table-column>
                       <el-table-column
-                        prop="content_type"
+                        prop="contentType"
                         label="内容"
                         width="130">
                       </el-table-column>
@@ -110,36 +145,88 @@
                         width="350">
                       </el-table-column>
                       <el-table-column
-                        prop="option"
-                        label="选项"
-                        width="180">
+                        prop="answerA"
+                        label="选项A"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerB"
+                        label="选项B"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerC"
+                        label="选项C"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerD"
+                        label="选项D"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerE"
+                        label="选项E"
+                        width="160">
                       </el-table-column>
                       <el-table-column
                         prop="answer"
                         label="答案">
                       </el-table-column>
                       <el-table-column
-                        prop="degree"
+                        prop="difficultScore"
                         label="难度"
                         width="50">
                       </el-table-column>
+                      <el-table-column
+                        prop="source"
+                        label="来源"
+                        width="150">
+                      </el-table-column>
                     </el-table>
+                    <div class="block">
+                      <el-pagination
+                        @current-change="change1"
+                        :hide-on-single-page="true"
+                        layout="prev, pager, next"
+                        :total="totalSingle">
+                      </el-pagination>
+                    </div>
                   </el-tab-pane>
                   <el-tab-pane label="多选题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                        <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                          <el-option
+                            v-for="item in subjects"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
+                      </el-col>
+                      <el-col :span="3" :offset="1">
+                        <el-select v-model="selectRange" placeholder="选择范围" style="float: left" align="left">
+                          <el-option
+                            v-for="item in ranges"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
                       </el-col>
                       <el-col :span="8">
                         <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
+                      <el-col :span="1" :offset="1">
+                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                      </el-col>
                     </el-row>
                     <el-table
-                      :data="table2"
+                      :data="MultiProblem"
                       ref="list2"
                       row-key="id"
                       style="width: 100%">
                       <el-table-column
+                        fixed="left"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
@@ -155,7 +242,7 @@
                         width="130">
                       </el-table-column>
                       <el-table-column
-                        prop="content_type"
+                        prop="contentType"
                         label="内容"
                         width="130">
                       </el-table-column>
@@ -165,36 +252,88 @@
                         width="350">
                       </el-table-column>
                       <el-table-column
-                        prop="option"
-                        label="选项"
-                        width="180">
+                        prop="answerA"
+                        label="选项A"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerB"
+                        label="选项B"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerC"
+                        label="选项C"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerD"
+                        label="选项D"
+                        width="160">
+                      </el-table-column>
+                      <el-table-column
+                        prop="answerE"
+                        label="选项E"
+                        width="160">
                       </el-table-column>
                       <el-table-column
                         prop="answer"
                         label="答案">
                       </el-table-column>
                       <el-table-column
-                        prop="degree"
+                        prop="difficultScore"
                         label="难度"
                         width="50">
                       </el-table-column>
+                      <el-table-column
+                        prop="source"
+                        label="来源"
+                        width="150">
+                      </el-table-column>
                     </el-table>
+                    <div class="block">
+                      <el-pagination
+                        @current-change="change2"
+                        :hide-on-single-page="true"
+                        layout="prev, pager, next"
+                        :total="totalMulti">
+                      </el-pagination>
+                    </div>
                   </el-tab-pane>
                   <el-tab-pane label="填空题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                        <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                          <el-option
+                            v-for="item in subjects"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
+                      </el-col>
+                      <el-col :span="3" :offset="1">
+                        <el-select v-model="selectRange" placeholder="选择范围" style="float: left" align="left">
+                          <el-option
+                            v-for="item in ranges"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
                       </el-col>
                       <el-col :span="8">
                         <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
+                      <el-col :span="1" :offset="1">
+                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                      </el-col>
                     </el-row>
                     <el-table
-                      :data="table3"
+                      :data="FillProblem"
                       ref="list3"
                       style="width: 100%"
                       row-key="id">
                       <el-table-column
+                        fixed="left"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
@@ -210,7 +349,7 @@
                         width="130">
                       </el-table-column>
                       <el-table-column
-                        prop="content_type"
+                        prop="contentType"
                         label="内容"
                         width="130">
                       </el-table-column>
@@ -224,27 +363,59 @@
                         label="答案">
                       </el-table-column>
                       <el-table-column
-                        prop="degree"
+                        prop="difficultScore"
                         label="难度"
                         width="50">
                       </el-table-column>
+                      <el-table-column
+                        prop="source"
+                        label="来源"
+                        width="150">
+                      </el-table-column>
                     </el-table>
+                    <div class="block">
+                      <el-pagination
+                        @current-change="change3"
+                        :hide-on-single-page="true"
+                        layout="prev, pager, next"
+                        :total="totalFill">
+                      </el-pagination>
+                    </div>
                   </el-tab-pane>
                   <el-tab-pane label="问答题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                        <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                          <el-option
+                            v-for="item in subjects"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
+                      </el-col>
+                      <el-col :span="3" :offset="1">
+                        <el-select v-model="selectRange" placeholder="选择范围" style="float: left" align="left">
+                          <el-option
+                            v-for="item in ranges"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
                       </el-col>
                       <el-col :span="8">
                         <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
+                      <el-col :span="1" :offset="1">
+                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                      </el-col>
                     </el-row>
                     <el-table
-                      :data="table4"
+                      :data="QaProbelm"
                       ref="list4"
                       style="width: 100%"
                       row-key="id">
                       <el-table-column
+                        fixed="left"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
@@ -260,7 +431,7 @@
                         width="130">
                       </el-table-column>
                       <el-table-column
-                        prop="content_type"
+                        prop="contentType"
                         label="内容"
                         width="130">
                       </el-table-column>
@@ -274,92 +445,26 @@
                         label="答案">
                       </el-table-column>
                       <el-table-column
-                        prop="degree"
+                        prop="difficultScore"
                         label="难度"
                         width="50">
                       </el-table-column>
+                      <el-table-column
+                        prop="source"
+                        label="来源"
+                        width="150">
+                      </el-table-column>
                     </el-table>
+                    <div class="block">
+                      <el-pagination
+                        @current-change="change4"
+                        :hide-on-single-page="true"
+                        layout="prev, pager, next"
+                        :total="totalQa">
+                      </el-pagination>
+                    </div>
                   </el-tab-pane>
                 </el-tabs>
-                <!--              <el-table-->
-                <!--                ref="tableData"-->
-                <!--                :data="tables1"-->
-                <!--                border-->
-                <!--                style="width: 100%"-->
-                <!--                @selection-change="handleSelectionChange1">-->
-                <!--                <el-table-column-->
-                <!--                  type="selection"-->
-                <!--                  width="55">-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column-->
-                <!--                  fixed-->
-                <!--                  prop="qid"-->
-                <!--                  label="题号"-->
-                <!--                  width="80">-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column-->
-                <!--                  prop="question"-->
-                <!--                  label="题目"-->
-                <!--                  width="450">-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column-->
-                <!--                  prop="options"-->
-                <!--                  label="选项"-->
-                <!--                  width="260">-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column-->
-                <!--                  prop="answer"-->
-                <!--                  label="答案"-->
-                <!--                  width="100">-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column-->
-                <!--                  prop="degree"-->
-                <!--                  label="难度"-->
-                <!--                  width="100">-->
-                <!--                </el-table-column>-->
-
-                <!--              </el-table>-->
-                <!--              <el-pagination-->
-                <!--                @size-change="handleSizeChange"-->
-                <!--                @current-change="handleCurrentChange"-->
-                <!--                :current-page="current"-->
-                <!--                :page-sizes="[100, 200, 300, 400]"-->
-                <!--                :page-size="size"-->
-                <!--                layout="total, sizes, prev, pager, next, jumper"-->
-                <!--                :total="total">-->
-                <!--              </el-pagination>-->
-<!--                <el-dialog title="新增题目" :visible.sync="dialogVisible">-->
-<!--                  <el-form :model="form">-->
-<!--                    <el-form-item label="题目" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.question" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="选项A" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.answerA" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="选项B" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.answerB" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="选项C" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.answerC" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="选项D" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.answerD" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="选项E" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.answerE" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="答案" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.answer" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="难度" :label-width="'60px'">-->
-<!--                      <el-input v-model="form.degree" auto-complete="off"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                  </el-form>-->
-<!--                  <div slot="footer">-->
-<!--                    <el-button @click="dialogVisible=false">取消</el-button>-->
-<!--                    <el-button type="primary" @click="save">添加</el-button>-->
-<!--                  </div>-->
-<!--                </el-dialog>-->
               </div>
             </el-card>
             <br>
@@ -371,10 +476,18 @@
                          v-for="(i,index) in user_groups"
                          v-bind:key="index">
                   <div style="margin-top: -15px">
-                    <el-button type="text" style="float: left;color: black">{{ i.group_name }}</el-button>
+                    <el-button type="text" style="float: left;color: black">{{ i.groupName }}</el-button>
                     <el-checkbox size="medium" style="float: right;margin-top: 5px" @change="checked=>addUserGroup(checked,i.groupId)"></el-checkbox>
                   </div>
                 </el-card>
+              </div>
+              <div class="block">
+                <el-pagination
+                  @current-change="change5"
+                  :hide-on-single-page="true"
+                  layout="prev, pager, next"
+                  :total="totalGroup">
+                </el-pagination>
               </div>
             </el-card>
 
@@ -410,6 +523,10 @@ export default {
     return {
       active:0,
       testname:'',
+      selectSubject:null,
+      selectRange:null,
+      subjects:[],
+      ranges:[],
       options1:[
         {
           value:'zidong',
@@ -434,6 +551,10 @@ export default {
         }
       ],
       method2:[],
+      SingleProblem:[],
+      MultiProblem:[],
+      FillProblem:[],
+      QaProbelm:[],
       problems:[
         {
           id:'1',
@@ -468,116 +589,157 @@ export default {
       ],
 
       problemSelection:[],
-      search:'',
+      search:null,
       searchstu:'',
       stuData:[{
       }],
       grantGroup:[],
       dialogVisible:false,
-      current:1,
-      size:10,
-      total:100,
-      form:{
-        question:'',
-        answerA:'',
-        answerB:'',
-        answerC:'',
-        answerD:'',
-        answerE:'',
-        answer:'',
-        degree:''
-      },
-      user_groups:[
-        {
-          group_name:'组1',
-          groupId:'1'
-        },
-        {
-          group_name:'组2',
-          groupId:'2'
-        }
-      ],
+      pageSingle:1,
+      pageMulti:1,
+      pageFill:1,
+      pageQa:1,
+      pageGroup:1,
+      totalSingle:1,
+      totalMulti:1,
+      totalFill:1,
+      totalQa:1,
+      totalGroup:1,
+      user_groups:[],
+      danxuan:'',
+      duoxuan:'',
+      tiankong:'',
+      wenda:'',
+      autoSubject:null,
+      autoRange:null,
     }
   },
   computed:{
-    table1() {
-      const search1='单项选择题';
-      const search2=this.search;
-      return this.problems.filter(data=>{
-        return Object.keys(data).some(key=>{
-          return String(data[key]).toLowerCase().indexOf(search1)>-1
-        })
-      })
-      return this.problems;
-    },
-    table2() {
-      const search='多项选择题'
-      return this.problems.filter(data=>{
-        return Object.keys(data).some(key=>{
-          return String(data[key]).toLowerCase().indexOf(search)>-1
-        })
-      })
-      return this.problems;
-    },
-    table3() {
-      const search='填空题'
-      return this.problems.filter(data=>{
-        return Object.keys(data).some(key=>{
-          return String(data[key]).toLowerCase().indexOf(search)>-1
-        })
-      })
-      return this.problems;
-    },
-    table4() {
-      const search='问答题'
-      return this.problems.filter(data=>{
-        return Object.keys(data).some(key=>{
-          return String(data[key]).toLowerCase().indexOf(search)>-1
-        })
-      })
-      return this.problems;
-    },
+    // table1() {
+    //   const search1='单项选择题';
+    //   const search2=this.search;
+    //   return this.problems.filter(data=>{
+    //     return Object.keys(data).some(key=>{
+    //       return String(data[key]).toLowerCase().indexOf(search1)>-1
+    //     })
+    //   })
+    //   return this.problems;
+    // },
+    // table2() {
+    //   const search='多项选择题'
+    //   return this.problems.filter(data=>{
+    //     return Object.keys(data).some(key=>{
+    //       return String(data[key]).toLowerCase().indexOf(search)>-1
+    //     })
+    //   })
+    //   return this.problems;
+    // },
+    // table3() {
+    //   const search='填空题'
+    //   return this.problems.filter(data=>{
+    //     return Object.keys(data).some(key=>{
+    //       return String(data[key]).toLowerCase().indexOf(search)>-1
+    //     })
+    //   })
+    //   return this.problems;
+    // },
+    // table4() {
+    //   const search='问答题'
+    //   return this.problems.filter(data=>{
+    //     return Object.keys(data).some(key=>{
+    //       return String(data[key]).toLowerCase().indexOf(search)>-1
+    //     })
+    //   })
+    //   return this.problems;
+    // },
   },
   components:{
     Left,Top,Down
   },
   methods:{
+    change1(val){
+      this.pageSingle=val;
+      this.getTeacherProblems();
+    },
+    change2(val){
+      this.pageMulti=val;
+      this.getTeacherProblems();
+    },
+    change3(val){
+      this.pageFill=val;
+      this.getTeacherProblems();
+    },
+    change4(val){
+      this.pageQa=val;
+      this.getTeacherProblems();
+    },
+    change5(val){
+      this.pageGroup=val;
+      this.getUserGroups();
+    },
     submit(){
-      this.$refs.list1.selection.forEach(e=>{
-        var pro={"id":e.id,"type":'单项选择题'}
-        this.problemSelection.push(pro)
-      })
-      this.$refs.list2.selection.forEach(e=>{
-        var pro={"id":e.id,"type":'多项选择题'}
-        this.problemSelection.push(pro)
-      })
-      this.$refs.list3.selection.forEach(e=>{
-        var pro={"id":e.id,"type":'填空题'}
-        this.problemSelection.push(pro)
-      })
-      this.$refs.list4.selection.forEach(e=>{
-        var pro={"id":e.id,"type":'问答题'}
-        this.problemSelection.push(pro)
-      })
-      console.log(this.problemSelection);
-      var manual=new Object();
-      manual["testname"]=this.testname;
-      manual["time1"]=this.time1;
-      manual["time2"]=this.time2;
-      manual["problemSelection"]=this.problemSelection;
-      manual["grantGroup"]=this.grantGroup;
-      axios({
-        url:"/exercise/new",
-        method:"POST",
-        data:manual,
-        header:{
-          "Content-Type":"application/json"
-        }
-      })
+      if(this.method1==='shoudong'){
+        this.$refs.list1.selection.forEach(e=>{
+          var pro={"id":e.id,"type":'单项选择题'}
+          this.problemSelection.push(pro)
+        })
+        this.$refs.list2.selection.forEach(e=>{
+          var pro={"id":e.id,"type":'多项选择题'}
+          this.problemSelection.push(pro)
+        })
+        this.$refs.list3.selection.forEach(e=>{
+          var pro={"id":e.id,"type":'填空题'}
+          this.problemSelection.push(pro)
+        })
+        this.$refs.list4.selection.forEach(e=>{
+          var pro={"id":e.id,"type":'问答题'}
+          this.problemSelection.push(pro)
+        })
+        console.log(this.problemSelection);
+        var manual=new Object();
+        manual["testname"]=this.testname;
+        manual["time1"]=this.time1;
+        manual["time2"]=this.time2;
+        manual["problemSelection"]=this.problemSelection;
+        manual["grantGroup"]=this.grantGroup;
+        axios({
+          url:"/exercise/new",
+          method:"POST",
+          data:manual,
+          header:{
+            "Content-Type":"application/json"
+          }
+        })
           .then(res=>{
             alert("创建成功");
-            this.$router.push({path:'/teacher',params:{active:'3'}})
+            this.$router.go(-1);
           })
+      }
+      else if(this.method1==='zidong'){
+        var auto=new Object();
+        auto["testname"]=this.testname;
+        auto["danxuan"]=this.danxuan;
+        auto["duoxuan"]=this.duoxuan;
+        auto["tiankong"]=this.tiankong;
+        auto["wenda"]=this.wenda;
+        auto["subject"]=this.autoSubject;
+        auto["range"]=this.autoRange;
+        auto["time2"]=this.time2;
+        auto["time1"]=this.time1;
+        auto["grantGroup"]=this.grantGroup;
+        console.log(this.time1);
+        axios({
+          url:"/exercise/new1",
+          method:"POST",
+          data:auto,
+          headers:{
+            'Content-type':'application/json'
+          },
+        }).then(res=>{
+          this.$message("创建成功");
+          this.$router.go(-1);
+        })
+      }
 
       //this.$router.push({path:'/teacher',query:{active:'2'}})
     },
@@ -602,8 +764,57 @@ export default {
       else
         this.grantGroup.remove(id)
       console.log(this.grantGroup);
+    },
+    getTeacherProblems(){
+      axios.all([
+        axios({url:"/problem/teacher_problem",params:{type:"单项选择题",page:this.pageSingle,keyWords:this.search,subject:this.selectSubject,contentType:this.selectRange}}),
+        axios({url:"/problem/teacher_problem",params:{type:"多项选择题",page:this.pageMulti,keyWords:this.search,subject:this.selectSubject,contentType:this.selectRange}}),
+        axios({url:"/problem/teacher_problem",params:{type:"填空题",page:this.pageFill,keyWords:this.search,subject:this.selectSubject,contentType:this.selectRange}}),
+        axios({url:"/problem/teacher_problem",params:{type:"问答题",page:this.pageQa,keyWords:this.search,subject:this.selectSubject,contentType:this.selectRange}}),
+      ]).then(axios.spread((single,multi,fill,qa)=>{
+        this.SingleProblem=single.data.data;
+        this.MultiProblem=multi.data.data;
+        this.FillProblem=fill.data.data;
+        this.QaProbelm=qa.data.data;
+        this.totalSingle=single.data.total;
+        this.totalMulti=multi.data.total;
+        this.totalFill=fill.data.total;
+        this.totalQa=qa.data.total;
+      }))
+    },
+    getSubjects(){
+      axios({
+        url:"/problem/allsubjects",
+      }).then(res=>{
+        this.subjects=res.data;
+      })
+    },
+    getRanges(){
+      axios({
+        url:"/problem/ranges",
+        params:{
+          subject:this.selectSubject
+        }
+      }).then(res=>{
+        this.ranges=res.data;
+      })
+    },
+    getUserGroups() {
+      axios({
+        url:"/user/groups",
+        params:{
+          page:this.pageGroup
+        }
+      }).then(res=>{
+        this.user_groups=res.data.data;
+      })
     }
   },
+  created() {
+    this.getTeacherProblems();
+    this.getSubjects();
+    this.getUserGroups();
+  }
 }
 </script>
 <style scoped>

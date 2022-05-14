@@ -256,7 +256,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -357,7 +357,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -434,7 +434,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -511,7 +511,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -617,7 +617,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -718,7 +718,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -795,7 +795,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -872,7 +872,7 @@
                   <el-table-column
                     prop="source"
                     label="来源"
-                    width="55">
+                    width="150">
                   </el-table-column>
                   <el-table-column
                     fixed="right"

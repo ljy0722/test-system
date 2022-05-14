@@ -37,14 +37,14 @@
                     <span>题目</span>
                   </div>
                   <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
-                    <el-row><span>总数：     {{problems.single.length+problems.multi.length+problems.fill.length+problems.quesans.length}}</span></el-row>
-                    <el-row><span>单项选择题：   {{problems.single.length}}</span></el-row>
-                    <el-row><span>多项选择题：  {{problems.multi.length}}</span></el-row>
-                    <el-row><span>填空题：   {{problems.fill.length}}</span></el-row>
-                    <el-row><span>问答题：   {{problems.quesans.length}}</span></el-row>
+                    <el-row><span>总数：     {{totalSingle+totalMulti+totalFill+totalQa}}</span></el-row>
+                    <el-row><span>单项选择题：   {{totalSingle}}</span></el-row>
+                    <el-row><span>多项选择题：  {{totalMulti}}</span></el-row>
+                    <el-row><span>填空题：   {{totalFill}}</span></el-row>
+                    <el-row><span>问答题：   {{totalQa}}</span></el-row>
                   </div>
                 </el-card>
-                <Chart7 :value1="problems.single.length" :value2="problems.multi.length" :value3="problems.fill.length" :value4="problems.quesans.length" style="margin-top: 40px"></Chart7>
+                <Chart7 :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
               </el-col>
               <el-col :span="8">
                 <el-card style="background:#eeeeee;width: 270px;min-height: 150px;margin-top: 80px;margin-right: 40px">
@@ -141,15 +141,6 @@
 
               <el-tabs type="border-card" >
                 <el-tab-pane label="单选题" style="margin-bottom: 30px">
-                  <el-row>
-                    <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
-                    </el-col>
-                  </el-row>
-
                   <el-table
                     :data="setDetail.singleChoiceList"
                     ref="setDetail.problems.single"
@@ -175,10 +166,29 @@
                       width="270">
                     </el-table-column>
                     <el-table-column
-                      prop="option"
-                      label="选项"
-                      width="180"
-                      style="white-space: pre-wrap">
+                      prop="answerA"
+                      label="选项A"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerB"
+                      label="选项B"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerC"
+                      label="选项C"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerD"
+                      label="选项D"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerE"
+                      label="选项E"
+                      width="160">
                     </el-table-column>
                     <el-table-column
                       prop="answer"
@@ -189,9 +199,14 @@
                       label="分值">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -205,14 +220,6 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="多选题">
-                  <el-row>
-                    <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
-                    </el-col>
-                  </el-row>
                   <el-table
                     :data="setDetail.multiChoiceList"
                     ref="setDetail.problems.multi"
@@ -238,9 +245,29 @@
                       width="270">
                     </el-table-column>
                     <el-table-column
-                      prop="option"
-                      label="选项"
-                      width="180">
+                      prop="answerA"
+                      label="选项A"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerB"
+                      label="选项B"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerC"
+                      label="选项C"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerD"
+                      label="选项D"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerE"
+                      label="选项E"
+                      width="160">
                     </el-table-column>
                     <el-table-column
                       prop="answer"
@@ -251,9 +278,14 @@
                       label="分值">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -267,14 +299,6 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="填空题">
-                  <el-row>
-                    <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
-                    </el-col>
-                  </el-row>
                   <el-table
                     :data="setDetail.fillBlankList"
                     ref="setDetail.problems.fill"
@@ -308,9 +332,14 @@
                       label="分值">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -324,14 +353,6 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="问答题">
-                  <el-row>
-                    <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
-                    </el-col>
-                  </el-row>
                   <el-table
                     :data="setDetail.questionAnswerList"
                     ref="setDetail.problems.quesans"
@@ -365,9 +386,14 @@
                       label="分值">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -400,15 +426,15 @@
                   <el-select v-model="chooseGroup" @change="seeAnalyse(chooseGroup)" placeholder="选择用户组" style="float: left">
                     <el-option
                       v-for="(item,index) in setDetail.groups"
-                      :key="item.id"
-                      :label="item.group_name"
-                      :value="item.id"></el-option>
+                      :key="item.groupId"
+                      :label="item.groupName"
+                      :value="item.groupId"></el-option>
                   </el-select>
                 </el-col>
 
               </el-row>
               <el-table
-                :data="showGroup"
+                :data="showStudentsInAGroup"
               >
                 <el-table-column
                   prop="id"
@@ -435,7 +461,6 @@
                   label="得分"
                   width="100">
                 </el-table-column>
-
                 <el-table-column
                   fixed="right"
                   width="250">
@@ -449,6 +474,14 @@
                   </template>
                 </el-table-column>
               </el-table>
+              <div class="block">
+                <el-pagination
+                  @current-change="change11"
+                  :hide-on-single-page="true"
+                  layout="prev, pager, next"
+                  :total="totalSetUser">
+                </el-pagination>
+              </div>
               <el-row style="margin-top: 80px">
                 <el-col :span="12">
                   <Chart :value1="10" :value2="10" :value3="10" :value4="10"></Chart>
@@ -477,21 +510,33 @@
                 <el-tab-pane label="单选题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
-                    <el-col :span="6">
-                      <el-input v-model="keywords1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-input v-model="searchTeacherPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                     </el-col>
                     <el-col :span="1" :offset="1">
-                      <el-button type="primary" @click="searchProblems('单项选择题')">搜索</el-button>
-                    </el-col>
-                    <el-col :span="8" :offset="1">
-                      <el-input v-model="search1" placeholder="输入关键字可进行筛选" style="margin-left: 20px"></el-input>
+                      <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
                     </el-col>
                   </el-row>
 
                   <el-table
-                    :data="table1"
+                    :data="problems.single"
                     ref="problems.single"
                     style="width: 100%">
                     <el-table-column
@@ -515,18 +560,43 @@
                       width="350">
                     </el-table-column>
                     <el-table-column
-                      prop="option"
-                      label="选项"
-                      width="180">
+                      prop="answerA"
+                      label="选项A"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerB"
+                      label="选项B"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerC"
+                      label="选项C"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerD"
+                      label="选项D"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerE"
+                      label="选项E"
+                      width="160">
                     </el-table-column>
                     <el-table-column
                       prop="answer"
                       label="答案">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right">
@@ -548,20 +618,32 @@
                 <el-tab-pane label="多选题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
-                    <el-col :span="6">
-                      <el-input v-model="keywords1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-input v-model="searchTeacherPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                     </el-col>
                     <el-col :span="1" :offset="1">
-                      <el-button type="primary" @click="searchProblems('多项选择题')">搜索</el-button>
-                    </el-col>
-                    <el-col :span="8" :offset="1">
-                      <el-input v-model="search1" placeholder="输入关键字可进行筛选" style="margin-left: 20px"></el-input>
+                      <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
-                    :data="table2"
+                    :data="problems.multi"
                     ref="problems.multi"
                     style="width: 100%">
                     <el-table-column
@@ -585,18 +667,43 @@
                       width="350">
                     </el-table-column>
                     <el-table-column
-                      prop="option"
-                      label="选项"
-                      width="180">
+                      prop="answerA"
+                      label="选项A"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerB"
+                      label="选项B"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerC"
+                      label="选项C"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerD"
+                      label="选项D"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerE"
+                      label="选项E"
+                      width="160">
                     </el-table-column>
                     <el-table-column
                       prop="answer"
                       label="答案">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right">
@@ -618,20 +725,32 @@
                 <el-tab-pane label="填空题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
-                    <el-col :span="6">
-                      <el-input v-model="keywords1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-input v-model="searchTeacherPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                     </el-col>
                     <el-col :span="1" :offset="1">
-                      <el-button type="primary" @click="searchProblems('填空题')">搜索</el-button>
-                    </el-col>
-                    <el-col :span="8" :offset="1">
-                      <el-input v-model="search1" placeholder="输入关键字可进行筛选" style="margin-left: 20px"></el-input>
+                      <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
-                    :data="table3"
+                    :data="problems.fill"
                     ref="problems.fill"
                     style="width: 100%">
                     <el-table-column
@@ -659,10 +778,15 @@
                       label="答案">
                     </el-table-column>
                     <el-table-column
-                    prop="degree"
-                    label="难度"
-                    width="50">
-                  </el-table-column>
+                      prop="difficultScore"
+                      label="难度"
+                      width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
+                    </el-table-column>
                     <el-table-column
                       fixed="right">
                       <template slot-scope="scope">
@@ -683,20 +807,32 @@
                 <el-tab-pane label="问答题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
-                    <el-col :span="6">
-                      <el-input v-model="keywords1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-input v-model="searchTeacherPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                     </el-col>
                     <el-col :span="1" :offset="1">
-                      <el-button type="primary" @click="searchProblems('问答题')">搜索</el-button>
-                    </el-col>
-                    <el-col :span="8" :offset="1">
-                      <el-input v-model="search1" placeholder="输入关键字可进行筛选" style="margin-left: 20px"></el-input>
+                      <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
-                    :data="table4"
+                    :data="problems.quesans"
                     ref="problems.quesans"
                     style="width: 100%">
                     <el-table-column
@@ -724,9 +860,14 @@
                       label="答案">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="50">
+                    </el-table-column>
+                    <el-table-column
+                      prop="source"
+                      label="来源"
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right">
@@ -922,10 +1063,28 @@
                 <el-tab-pane label="单选题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
                     <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                      <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    </el-col>
+                    <el-col :span="1" :offset="1">
+                      <el-button type="primary" @click="getAllproblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
@@ -953,16 +1112,36 @@
                       width="275">
                     </el-table-column>
                     <el-table-column
-                      prop="option"
-                      label="选项"
-                      width="180">
+                      prop="answerA"
+                      label="选项A"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerB"
+                      label="选项B"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerC"
+                      label="选项C"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerD"
+                      label="选项D"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerE"
+                      label="选项E"
+                      width="160">
                     </el-table-column>
                     <el-table-column
                       prop="answer"
                       label="答案">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="55">
                     </el-table-column>
@@ -992,10 +1171,28 @@
                 <el-tab-pane label="多选题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
                     <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                      <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    </el-col>
+                    <el-col :span="1" :offset="1">
+                      <el-button type="primary" @click="getAllproblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
@@ -1023,16 +1220,36 @@
                       width="275">
                     </el-table-column>
                     <el-table-column
-                      prop="option"
-                      label="选项"
-                      width="180">
+                      prop="answerA"
+                      label="选项A"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerB"
+                      label="选项B"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerC"
+                      label="选项C"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerD"
+                      label="选项D"
+                      width="160">
+                    </el-table-column>
+                    <el-table-column
+                      prop="answerE"
+                      label="选项E"
+                      width="160">
                     </el-table-column>
                     <el-table-column
                       prop="answer"
                       label="答案">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="55">
                     </el-table-column>
@@ -1062,10 +1279,28 @@
                 <el-tab-pane label="填空题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
                     <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                      <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    </el-col>
+                    <el-col :span="1" :offset="1">
+                      <el-button type="primary" @click="getAllproblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
@@ -1098,7 +1333,7 @@
                       width="180">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="55">
                     </el-table-column>
@@ -1128,10 +1363,28 @@
                 <el-tab-pane label="问答题">
                   <el-row>
                     <el-col :span="3">
-                      <el-select value="" placeholder="选择学科" style="float: left" align="left"></el-select>
+                      <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="3" :offset="1">
+                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-col>
                     <el-col :span="8">
-                      <el-input placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                      <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    </el-col>
+                    <el-col :span="1" :offset="1">
+                      <el-button type="primary" @click="getAllproblems">搜索</el-button>
                     </el-col>
                   </el-row>
                   <el-table
@@ -1164,7 +1417,7 @@
                       width="180">
                     </el-table-column>
                     <el-table-column
-                      prop="degree"
+                      prop="difficultScore"
                       label="难度"
                       width="55">
                     </el-table-column>
@@ -1389,7 +1642,7 @@ export default {
   data(){
     return{
       // getactive:this.$route.params.active,
-      active:this.$route.query.active?this.$route.query.active:'1',
+      active:null,
       isCollapse:false,
       dispatch:false,
       dispatch2:false,
@@ -1413,6 +1666,7 @@ export default {
       totalAllQa:1,
       totalGroup:1,
       totalUser:1,
+      totalSetUser:1,
       pageSet:1,
       pageSingle:1,
       pageMulti:1,
@@ -1424,6 +1678,8 @@ export default {
       pageAllQa:1,
       pageGroup:1,
       pageUser:1,
+      pageSetUser:1,
+      showStudentsInAGroup:[],
       sortInfo:[
         {
           value:'1',
@@ -1558,16 +1814,7 @@ export default {
       },
       problems:{
         single:[],
-        multi:[{
-          id:'700',
-          subject:'温病学',
-          contentType:'温病的辩证',
-          question_type:'多项选择题',
-          question:'肾阴耗损证的辨证要点是：',
-          option:'A．手指蠕动或瘛疭，舌干绛而萎，脉虚\nB．夜热早凉，热退无汗，能食消瘦，舌红苔少\nC．手足心热甚于手足背，口燥咽干，舌绛不鲜，干枯而萎，脉虚\nD．神昏肢厥，舌绛\nE．神志时清时寐，舌苔垢腻',
-          answer:'A',
-          score: '2'
-        },],
+        multi:[],
         fill:[],
         quesans:[],
       },
@@ -1615,6 +1862,14 @@ export default {
       pageNum:1,
       searchUserId:'',
       searchUserInfo:[],
+      subjects:null,
+      ranges:null,
+      selectSubject1:null,
+      selectRange1:null,
+      searchTeacherPro:null,
+      selectSubject2:null,
+      selectRange2:null,
+      searchAllPro:null
     }
   },
   mounted() {
@@ -1655,147 +1910,37 @@ export default {
     change10(val){
       this.pageUser=val;
     },
+    change11(val){
+      this.pageSetUser=val;
+    },
     getAllproblems(){
       axios.all([
-        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:null,subject:null,contentType:null,type:'单项选择题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:null,subject:null,contentType:null,type:'多项选择题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:null,subject:null,contentType:null,type:'填空题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:null,subject:null,contentType:null,type:'问答题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'单项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'多项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'填空题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'问答题'}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
-        if(single.data.size!=0){
-          this.allProblemSingle=[];
-          for(let i=0;i<single.data.data.length;i++){
-            var pro=new Object();
-            console.log(single.data.data[i]);
-            pro["id"]=single.data.data[i].id;
-            pro["subject"]=single.data.data[i].subject;
-            pro["question"]=single.data.data[i].question;
-            pro["contentType"]=single.data.data[i].contentType;
-            pro["question_type"]=single.data.data[i].questionType;
-            pro["option"]=single.data.data[i].answerA+"\n"+single.data.data[i].answerB+"\n"+single.data.data[i].answerC+"\n"+single.data.data[i].answerD+"\n"+single.data.data[i].answerE;
-            pro["answer"]=single.data.data[i].answer;
-            pro["score"]="2";
-            this.allProblemSingle.push(pro);
-            console.log(this.allProblemSingle);
-          }
-        }
-        if(multi.data.size!=0){
-          this.allProblemMulti=[];
-          for(let i=0;i<multi.data.data.length;i++){
-            var pro=new Object();
-            console.log(multi.data.data[i]);
-            pro["id"]=multi.data.data[i].id;
-            pro["subject"]=multi.data.data[i].subject;
-            pro["question"]=multi.data.data[i].question;
-            pro["contentType"]=multi.data.data[i].contentType;
-            pro["question_type"]=multi.data.data[i].questionType;
-            pro["option"]=multi.data.data[i].answerA+"\n"+multi.data.data[i].answerB+"\n"+multi.data.data[i].answerC+"\n"+multi.data.data[i].answerD+"\n"+multi.data.data[i].answerE;
-            pro["answer"]=multi.data.data[i].answer;
-            pro["score"]="2";
-            this.allProblemMulti.push(pro);
-          }
-        }
-        if(fill.data.size!=0){
-          this.allProblemFill=[];
-          for(let i=0;i<fill.data.data.length;i++){
-            var pro=new Object();
-            console.log(fill.data.data[i]);
-            pro["id"]=fill.data.data[i].id;
-            pro["subject"]=fill.data.data[i].subject;
-            pro["question"]=fill.data.data[i].question;
-            pro["contentType"]=fill.data.data[i].contentType;
-            pro["question_type"]=fill.data.data[i].questionType;
-            pro["option"]=fill.data.data[i].answerA+"\n"+fill.data.data[i].answerB+"\n"+fill.data.data[i].answerC+"\n"+fill.data.data[i].answerD+"\n"+fill.data.data[i].answerE;
-            pro["answer"]=fill.data.data[i].answer;
-            pro["score"]="2";
-            this.allProblemFill.push(pro);
-          }
-        }
-        if(qa.data.size!=0){
-          this.allProblemQa=[];
-          for(let i=0;i<qa.data.data.length;i++){
-            var pro=new Object();
-            console.log(qa.data.data[i]);
-            pro["id"]=qa.data.data[i].id;
-            pro["subject"]=qa.data.data[i].subject;
-            pro["question"]=qa.data.data[i].question;
-            pro["contentType"]=qa.data.data[i].contentType;
-            pro["question_type"]=qa.data.data[i].questionType;
-            pro["option"]=qa.data.data[i].answerA+"\n"+qa.data.data[i].answerB+"\n"+qa.data.data[i].answerC+"\n"+qa.data.data[i].answerD+"\n"+qa.data.data[i].answerE;
-            pro["answer"]=qa.data.data[i].answer;
-            pro["score"]="2";
-            this.allProblemQa.push(pro);
-          }
-        }
+        this.allProblemSingle=single.data.data;
+        this.allProblemMulti=multi.data.data;
+        this.allProblemFill=fill.data.data;
+        this.allProblemQa=qa.data.data;
       }))
     },
     getTeacherProblems(){
       axios.all([
-        axios({url:"/problem/teacher_problem",params:{type:"单项选择题",page:this.pageSingle,keyWords:null,subject:null,contentType:null}}),
-        axios({url:"/problem/teacher_problem",params:{type:"多项选择题",page:this.pageMulti,keyWords:null,subject:null,contentType:null}}),
-        axios({url:"/problem/teacher_problem",params:{type:"填空题",page:this.pageFill,keyWords:null,subject:null,contentType:null}}),
-        axios({url:"/problem/teacher_problem",params:{type:"问答题",page:this.pageQa,keyWords:null,subject:null,contentType:null}}),
+        axios({url:"/problem/teacher_problem",params:{type:"单项选择题",page:this.pageSingle,keyWords:this.searchTeacherPro,subject:this.selectSubject1,contentType:this.selectRange1}}),
+        axios({url:"/problem/teacher_problem",params:{type:"多项选择题",page:this.pageMulti,keyWords:this.searchTeacherPro,subject:this.selectSubject1,contentType:this.selectRange1}}),
+        axios({url:"/problem/teacher_problem",params:{type:"填空题",page:this.pageFill,keyWords:this.searchTeacherPro,subject:this.selectSubject1,contentType:this.selectRange1}}),
+        axios({url:"/problem/teacher_problem",params:{type:"问答题",page:this.pageQa,keyWords:this.searchTeacherPro,subject:this.selectSubject1,contentType:this.selectRange1}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
-        if(single.data.size!=0){
-          this.problems.single=[];
-          for(let i=0;i<single.data.data.length;i++){
-            var pro=new Object();
-            pro["id"]=single.data.data[i].id;
-            pro["subject"]=single.data.data[i].subject;
-            pro["question"]=single.data.data[i].question;
-            pro["contentType"]=single.data.data[i].contentType;
-            pro["question_type"]=single.data.data[i].questionType;
-            pro["option"]=single.data.data[i].answerA+"\n"+single.data.data[i].answerB+"\n"+single.data.data[i].answerC+"\n"+single.data.data[i].answerD+"\n"+single.data.data[i].answerE;
-            pro["answer"]=single.data.data[i].answer;
-            pro["score"]="2";
-            this.problems.single.push(pro);
-          }
-        }
-        if(multi.data.size!=0){
-          this.problems.multi=[];
-          for(let i=0;i<multi.data.data.length;i++){
-            var pro=new Object();
-            pro["id"]=multi.data.data[i].id;
-            pro["subject"]=multi.data.data[i].subject;
-            pro["question"]=multi.data.data[i].question;
-            pro["contentType"]=multi.data.data[i].contentType;
-            pro["question_type"]=multi.data.data[i].questionType;
-            pro["option"]=multi.data.data[i].answerA+"\n"+multi.data.data[i].answerB+"\n"+multi.data.data[i].answerC+"\n"+multi.data.data[i].answerD+"\n"+multi.data.data[i].answerE;
-            pro["answer"]=multi.data.data[i].answer;
-            pro["score"]="2";
-            this.problems.multi.push(pro);
-          }
-        }
-        if(fill.data.size!=0){
-          this.problems.fill=[];
-          for(let i=0;i<fill.data.data.length;i++){
-            var pro=new Object();
-            pro["id"]=fill.data.data[i].id;
-            pro["subject"]=fill.data.data[i].subject;
-            pro["question"]=fill.data.data[i].question;
-            pro["contentType"]=fill.data.data[i].contentType;
-            pro["question_type"]=fill.data.data[i].questionType;
-            pro["option"]=fill.data.data[i].answerA+"\n"+fill.data.data[i].answerB+"\n"+fill.data.data[i].answerC+"\n"+fill.data.data[i].answerD+"\n"+fill.data.data[i].answerE;
-            pro["answer"]=fill.data.data[i].answer;
-            pro["score"]="2";
-            this.problems.fill.push(pro);
-          }
-        }
-        if(qa.data.size!=0) {
-          this.problems.quesans = [];
-          for (let i = 0; i < qa.data.data.length; i++) {
-            var pro = new Object();
-            pro["id"] = qa.data.data[i].id;
-            pro["subject"] = qa.data.data[i].subject;
-            pro["question"]= qa.data.data[i].question;
-            pro["contentType"] = qa.data.data[i].contentType;
-            pro["question_type"] = qa.data.data[i].questionType;
-            pro["option"] = qa.data.data[i].answerA + "\n" + qa.data.data[i].answerB + "\n" + qa.data.data[i].answerC + "\n" + qa.data.data[i].answerD + "\n" + qa.data.data[i].answerE;
-            pro["answer"] = qa.data.data[i].answer;
-            pro["score"] = "2";
-            this.problems.quesans.push(pro);
-          }
-        }
+        this.problems.single=single.data.data;
+        this.problems.multi=multi.data.data;
+        this.problems.fill=fill.data.data;
+        this.problems.quesans=qa.data.data;
+        this.totalSingle=single.data.total;
+        this.totalMulti=multi.data.total;
+        this.totalFill=fill.data.total;
+        this.totalQa=qa.data.total;
       }))
     },
     downloadTemplate(){
@@ -1912,8 +2057,24 @@ export default {
       }).then(res=>{
         this.setDetail=res.data;
         console.log(this.setDetail);
+        if(this.setDetail.groups.length!=0){
+          this.chooseGroup=this.setDetail.groups[0].groupId;
+        }
+        this.getStudentsInExercise();
       })
-
+    },
+    getStudentsInExercise(){
+      axios({
+        url:"user/groupInExercise",
+        params:{
+          exerciseId:this.setDetail.id,
+          groupId:this.chooseGroup,
+          page:this.pageSetUser
+        }
+      }).then(res=>{
+        this.showStudentsInAGroup=res.data.data;
+        this.totalSetUser=res.data.total;
+      })
     },
     viewStudentSet(studentId,exerciseId){
       axios({
@@ -2161,6 +2322,7 @@ export default {
         data:form
       }).then(res=>{
         this.$message('创建成功');
+        this.getUserGroups();
       });
       this.createUserGroup=false;
     },
@@ -2196,11 +2358,30 @@ export default {
         url:"/user/deleteGroup",
         params:{
           groupId:id,
+          page:this.pageGroup
         }
       }).then(res=>{
-        this.user_groups=res.data;
+        this.user_groups=res.data.data;
+        this.totalGroup=res.data.total;
       })
-    }
+    },
+    getSubjects(){
+      axios({
+        url:"/problem/allsubjects",
+      }).then(res=>{
+        this.subjects=res.data;
+      })
+    },
+    getRanges(sub){
+      axios({
+        url:"/problem/ranges",
+        params:{
+          subject:sub
+        }
+      }).then(res=>{
+        this.ranges=res.data;
+      })
+    },
   },
   computed:{
     getval1(){
@@ -2328,9 +2509,10 @@ export default {
     }).catch(err=>{
 
     });
-    //this.getAllproblems();
+    this.getSubjects();
+    this.getTeacherProblems();
+  },
 
-  }
 
 }
 </script>
