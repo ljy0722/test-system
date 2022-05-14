@@ -1506,7 +1506,7 @@
                 <el-button type="plain" style="float: left;margin-top: 80px" size="mini" @click="userGroupDetail=false">返回</el-button>
               </el-col>
               <el-col :span="2">
-                <el-button type="primary" align="left" style="margin-top: 80px" @click="addUser=true;searchUserInfo=[];searchUserId=''">添加用户</el-button>
+                <el-button type="primary" align="left" style="margin-top: 80px" @click="addUser=true;searchUserInfo=[];searchUserId='';searchUserInfo=[]">添加用户</el-button>
               </el-col>
               <el-col :span="2" :offset="1">
                 <el-button type="primary" align="left" style="margin-top: 80px" @click="addUsers=true">批量导入</el-button>
@@ -1642,6 +1642,8 @@ export default {
   data(){
     return{
       // getactive:this.$route.params.active,
+      file:'',
+      filename:'',
       active:null,
       isCollapse:false,
       dispatch:false,
@@ -2268,13 +2270,14 @@ export default {
       })
     },
     addUsersByFile(){
-      if(this.fileList.length===0){
+      if(this.fileList2.length===0){
         this.$message.warning('请上传文件');
       }
       else{
         let form=new FormData();
         form.append('file',this.fileList2);
-
+        console.log("from");
+        console.log(form);
         axios({
           method:"POST",
           url:"/user/add2group",
@@ -2283,7 +2286,7 @@ export default {
           },
           data:form
         }).then(res=>{
-
+          this.userGroup=res.data.data;
         }).catch(err=>{
 
         });
@@ -2309,15 +2312,17 @@ export default {
     },
     createNewUserGroup(){
       let form=new FormData();
-      form.append('file',this.fileList1);
+      console.log(this.fileList1[0]);
+      console.log(form);
+      form.append("file",this.fileList1[0]);
+      console.log("from");
+      console.log(form);
+      form.append("groupName",this.newUserGroup.groupName);
       axios({
         url:"/user/createGroup",
         method:"POST",
         headers:{
           'Content-type':'multipart/form-data'
-        },
-        params:{
-          groupName:this.newUserGroup.groupName,
         },
         data:form
       }).then(res=>{
@@ -2338,6 +2343,7 @@ export default {
         user["sex"]=res.data.sex;
         user["email"]=res.data.email;
         user["name"]=res.data.userName;
+        this.searchUserInfo=[];
         this.searchUserInfo.push(user);
       })
     },

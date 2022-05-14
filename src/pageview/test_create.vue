@@ -793,7 +793,7 @@ export default {
       axios({
         url:"/problem/ranges",
         params:{
-          subject:this.selectSubject
+          subject:this.autoSubject
         }
       }).then(res=>{
         this.ranges=res.data;

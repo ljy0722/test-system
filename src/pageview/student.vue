@@ -120,7 +120,7 @@
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -128,13 +128,25 @@
                         :value="item.value"></el-option>
                     </el-select>
                   </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
                   <el-col :span="8">
-                    <el-input v-model="search" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchWrongPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
                   </el-col>
                 </el-row>
 
                 <el-table
-                  :data="table1"
+                  :data="wrongProblemSingle"
                   ref="wrongProblem"
                   style="width: 100%;white-space: pre-line">
                   <el-table-column
@@ -212,7 +224,7 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -220,12 +232,24 @@
                         :value="item.value"></el-option>
                     </el-select>
                   </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
                   <el-col :span="8">
-                    <el-input v-model="search" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchWrongPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table2"
+                  :data="wrongProblemMulti"
                   ref="wrongProblem"
                   style="width: 100%">
                   <el-table-column
@@ -302,7 +326,7 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -310,12 +334,24 @@
                         :value="item.value"></el-option>
                     </el-select>
                   </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
                   <el-col :span="8">
-                    <el-input v-model="search" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchWrongPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table3"
+                  :data="wrongProblemFill"
                   ref="wrongProblem"
                   style="width: 100%">
                   <el-table-column
@@ -367,7 +403,7 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="selectSubject" placeholder="选择学科" style="float: left" align="left" @change="getWrongQuestion">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -375,12 +411,24 @@
                         :value="item.value"></el-option>
                     </el-select>
                   </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
                   <el-col :span="8">
-                    <el-input v-model="search" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchWrongPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table4"
+                  :data="wrongProblemQa"
                   ref="wrongProblem"
                   style="width: 100%">
                   <el-table-column
@@ -500,6 +548,9 @@ export default {
       selectSubject:null,
       subjects:[],
       ranges:[],
+      searchSubject:null,
+      searchRange:null,
+      searchWrongPro:null,
       exercise:{
         danxuan:'',
         duoxuan:'',
@@ -585,7 +636,7 @@ export default {
       sortInfo:[
         {
           value:'1',
-          label:'最近结束',
+          label:'最晚结束',
         },
         {
           value:'2',
@@ -720,16 +771,20 @@ export default {
     },
     getWrongQuestion(){
       axios.all([
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongSingle,keyWords:null,subject:this.selectSubject,contentType:null,type:'单项选择题'}}),
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongMulti,keyWords:null,subject:this.selectSubject,contentType:null,type:'多项选择题'}}),
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongFill,keyWords:null,subject:this.selectSubject,contentType:null,type:'填空题'}}),
-        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongQa,keyWords:null,subject:this.selectSubject,contentType:null,type:'问答题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongSingle,keyWords:this.searchWrongPro,subject:this.searchSubject,contentType:this.searchRange,type:'单项选择题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongMulti,keyWords:this.searchWrongPro,subject:this.searchSubject,contentType:this.searchRange,type:'多项选择题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongFill,keyWords:this.searchWrongPro,subject:this.searchSubject,contentType:this.searchRange,type:'填空题'}}),
+        axios({url:"/problem/wrongquestion",params:{page:this.pageWrongQa,keyWords:this.searchWrongPro,subject:this.searchSubject,contentType:this.searchRange,type:'问答题'}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
         this.wrongProblemSingle=single.data.data;
         this.wrongProblemMulti=multi.data.data;
         this.wrongProblemFill=fill.data.data;
         this.wrongProblemQa=qa.data.data;
-        console.log("返回错题")
+        this.totalWrongSingle=single.data.total;
+        this.totalWrongMulti=multi.data.total;
+        this.totalWrongFill=fill.data.total;
+        this.totalWrongQa=qa.data.total;
+        //console.log("返回错题")
       }))
     },
 

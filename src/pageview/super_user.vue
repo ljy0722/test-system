@@ -17,7 +17,7 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item-group style="background-color: #f0f0f0" align="left">
-                <el-menu-item index="1" ><i class="el-icon-user-solid"></i>查看所有用户</el-menu-item>
+                <el-menu-item index="1" ><i class="el-icon-user-solid"></i>查看所有学生</el-menu-item>
                 <el-menu-item index="2" ><i class="el-icon-s-custom"></i>查看所有教师</el-menu-item>
                 <el-menu-item index="3"><i class="el-icon-s-check"></i>待审核教师 </el-menu-item>
               </el-menu-item-group>
@@ -40,6 +40,9 @@
           <div v-if="active=='1'">
             <el-table
               :data="users"
+              border
+              stripe
+              max-height="400"
             >
               <el-table-column
                 prop="userId"
@@ -62,11 +65,23 @@
                 width="200">
               </el-table-column>
               <el-table-column
-                align="right">
+                prop="phone"
+                label="手机号"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="地址"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                width="100">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
-                    @click="operate(scope.$index,scope.row)">操作</el-button>
+                    type="info"
+                    @click="modifyUser(scope.row)">修改信息</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -78,10 +93,38 @@
                 :total="totalUser">
               </el-pagination>
             </div>
+            <el-dialog
+              :visible.sync="modifyuser"
+              title="修改用户信息">
+              <el-form :model="modifyUserInfo" label-width="60px">
+                <el-form-item label="用户ID:">
+                  <span style="float: left">{{modifyUserInfo.userId}}</span>
+                </el-form-item>
+                <el-form-item label="姓名:">
+                  <el-input v-model="modifyUserInfo.userName"></el-input>
+                </el-form-item>
+                <el-form-item label="性别:">
+                  <el-input v-model="modifyUserInfo.sex"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱:">
+                  <el-input v-model="modifyUserInfo.email"></el-input>
+                </el-form-item>
+                <el-form-item label="手机:">
+                  <el-input v-model="modifyUserInfo.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="地址:">
+                  <el-input v-model="modifyUserInfo.address"></el-input>
+                </el-form-item>
+                <el-button @click="submitModify">确定</el-button>
+              </el-form>
+            </el-dialog>
           </div>
           <div v-if="active=='2'">
             <el-table
               :data="teacher"
+              border
+              stripe
+              max-height="400"
               >
               <el-table-column
                 prop="userId"
@@ -104,15 +147,28 @@
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="license"
-                label="教师资格证编号">
+                prop="phone"
+                label="手机号"
+                width="200">
               </el-table-column>
               <el-table-column
-                align="right">
+                prop="address"
+                label="地址"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                prop="license"
+                label="教师资格证编号"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                width="100">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
-                    @click="operate(scope.$index,scope.row)">操作</el-button>
+                    type="info"
+                    @click="modifyUser(scope.row)">修改信息</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -124,25 +180,43 @@
                 :total="totalTeacher">
               </el-pagination>
             </div>
+            <el-dialog
+              :visible.sync="modifyuser"
+              title="修改用户信息">
+              <el-form :model="modifyUserInfo" label-width="60px">
+                <el-form-item label="用户ID:">
+                  <span style="float: left">{{modifyUserInfo.userId}}</span>
+                </el-form-item>
+                <el-form-item label="姓名:">
+                  <el-input v-model="modifyUserInfo.userName"></el-input>
+                </el-form-item>
+                <el-form-item label="性别:">
+                  <el-input v-model="modifyUserInfo.sex"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱:">
+                  <el-input v-model="modifyUserInfo.email"></el-input>
+                </el-form-item>
+                <el-form-item label="手机:">
+                  <el-input v-model="modifyUserInfo.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="地址:">
+                  <el-input v-model="modifyUserInfo.address"></el-input>
+                </el-form-item>
+                <el-button @click="submitModify">确定</el-button>
+              </el-form>
+            </el-dialog>
           </div>
           <div v-if="active=='3'">
             <el-table
               :data="teacher2Check"
+              border
+              stripe
+              max-height="400"
               >
               <el-table-column
                 prop="userId"
                 label="用户ID"
                 width="100">
-              </el-table-column>
-              <el-table-column
-                prop="userName"
-                label="姓名"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="sex"
-                label="性别"
-                width="80">
               </el-table-column>
               <el-table-column
                 prop="email"
@@ -161,9 +235,11 @@
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
+                    type="success"
                     @click="teacherAgree(scope.row.userId)">是</el-button>
                   <el-button
                     size="mini"
+                    type="danger"
                     @click="teacherNot(scope.row.userId)">否</el-button>
                 </template>
               </el-table-column>
@@ -182,21 +258,32 @@
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRange(1)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchCheckPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getTocheckProblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table1"
+                  :data="problems2CheckSingle"
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -264,9 +351,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="success"
                         @click="passproblem(scope.row.id)">通过</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="notpassproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -283,21 +372,32 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRange(1)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchCheckPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getTocheckProblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table2"
+                  :data="problems2CheckMulti"
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -365,9 +465,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="success"
                         @click="passproblem(scope.row.id)">通过</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="notpassproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -384,21 +486,32 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRange(1)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchCheckPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getTocheckProblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table3"
+                  :data="problems2CheckFill"
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -442,9 +555,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="success"
                         @click="passproblem(scope.row.id)">通过</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="notpassproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -461,21 +576,32 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject1" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRange(1)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent1" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchCheckPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getTocheckProblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table4"
+                  :data="problems2CheckQa"
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -519,9 +645,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="success"
                         @click="passproblem(scope.row.id)">通过</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="notpassproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -543,21 +671,32 @@
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRange(2)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getAllproblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table1"
+                  :data="problemsSingle"
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -625,9 +764,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="info"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deleteproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -644,21 +785,32 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRange(2)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getAllproblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table2"
+                  :data="problemsMulti"
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -726,9 +878,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="info"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deleteproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -745,21 +899,32 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRange(2)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getAllproblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table3"
+                  :data="problemsFill"
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -803,9 +968,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="info"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deleteproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -822,21 +989,32 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="subject2" placeholder="选择学科" style="float: left" align="left">
+                    <el-select v-model="searchSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRange(2)">
                       <el-option
-                        v-for="sub in subjects"
-                        :key="sub.value"
-                        :label="sub.label"
-                        :value="sub.value">
-                      </el-option>
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="3">
+                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="searchcontent2" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                    <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
+                  </el-col>
+                  <el-col :span="1" :offset="1">
+                    <el-button type="primary" @click="getAllproblems">搜索</el-button>
                   </el-col>
                 </el-row>
                 <el-table
-                  :data="table4"
+                  :data="problemsQa"
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -880,9 +1058,11 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="info"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deleteproblem(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -1113,7 +1293,23 @@ export default {
         difficultScore:'',
         source:''
       },
-      subjects:[]
+      subjects:[],
+      ranges:[],
+      searchSubject1:null,
+      searchRange1:null,
+      searchSubject2:null,
+      searchRange2:null,
+      searchCheckPro:null,
+      searchAllPro:null,
+      modifyuser:false,
+      modifyUserInfo:{
+        userId:'',
+        userName:'',
+        email:'',
+        address:'',
+        sex:'',
+        phone:''
+      }
     }
   },
   components:{
@@ -1162,7 +1358,7 @@ export default {
       })
         .then(res=>{
           this.users=res.data.data;
-          this.totalUser=res.data.size;
+          this.totalUser=res.data.total;
         })
         .catch(err=>{
           console.log(err);
@@ -1177,7 +1373,7 @@ export default {
       })
         .then(res=>{
           this.teacher=res.data.data;
-          this.totalTeacher=res.data.size;
+          this.totalTeacher=res.data.total;
         })
         .catch(err=>{
           console.log(err);
@@ -1192,7 +1388,7 @@ export default {
       })
         .then(res=>{
           this.teacher2Check=res.data.data;
-          this.totalTocheck=res.data.size;
+          this.totalTocheck=res.data.total;
         })
         .catch(err=>{
           console.log(err);
@@ -1200,29 +1396,63 @@ export default {
     },
     getTocheckProblems(){
       axios.all([
-        axios({url:"/problem/tocheck",params:{page:this.pageTocheckSingle,keyWords:null,subject:null,contentType:null,type:'单项选择题'}}),
-        axios({url:"/problem/tocheck",params:{page:this.pageTocheckMulti,keyWords:null,subject:null,contentType:null,type:'多项选择题'}}),
-        axios({url:"/problem/tocheck",params:{page:this.pageTocheckFill,keyWords:null,subject:null,contentType:null,type:'填空题'}}),
-        axios({url:"/problem/tocheck",params:{page:this.pageTocheckQa,keyWords:null,subject:null,contentType:null,type:'问答题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckSingle,keyWords:this.searchCheckPro,subject:this.searchSubject1,contentType:this.searchRange1,type:'单项选择题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckMulti,keyWords:this.searchCheckPro,subject:this.searchSubject1,contentType:this.searchRange1,type:'多项选择题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckFill,keyWords:this.searchCheckPro,subject:this.searchSubject1,contentType:this.searchRange1,type:'填空题'}}),
+        axios({url:"/problem/tocheck",params:{page:this.pageTocheckQa,keyWords:this.searchCheckPro,subject:this.searchSubject1,contentType:this.searchRange1,type:'问答题'}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
         this.problems2CheckSingle=single.data.data;
         this.problems2CheckMulti=multi.data.data;
         this.problems2CheckFill=fill.data.data;
         this.problems2CheckQa=qa.data.data;
+        this.totalTocheckSingle=single.data.total;
+        this.totalTocheckMulti=multi.data.total;
+        this.totalTocheckFill=fill.data.total;
+        this.totalTocheckQa=qa.data.total;
       }))
     },
     getAllproblems(){
       axios.all([
-        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:null,subject:null,contentType:null,type:'单项选择题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:null,subject:null,contentType:null,type:'多项选择题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:null,subject:null,contentType:null,type:'填空题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:null,subject:null,contentType:null,type:'问答题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:this.searchAllPro,subject:this.searchSubject2,contentType:this.searchRange2,type:'单项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:this.searchAllPro,subject:this.searchSubject2,contentType:this.searchRange2,type:'多项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:this.searchAllPro,subject:this.searchSubject2,contentType:this.searchRange2,type:'填空题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:this.searchAllPro,subject:this.searchSubject2,contentType:this.searchRange2,type:'问答题'}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
         this.problemsSingle=single.data.data;
         this.problemsMulti=multi.data.data;
         this.problemsFill=fill.data.data;
         this.problemsQa=qa.data.data;
+        this.totalAllSingle=single.data.total;
+        this.totalAllMulti=multi.data.total;
+        this.totalAllFill=fill.data.total;
+        this.totalAllQa=qa.data.total;
       }))
+    },
+    modifyUser(row){
+      console.log(row.userId);
+      this.modifyUserInfo=row;
+      this.modifyuser=true;
+    },
+    submitModify(){
+      axios({
+        url:"/user/modifyUserInfo",
+        method:"POST",
+        data:{
+          userId:this.modifyUserInfo.userId,
+          userName:this.modifyUserInfo.userName,
+          sex:this.modifyUserInfo.sex,
+          birthday:null,
+          identity:null,
+          phoneNum:this.modifyUserInfo.phone,
+          email:this.modifyUserInfo.email,
+          address:this.modifyUserInfo.address,
+          applyTeacher:null
+        }
+      }).then(res=>{
+        this.getAllUsers();
+        this.getAllTeachers();
+      })
+      this.modifyuser=false;
     },
     teacherAgree(id){
       let tid=id;
@@ -1290,7 +1520,6 @@ export default {
       })
         .then(res=>{
           this.$message('审核不通过！');
-          this.problems2Check=res.data;
           this.getTocheckProblems();
         })
         .catch(err=>{
@@ -1342,38 +1571,50 @@ export default {
         this.$message('删除失败');
       })
     },
+
     change1(val){
       this.pageUser=val;
+      this.getAllUsers();
     },
     change2(val){
       this.pageTeacher=val;
+      this.getAllTeachers();
     },
     change3(val){
       this.pageTocheck=val;
+      this.getTocheckTeachers();
     },
     change4(val){
       this.pageTocheckSingle=val;
+      this.getTocheckProblems();
     },
     change5(val){
       this.pageTocheckMulti=val;
+      this.getTocheckProblems();
     },
     change6(val){
       this.pageTocheckFill=val;
+      this.getTocheckProblems();
     },
     change7(val){
       this.pageTocheckQa=val;
+      this.getTocheckProblems();
     },
     change8(val){
       this.pageAllSingle=val;
+      this.getAllproblems();
     },
     change9(val){
       this.pageAllMulti=val;
+      this.getAllproblems();
     },
     change10(val){
       this.pageAllFill=val;
+      this.getAllproblems();
     },
     change11(val){
       this.pageAllQa=val;
+      this.getAllproblems();
     },
 
 
@@ -1405,10 +1646,10 @@ export default {
       }
       else{
         let form=new FormData();
-        form.append('file',this.fileList);
-        this.$axios({
+        form.append('file',this.fileList[0]);
+        axios({
           method:"POST",
-          url:"/static/add",
+          url:"/problem/importProblems",
           headers:{
             'Content-type':'multipart/form-data'
           },
@@ -1419,6 +1660,20 @@ export default {
 
         });
       }
+    },
+    getRange(n){
+      let sub=this.searchSubject1;
+      if(n===2){
+        sub=this.searchSubject2;
+      }
+      axios({
+        url:"/problem/ranges",
+        params:{
+          subject:sub
+        }
+      }).then(res=>{
+        this.ranges=res.data;
+      })
     }
   },
   computed: {

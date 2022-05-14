@@ -126,7 +126,8 @@ export default {
               if (res.data.result === true) {
                 this.$router.push({ path: "/" });
               } else {
-                alert("您注册的账号已存在！");
+                alert("请等待管理员进行审核");
+                this.$router.push({path:"/"});
               }
             });
         }

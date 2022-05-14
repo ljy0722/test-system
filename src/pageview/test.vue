@@ -172,6 +172,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      id:this.$route.query.exerciseId,
       resTime: "", // 剩余时间
       startTime: "2022-5-8 12:00:00", // 开始时间，自己设置或数据库获取
       endTime: "2022-5-30 22:00:00", // 结束时间，自己设置或数据库获取
@@ -429,9 +430,9 @@ export default {
         }
       }).then(res=>{
         this.$message("提交成功");
-        //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
+        this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
       })
-      this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
+      //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
     },
     gotobutton1(index) {
       this.$data.singleChoiceList[index].show = 'background: #00ABEA;';
@@ -536,7 +537,7 @@ export default {
         // 清除定时器
         clearInterval(this.timer)
         // 在这里编写考试交卷的功能
-        //this.submit();
+        this.submit();
       }
     },
     getTimeS(){
