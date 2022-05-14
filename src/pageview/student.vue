@@ -753,11 +753,11 @@ export default {
         },
       })
         .then(res=>{
-
           var now=new Date();
           var hh=now.getHours()+parseInt(parseInt(this.exercise.time)/60);
           var mm=now.getMinutes()+parseInt(this.exercise.time)%60;
-          var endTime=hh+":"+mm+":00";
+          var ss=now.getSeconds();
+          var endTime=hh+":"+mm+":"+ss;
           this.$router.push({path:'/test',query:{endTime:endTime,exerciseId:res.data}});
         })
       console.log(this.exercise)
@@ -794,15 +794,19 @@ export default {
     },
     change1(val){
       this.pageWrongSingle=val;
+      this.getWrongQuestion();
     },
     change2(val){
       this.pageWrongMulti=val;
+      this.getWrongQuestion();
     },
     change3(val){
       this.pageWrongFill=val;
+      this.getWrongQuestion();
     },
     change4(val){
       this.pageWrongQa=val;
+      this.getWrongQuestion();
     },
     deletewrong(id){
       axios({

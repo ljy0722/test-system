@@ -535,7 +535,7 @@ export default {
         // 倒计时最后一秒将剩余时间修改
         this.resTime= "00:00:00";
         // 清除定时器
-        clearInterval(this.timer)
+        clearInterval(this.timer);
         // 在这里编写考试交卷的功能
         this.submit();
       }
@@ -577,6 +577,9 @@ export default {
   },
   mounted() {
     this.timer = setInterval(this.getRestTime,1000)
+  },
+  destroyed() {
+    this.resTime='';
   },
   components:{Top,Down}
 }
