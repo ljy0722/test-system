@@ -420,7 +420,7 @@ export default {
     },
     submit(){
       for(let i=0;i<this.multiChoiceList.length;i++){
-        let ans=this.multiChoiceList[i].myAnswer.join("");
+        let ans=this.multiChoiceList[i].myAnswer.join(" ");
         this.multiChoiceList[i].myAnswer=ans;
       }
       axios({
