@@ -758,7 +758,7 @@ export default {
           var mm=now.getMinutes()+parseInt(this.exercise.time)%60;
           var ss=now.getSeconds();
           var endTime=hh+":"+mm+":"+ss;
-          this.$router.push({path:'/test',query:{endTime:endTime,exerciseId:res.data}});
+          this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       console.log(this.exercise)
       //this.$router.push({path:'/test',query:{time:this.exercise.time}})

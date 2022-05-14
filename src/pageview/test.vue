@@ -11,7 +11,8 @@
               <el-container>
                 <el-main class="content_style" style="margin-right: 15px;">
                   <el-container>
-                    <el-header class="other_header" style="height: 40px;line-height: 40px;text-align: center; color:black;font-weight: bold ;">中医药基础</el-header>
+                    <el-header class="other_header" style="height: 40px;line-height: 40px;text-align: center; color:black;font-weight: bold ;">
+                      {{ setName }}</el-header>
                     <el-main>
                       <el-row style="background: #ffffff">
                         <el-row>
@@ -29,11 +30,11 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.result" :key="indx">
+                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
                               <a @click="gotobutton1(index)">
-                                <el-radio v-model="item.radio" :label="citem.outanswer">{{citem.outcome}}</el-radio>
+                                <el-radio v-model="item.myAnswer" :label="citem.outanswer">{{citem.outcome}}</el-radio>
                               </a>
                             </el-row>
                           </el-col>
@@ -53,11 +54,11 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.result" :key="indx">
+                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
                               <a @click="gotobutton2(index)">
-                                <el-checkbox-group v-model="item.radio">
+                                <el-checkbox-group v-model="item.myAnswer">
                                   <el-checkbox  :label="citem.outanswer">{{citem.outcome}}</el-checkbox>
                                 </el-checkbox-group>
 
@@ -172,7 +173,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      id:this.$route.query.exerciseId,
+      //id:this.$route.query.exerciseId,
+      setName:'',
       resTime: "", // 剩余时间
       startTime: "2022-5-8 12:00:00", // 开始时间，自己设置或数据库获取
       endTime: "2022-5-30 22:00:00", // 结束时间，自己设置或数据库获取
@@ -417,11 +419,15 @@ export default {
       alert("提交成功"+this.$data.grades);
     },
     submit(){
+      for(let i=0;i<this.multiChoiceList.length;i++){
+        let ans=this.multiChoiceList[i].myAnswer.join("");
+        this.multiChoiceList[i].myAnswer=ans;
+      }
       axios({
         url:"/test/submit",
         method:"POST",
         data:{
-          id:this.id,
+          id:null,
           setname:this.setname,
           singleChoiceList:this.singleChoiceList,
           multiChoiceList:this.multiChoiceList,
@@ -430,7 +436,7 @@ export default {
         }
       }).then(res=>{
         this.$message("提交成功");
-        this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
+        //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
       })
       //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
     },
@@ -530,7 +536,7 @@ export default {
       if (timeStamp>= 1000) {
         // 1000为一秒
         // 如果大于1秒
-        timeStamp = time -1000;
+        timeStamp = timeStamp -1000;
       } else {
         // 倒计时最后一秒将剩余时间修改
         this.resTime= "00:00:00";
@@ -544,36 +550,49 @@ export default {
       var now=new Date();
       let mm=now.getMonth()+1;
       this.startTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-      this.endTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+this.$route.query.endTime;
+      this.endTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+this.$route.params.endTime;
     }
   },
   created() {
-    axios({
-      url:"/exercise/getExerciseProblems",
-      params:{
-        exerciseId:this.$route.query.exerciseId
-      }
-    }).then(res=>{
-      this.singleChoiceList=[];
-      for(let i=0;i<res.data.exerciseSets.singleChoiceList.length;i++){
-        var pro=res.data.exerciseSets.singleChoiceList[i];
-        pro["radio"]='';
-        pro["show"]='';
-        this.singleChoiceList.push(pro);
-      }
-      this.multiChoiceList=[];
-      for(let i=0;i<res.data.exerciseSets.multiChoiceList.length;i++){
-        var pro=res.data.exerciseSets.multiChoiceList[i];
-        pro["radio"]=[];
-        pro["show"]='';
-        this.multiChoiceList.push(pro);
-      }
-      console.log(this.multiChoiceList);
-      // this.singleChoiceList=res.data.exerciseSets.singleChoiceList;
-      // this.multiChoiceList=res.data.exerciseSets.multiChoiceList;
-    })
+    // axios({
+    //   url:"/exercise/getExerciseProblems",
+    //   params:{
+    //     exerciseId:this.$route.params.exerciseId
+    //   }
+    // }).then(res=>{
+    //   this.singleChoiceList=[];
+    //   for(let i=0;i<res.data.exerciseSets.singleChoiceList.length;i++){
+    //     var pro=res.data.exerciseSets.singleChoiceList[i];
+    //     pro["radio"]='';
+    //     pro["show"]='';
+    //     this.singleChoiceList.push(pro);
+    //   }
+    //   this.multiChoiceList=[];
+    //   for(let i=0;i<res.data.exerciseSets.multiChoiceList.length;i++){
+    //     var pro=res.data.exerciseSets.multiChoiceList[i];
+    //     pro["radio"]=[];
+    //     pro["show"]='';
+    //     this.multiChoiceList.push(pro);
+    //   }
+    //   console.log(this.multiChoiceList);
+    //   // this.singleChoiceList=res.data.exerciseSets.singleChoiceList;
+    //   // this.multiChoiceList=res.data.exerciseSets.multiChoiceList;
+    // })
+    let exerciseInfo=JSON.parse(this.$route.params.exerciseInfo);
+    this.singleChoiceList=exerciseInfo.singleChoiceList;
+    this.multiChoiceList=exerciseInfo.multiChoiceList;
+    this.fillBlankList=exerciseInfo.fillBlankList;
+    this.questionAnswerList=exerciseInfo.questionAnswerList;
+    this.setName=exerciseInfo.setname;
+    for(let i=0;i<this.singleChoiceList.length;i++){
+      this.singleChoiceList[i].myAnswer='';
+    }
+    for(let i=0;i<this.multiChoiceList.length;i++){
+      this.multiChoiceList[i].myAnswer=[];
+    }
     this.getTimeS();
     this.getRestTime();
+    console.log(this.endTime);
   },
   mounted() {
     this.timer = setInterval(this.getRestTime,1000)
