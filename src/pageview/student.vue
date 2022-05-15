@@ -108,7 +108,7 @@
             <el-card style="margin-bottom: 5px;height: 60px"
                      v-for="(i,index) in exerciseSets"
                      v-bind:key="index"
-                     v-if="(shaixuan===''||i.state===shaixuan)&&i.test===setType">
+                     >
               <el-row style="margin-top: -15px">
                 <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state,i.timeState,i.endTime)"> {{ i.exerciseName }}</el-button>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='1'">未开始</span></i>
@@ -746,7 +746,7 @@ export default {
         params:{
           pageNum:this.pageSets,
           test:this.setType,
-          state:Number(this.shaixuan)+1,
+          state:Number(this.shaixuan)-1,
           order:this.sortvalue
         }
       }).then(res=>{
