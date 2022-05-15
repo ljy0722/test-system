@@ -758,7 +758,9 @@ export default {
           this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
           this.exerciseSets[i].startTime=this.exerciseSets[i].startTime.slice(0,10)+" "+this.exerciseSets[i].startTime.slice(11,19);
           var now=new Date();
-          let nowTime=now.getFullYear()+"-"+String(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+          //let nowTime=now.getFullYear()+"-"+String(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+          let nowTime=now.Format("yyyy-MM-dd hh:mm:ss");
+          console.log(nowTime);
           if(nowTime<this.exerciseSets[i].startTime){
             this.exerciseSets[i]["timeState"]='1';
           }
@@ -776,7 +778,7 @@ export default {
       if(timeState==='1'){
         alert("题目集未到开放时间！");
       }
-      else if(timeState==='2'&&state==='U'){
+      else if(timeState==='2'&&(state==='U'||state==='P')){
         axios({
           url:"/test/take",
           params:{

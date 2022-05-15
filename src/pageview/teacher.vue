@@ -2185,7 +2185,7 @@ export default {
         method:"POST",
         data:this.addques
       }).then(res=>{
-
+        this.dispatch=false;
       })
     },
     remove(row){

@@ -1134,7 +1134,7 @@
                 :auto-upload="false"
                 align="left">
                 <el-button  size="small" type="primary">点击上传</el-button>
-                <div slot="tip" align="left" class="el-upload__tip">只能上传.xslx文件，仅限单选题、多选题、填空题和多选题四种题型,其中单选题类型对应编号为1，多选题类型对应编号为2，填空题对应编号为3，问答题对应编号为4</div>
+                <div slot="tip" align="left" class="el-upload__tip">只能上传.xslx文件，一次上传一份文件，仅限单选题、多选题、填空题和多选题四种题型,具体格式请下载模板查看</div>
                 <el-button @click="download" size="small" type="plain">下载模板</el-button>
               </el-upload>
               <el-button type="primary" size="small" style="margin-top: 60px;margin-bottom: 20px;float: left" @click="uploadFile">导入题库</el-button>
@@ -1548,9 +1548,7 @@ export default {
       axios({
         url:"/problem/modifyProblem",
         method:"POST",
-        data:{
-          modify:this.modifyProblem,
-        }
+        data:this.modifyProblem
       }).then(res=>{
         this.getAllproblems();
         this.$message('修改成功');
@@ -1655,7 +1653,7 @@ export default {
           },
           data:form
         }).then(res=>{
-
+          this.fileList=[];
         }).catch(err=>{
 
         });
