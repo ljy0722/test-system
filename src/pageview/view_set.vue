@@ -31,15 +31,15 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.result" :key="indx">
+                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
                               <a @click="gotobutton1(index)">
-                                <el-radio v-model="item.radio" :label="citem.outanswer">{{citem.outcome}}</el-radio>
+                                <el-radio v-model="item.myAnswer" :label="citem.outanswer">{{citem.outcome}}</el-radio>
                               </a>
                             </el-row>
                             <el-row style="color: dodgerblue;margin-top: 20px">
-                              正确答案：{{item.answer}}
+                              正确答案：{{item.problemInfo.answer}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -58,18 +58,18 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.result" :key="indx">
+                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
                               <a @click="gotobutton2(index)">
-                                <el-checkbox-group v-model="item.radio">
+                                <el-checkbox-group v-model="item.myAnswer">
                                   <el-checkbox  :label="citem.outanswer">{{citem.outcome}}</el-checkbox>
                                 </el-checkbox-group>
 
                               </a>
                             </el-row>
                             <el-row style="color: dodgerblue;margin-top: 20px">
-                              正确答案：{{item.answer}}
+                              正确答案：{{item.problemInfo.answer}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -414,30 +414,33 @@ export default {
     },
   },
   created() {
-    this.setname=JSON.parse(this.$route.query.setname);
-    this.score=JSON.parse(this.$route.query.score);
-    this.singleChoiceList=JSON.parse(this.$route.query.single);
-    this.multiChoiceList=JSON.parse(this.$route.query.multi);
-    this.fillBlankList=JSON.parse(this.$route.query.fill);
-    this.questionAnswerList=JSON.parse(this.$route.query.qa);
+    //this.setname=JSON.parse(this.$route.params.setname);
+    this.score=JSON.parse(this.$route.params.grade);
+    this.singleChoiceList=JSON.parse(this.$route.params.single);
+    this.multiChoiceList=JSON.parse(this.$route.params.multi);
+    console.log(this.multiChoiceList);
+    this.fillBlankList=JSON.parse(this.$route.params.fill);
+    this.questionAnswerList=JSON.parse(this.$route.params.qa);
     for(let i=0;i<this.singleChoiceList.length;i++){
-      if(this.$data.singleChoiceList[i].answer==this.$data.singleChoiceList[i].radio){
-        this.$data.singleChoiceList[i].show = 'background: #00ABEA;';
+      if(this.singleChoiceList[i].problemInfo.answer===this.singleChoiceList[i].myAnswer){
+        this.singleChoiceList[i]["show"] = 'background: #00ABEA;';
       }
       else{
-        this.$data.singleChoiceList[i].show = 'background: red;';
+        this.singleChoiceList[i]["show"] = 'background: red;';
       }
     }
     for(let i=0;i<this.multiChoiceList.length;i++){
-      if(this.$data.multiChoiceList[i].answer==this.$data.multiChoiceList[i].radio){
-        this.$data.multiChoiceList[i].show = 'background: #00ABEA;';
+      if(this.multiChoiceList[i].problemInfo.answer===this.multiChoiceList[i].myAnswer){
+        this.multiChoiceList[i]["show"] = 'background: #00ABEA;';
       }
       else{
-        this.$data.multiChoiceList[i].show = 'background: red;';
+        this.multiChoiceList[i]["show"] = 'background: red;';
       }
+      var radio=this.multiChoiceList[i].myAnswer.split(" ");
+      this.multiChoiceList[i].myAnswer=radio;
     }
     for(let i=0;i<this.fillBlankList.length;i++){
-      if(this.$data.fillBlankList[i].answer==this.$data.fillBlankList[i].blank){
+      if(this.$data.fillBlankList[i].answer===this.$data.fillBlankList[i].blank){
         this.$data.fillBlankList[i].show='background: #00ABEA;';
       }
       else{

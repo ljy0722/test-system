@@ -96,10 +96,10 @@
                      v-bind:key="index"
                      v-if="shaixuan==''||i.state==shaixuan">
               <el-row style="margin-top: -15px">
-                <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.id,i.state)"> {{ i.exerciseName }}</el-button>
+                <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state)"> {{ i.exerciseName }}</el-button>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='1'">未开始</span></i>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='2'">正在进行</span></i>
-                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='3'">已结束</span></i>
+                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='3'">已完成</span></i>
               </el-row>
               <el-row style="margin-top: -5px;float: right">
                 <span style="float: left;font-size: small">结束时间：{{i.endTime}}</span>
@@ -495,6 +495,13 @@
                 </div>
               </el-card>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
+                <div style="font-size: x-large">{{user.practiceAttendedNum}}</div>
+                <br>
+                <div>
+                  <span style="color: #868686">完成的练习数</span>
+                </div>
+              </el-card>
+              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
                 <div style="font-size: x-large">{{user.wrong_num}}</div>
                 <br>
                 <div>
@@ -507,7 +514,7 @@
               <br>
               <br>
               <chart3 :xaxis="[1,2,3,4,5]" :yaxis="[50,60,30,90,100]"></chart3>
-              <chart4 :value1="20" :value2="30" :value3="10" :value4="5"></chart4>
+              <chart4 :value1=user.typeNum[0] :value2=user.typeNum[1] :value3=user.typeNum[2] :value4=user.typeNum[3]></chart4>
               <br>
               <Chart5></Chart5>
             </el-col>
@@ -562,23 +569,7 @@ export default {
         startTimeS:'',
         endTimeS:'',
       },
-      exerciseSets:[
-        {
-          setname:'练习卷1',
-          state:'1',
-          endTime:'2022-4-30',
-        },
-        {
-          setname: '练习卷2',
-          state:'2',
-          endTime: '2022-4-15'
-        },
-        {
-          setname: '练习卷3',
-          state:'3',
-          endTime: '2022-4-20'
-        }
-      ],
+      exerciseSets:[],
       wrongProblemSingle:[
         {
           id:'1',
@@ -624,7 +615,9 @@ export default {
       user:{
         exer_num:10,
         test_num:5,
-        wrong_num:20
+        wrong_num:20,
+        practiceAttendedNum:10,
+        typeNum:[0,0,0,0]
       },
       pagination: {
         //分页后的考试信息
@@ -655,7 +648,7 @@ export default {
         },
         {
           value: '3',
-          label: '已结束',
+          label: '已完成',
         },
         {
           value: '',
@@ -683,16 +676,36 @@ export default {
           break;
         case '4':
           this.active='4';
-          axios({
-            url:"/user/exerciseInfo",
-          }).then(res=>{
-            this.user.exer_num=res.data.correctNum+res.data.wrongNum;
-            this.user.test_num=res.data.testAttendedNum;
-            this.user.wrong_num=res.data.wrongNum;
-          })
+
           console.log(4);
           break;
       }
+    },
+    getStuInfo(){
+      axios({
+        url:"/user/exerciseInfo",
+      }).then(res=>{
+        this.user.exer_num=res.data.correctNum+res.data.wrongNum;
+        this.user.test_num=res.data.testAttendedNum;
+        this.user.wrong_num=res.data.wrongNum;
+        this.user.practiceAttendedNum=res.data.practiceAttendedNum;
+        for(let i=0;i<res.data.typeStatistics.length;i++){
+          if(res.data.typeStatistics[i].type==="单项选择题"){
+            this.user.typeNum[0]=res.data.typeStatistics[i].number;
+          }
+          if(res.data.typeStatistics[i].type==="多项选择题"){
+            this.user.typeNum[1]=res.data.typeStatistics[i].number;
+          }
+          if(res.data.typeStatistics[i].type==="填空题"){
+            this.user.typeNum[2]=res.data.typeStatistics[i].number;
+          }
+          if(res.data.typeStatistics[i].type==="问答题"){
+            this.user.typeNum[3]=res.data.typeStatistics[i].number;
+          }
+        }
+        console.log(this.user.typeNum[0]);
+        console.log(this.user.typeNum[1]);
+      })
     },
     getStudentExercise(){
       axios({
@@ -707,8 +720,14 @@ export default {
             this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-9);
           }
           this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
-          if(this.exerciseSets[i].state==='D'){
+          if(this.exerciseSets[i].state==='C'){
             this.exerciseSets[i].state='3';
+          }
+          if(this.exerciseSets[i].state==='D'){
+            this.exerciseSets[i].state='2';
+          }
+          if(this.exerciseSets[i].state==='U'){
+            this.exerciseSets[i].state='1';
           }
         }
         this.totalSets=res.data.total;
@@ -720,24 +739,42 @@ export default {
       }
       if(state=='2'){
         axios({
-          url:"/exercise/getInfo",
+          url:"/test/take",
           params:{
-            exerciseID:id
+            exerciseId:44
           }
         })
         .then(res=>{
-          this.$router.push({path:'/test',params:{exercise:res.data}})
+          var now=new Date();
+          var hh=now.getHours()+parseInt(parseInt("50")/60);
+          var mm=now.getMinutes()+parseInt("50")%60;
+          var ss=now.getSeconds();
+          if(mm>=60){
+            mm=mm-60;
+            hh=hh+1;
+          }
+          var endTime=hh+":"+mm+":"+ss;
+          this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       }
       if(state=='3'){
         axios({
           url:"exercise/viewresult",
           params:{
-            exerciseID:id
+            exerciseId:id
           }
         })
         .then(res=>{
-          this.$router.push({path:'/view_set',params:{exercise:res.data}})
+          var now=new Date();
+          var hh=now.getHours()+parseInt(parseInt("50")/60);
+          var mm=now.getMinutes()+parseInt("50")%60;
+          var ss=now.getSeconds();
+          if(mm>=60){
+            mm=mm-60;
+            hh=hh+1;
+          }
+          var endTime=hh+":"+mm+":"+ss;
+          this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       }
     },
@@ -757,6 +794,10 @@ export default {
           var hh=now.getHours()+parseInt(parseInt(this.exercise.time)/60);
           var mm=now.getMinutes()+parseInt(this.exercise.time)%60;
           var ss=now.getSeconds();
+          if(mm>=60){
+            mm=mm-60;
+            hh=hh+1;
+          }
           var endTime=hh+":"+mm+":"+ss;
           this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
@@ -945,6 +986,7 @@ export default {
     }).then(res=>{
       this.subjects=res.data;
     })
+    this.getStuInfo();
   }
 }
 </script>

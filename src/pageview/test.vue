@@ -419,6 +419,9 @@ export default {
       alert("提交成功"+this.$data.grades);
     },
     submit(){
+      // 清除定时器
+      clearInterval(this.timer);
+      let multiList=this.multiChoiceList;
       for(let i=0;i<this.multiChoiceList.length;i++){
         let ans=this.multiChoiceList[i].myAnswer.join(" ");
         this.multiChoiceList[i].myAnswer=ans;
@@ -436,7 +439,7 @@ export default {
         }
       }).then(res=>{
         this.$message("提交成功");
-        //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
+        this.$router.push({name:'viewset',params:{grade:50,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
       })
       //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
     },
@@ -540,8 +543,7 @@ export default {
       } else {
         // 倒计时最后一秒将剩余时间修改
         this.resTime= "00:00:00";
-        // 清除定时器
-        clearInterval(this.timer);
+
         // 在这里编写考试交卷的功能
         this.submit();
       }
@@ -551,6 +553,7 @@ export default {
       let mm=now.getMonth()+1;
       this.startTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
       this.endTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+this.$route.params.endTime;
+      console.log(this.endTime);
     }
   },
   created() {

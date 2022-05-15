@@ -54,7 +54,7 @@ export default {
         },
         series: [
           {
-            name: '得分情况',
+            name: '',
             type: 'pie',
             radius: ['50%', '70%'],
             avoidLabelOverlap: false,
