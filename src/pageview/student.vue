@@ -66,7 +66,7 @@
                 <div style="width: 50px;margin-top: 10px">排序:</div>
               </el-col>
               <el-col :span="3">
-                <el-select v-model="sortvalue" placeholder="排序方式" @change="sortBy(sortvalue)">
+                <el-select v-model="sortvalue" placeholder="排序方式" @change="getStudentExercise">
                   <el-option
                     v-for="item in sortInfo"
                     :key="item.value"
@@ -80,9 +80,23 @@
                 <div style="width: 50px;margin-top: 10px">筛选:</div>
               </el-col>
               <el-col :span="3">
-                <el-select v-model="shaixuan" placeholder="筛选方式">
+                <el-select v-model="shaixuan" placeholder="筛选方式" @change="getStudentExercise">
                   <el-option
                     v-for="item in shaixuanInfo"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="1" :offset="1">
+                <div style="width: 50px;margin-top: 10px">分类:</div>
+              </el-col>
+              <el-col :span="3">
+                <el-select v-model="setType" placeholder="分类方式" @change="getStudentExercise">
+                  <el-option
+                    v-for="item in setTypeInfo"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -94,15 +108,15 @@
             <el-card style="margin-bottom: 5px;height: 60px"
                      v-for="(i,index) in exerciseSets"
                      v-bind:key="index"
-                     v-if="shaixuan==''||i.state==shaixuan">
+                     v-if="(shaixuan===''||i.state===shaixuan)&&i.test===setType">
               <el-row style="margin-top: -15px">
-                <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state)"> {{ i.exerciseName }}</el-button>
-                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='1'">未开始</span></i>
-                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='2'">正在进行</span></i>
-                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='3'">已完成</span></i>
+                <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state,i.timeState,i.endTime)"> {{ i.exerciseName }}</el-button>
+                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='1'">未开始</span></i>
+                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='2'">正在进行</span></i>
+                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='3'">已结束</span></i>
               </el-row>
               <el-row style="margin-top: -5px;float: right">
-                <span style="float: left;font-size: small">结束时间：{{i.endTime}}</span>
+                <span style="float: left;font-size: small">起止时间：{{i.endTime}}--{{i.startTime}}</span>
               </el-row>
             </el-card>
             <div class="block">
@@ -625,15 +639,23 @@ export default {
         total: null, //记录条数
         size: 6 //每页条数
       },
-      sortvalue:'',
+      sortvalue:'1',
       sortInfo:[
         {
           value:'1',
-          label:'最晚结束',
+          label:'最早开始',
         },
         {
           value:'2',
-          label:'最早创建',
+          label:'最早结束',
+        },
+        {
+          value:'3',
+          label:'最晚开始',
+        },
+        {
+          value:'4',
+          label:'最晚结束',
         },
       ],
       shaixuan:'',
@@ -655,6 +677,17 @@ export default {
           label: '全部',
         }
       ],
+      setType:false,
+      setTypeInfo:[
+        {
+          value:false,
+          label:'我的练习'
+        },
+        {
+          value:true,
+          label: '我的考试'
+        },
+      ]
     }
   },
   methods:{
@@ -711,7 +744,10 @@ export default {
       axios({
         url:"/exercise/getStudentExercise",
         params:{
-          pageNum:this.pageSets
+          pageNum:this.pageSets,
+          test:this.setType,
+          state:Number(this.shaixuan)+1,
+          order:this.sortvalue
         }
       }).then(res=>{
         this.exerciseSets=res.data.data;
@@ -720,31 +756,35 @@ export default {
             this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-9);
           }
           this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
-          if(this.exerciseSets[i].state==='C'){
-            this.exerciseSets[i].state='3';
+          this.exerciseSets[i].startTime=this.exerciseSets[i].startTime.slice(0,10)+" "+this.exerciseSets[i].startTime.slice(11,19);
+          var now=new Date();
+          let nowTime=now.getFullYear()+"-"+String(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+          if(nowTime<this.exerciseSets[i].startTime){
+            this.exerciseSets[i]["timeState"]='1';
           }
-          if(this.exerciseSets[i].state==='D'){
-            this.exerciseSets[i].state='2';
+          else if(nowTime<this.exerciseSets[i].endTime){
+            this.exerciseSets[i]["timeState"]='2';
           }
-          if(this.exerciseSets[i].state==='U'){
-            this.exerciseSets[i].state='1';
+          else{
+            this.exerciseSets[i]["timeState"]='3';
           }
         }
         this.totalSets=res.data.total;
       })
     },
-    viewSet(id,state) {
-      if(state=='1'){
-        alert("题目集暂未开放");
+    viewSet(id,state,timeState,end) {
+      if(timeState==='1'){
+        alert("题目集未到开放时间！");
       }
-      if(state=='2'){
+      else if(timeState==='2'&&state==='U'){
         axios({
           url:"/test/take",
           params:{
-            exerciseId:44
+            exerciseId:id
           }
         })
         .then(res=>{
+          var lasttime=res.data.lastTime;
           var now=new Date();
           var hh=now.getHours()+parseInt(parseInt("50")/60);
           var mm=now.getMinutes()+parseInt("50")%60;
@@ -754,10 +794,14 @@ export default {
             hh=hh+1;
           }
           var endTime=hh+":"+mm+":"+ss;
+          let end1=end.slice(11,19);
+          if(endTime>end1){
+            endTime=end1
+          }
           this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       }
-      if(state=='3'){
+      else{
         axios({
           url:"exercise/viewresult",
           params:{
@@ -924,61 +968,61 @@ export default {
   },
   components:{Top,Down,Chart3,Chart4,Chart5},
   computed:{
-    exerciseSetsFilter(shaixuan){
-      if(shaixuan=='1'){
-        let _this=this;
-        let exer= _this.exerciseSets.filter(item=>item.state==='1').reverse();
-        return exer;
-      }
-    },
-    table1() {
-      //const search1='单项选择题';
-      const search=this.search;
-      if(search!=''){
-        return this.wrongProblemSingle.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-      }
-      return this.wrongProblemSingle;
-    },
-    table2() {
-      //const search='多项选择题'
-      const search=this.search;
-      if(search!=''){
-        return this.wrongProblemMulti.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-      }
-      return this.wrongProblemMulti;
-    },
-    table3() {
-      //const search='填空题'
-      const search=this.search;
-      if(search!=''){
-        return this.wrongProblemFill.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-      }
-      return this.wrongProblemFill;
-    },
-    table4() {
-      //const search='问答题'
-      const search=this.search;
-      if(search!=''){
-        return this.wrongProblemQa.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-      }
-      return this.wrongProblemQa;
-    },
+    // exerciseSetsFilter(shaixuan){
+    //   if(shaixuan=='1'){
+    //     let _this=this;
+    //     let exer= _this.exerciseSets.filter(item=>item.state==='1').reverse();
+    //     return exer;
+    //   }
+    // },
+    // table1() {
+    //   //const search1='单项选择题';
+    //   const search=this.search;
+    //   if(search!=''){
+    //     return this.wrongProblemSingle.filter(data=>{
+    //       return Object.keys(data).some(key=>{
+    //         return String(data[key]).toLowerCase().indexOf(search)>-1
+    //       })
+    //     })
+    //   }
+    //   return this.wrongProblemSingle;
+    // },
+    // table2() {
+    //   //const search='多项选择题'
+    //   const search=this.search;
+    //   if(search!=''){
+    //     return this.wrongProblemMulti.filter(data=>{
+    //       return Object.keys(data).some(key=>{
+    //         return String(data[key]).toLowerCase().indexOf(search)>-1
+    //       })
+    //     })
+    //   }
+    //   return this.wrongProblemMulti;
+    // },
+    // table3() {
+    //   //const search='填空题'
+    //   const search=this.search;
+    //   if(search!=''){
+    //     return this.wrongProblemFill.filter(data=>{
+    //       return Object.keys(data).some(key=>{
+    //         return String(data[key]).toLowerCase().indexOf(search)>-1
+    //       })
+    //     })
+    //   }
+    //   return this.wrongProblemFill;
+    // },
+    // table4() {
+    //   //const search='问答题'
+    //   const search=this.search;
+    //   if(search!=''){
+    //     return this.wrongProblemQa.filter(data=>{
+    //       return Object.keys(data).some(key=>{
+    //         return String(data[key]).toLowerCase().indexOf(search)>-1
+    //       })
+    //     })
+    //   }
+    //   return this.wrongProblemQa;
+    // },
   },
   created() {
     axios({

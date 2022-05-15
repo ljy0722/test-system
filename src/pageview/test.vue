@@ -600,8 +600,8 @@ export default {
   mounted() {
     this.timer = setInterval(this.getRestTime,1000)
   },
-  destroyed() {
-    this.resTime='';
+  beforeDestroy() {
+    clearInterval(this.timer);
   },
   components:{Top,Down}
 }
