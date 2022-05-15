@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import Cookie from "js-cookie";
 export default {
   name: "top",
   methods:{
@@ -33,6 +34,8 @@ export default {
       //this.$router.push('/');
       this.$confirm('确认退出？','提示',{confirmButtonText:'确定',cancelButtonText:'取消',type:'warning'}).then(action => {
         this.$store.commit('$_removeStorage');    // 清除登录信息
+        Cookie.remove('token');
+        Cookie.remove('userId');
         this.$router.push({
           path:'/'
         });

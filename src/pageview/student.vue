@@ -41,7 +41,7 @@
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
                 <p>练习范围</p>
-                <el-select v-model="exercise.range">
+                <el-select v-model="exercise.range" multiple>
                   <el-option
                     v-for="item in ranges"
                     :key="item.value"
@@ -578,7 +578,7 @@ export default {
         tiankong:'',
         wenda:'',
         subject:'',
-        range:'',
+        range:[],
         time:'',
         startTimeS:'',
         endTimeS:'',
@@ -964,6 +964,7 @@ export default {
         }
       }).then(res=>{
         this.ranges=res.data;
+        this.ranges.shift();
       })
     }
 
@@ -1031,6 +1032,7 @@ export default {
       url:"/problem/allsubjects",
     }).then(res=>{
       this.subjects=res.data;
+      this.subjects.shift();
     })
     this.getStuInfo();
   }

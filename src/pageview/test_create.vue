@@ -70,7 +70,7 @@
                 <el-divider></el-divider>
                 <div style="width: 30%" align="left">
                   <p>选择范围</p>
-                  <el-select v-model="autoRange">
+                  <el-select v-model="autoRange" multiple>
                     <el-option
                       v-for="item in ranges"
                       :key="item.value"
@@ -611,7 +611,7 @@ export default {
       tiankong:'',
       wenda:'',
       autoSubject:null,
-      autoRange:null,
+      autoRange:[],
     }
   },
   computed:{
@@ -787,6 +787,7 @@ export default {
         url:"/problem/allsubjects",
       }).then(res=>{
         this.subjects=res.data;
+        this.subjects.shift();
       })
     },
     getRanges(){
@@ -797,6 +798,7 @@ export default {
         }
       }).then(res=>{
         this.ranges=res.data;
+        this.ranges.shift();
       })
     },
     getUserGroups() {
