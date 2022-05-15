@@ -795,14 +795,14 @@ export default {
           let t=hourTime*60+minuteTime;
           var now=new Date();
           var hh=now.getHours()+parseInt(parseInt(t)/60);
-          if(hh>=24){
-            hh=hh-24;
-          }
           var mm=now.getMinutes()+parseInt(t)%60;
           var ss=now.getSeconds();
           if(mm>=60){
             mm=mm-60;
             hh=hh+1;
+          }
+          if(hh>=24){
+            hh=hh-24;
           }
           let endTime=("0"+hh).slice(-2)+":"+("0"+mm).slice(-2)+":"+("0"+ss).slice(-2);
           console.log(endTime);
@@ -856,7 +856,10 @@ export default {
             mm=mm-60;
             hh=hh+1;
           }
-          var endTime=hh+":"+mm+":"+ss;
+          if(hh>=24){
+            hh=hh-24;
+          }
+          var endTime=("0"+hh).slice(-2)+":"+("0"+mm).slice(-2)+":"+("0"+ss).slice(-2);
           this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       console.log(this.exercise)

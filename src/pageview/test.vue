@@ -428,6 +428,10 @@ export default {
         let ans=this.multiChoiceList[i].myAnswer.join(" ");
         this.multiChoiceList[i].myAnswer=ans;
       }
+      let test=false;
+      if(this.isTest===true){
+        test=true;
+      }
 
       axios({
         url:"/test/submit",
@@ -436,7 +440,7 @@ export default {
           id:this.exerciseId,
           setname:this.setname,
           score:null,
-          isTest:this.isTest,
+          isTest:test,
           singleChoiceList:this.singleChoiceList,
           multiChoiceList:this.multiChoiceList,
           fillBlankList:this.fillBlankList,
@@ -546,7 +550,9 @@ export default {
     // })
     let exerciseInfo=JSON.parse(this.$route.params.exerciseInfo);
     console.log(exerciseInfo);
-    this.isTest=exerciseInfo.isTest;
+    if(exerciseInfo.isTest!==null){
+      this.isTest=exerciseInfo.isTest;
+    }
     this.exerciseId=exerciseInfo.id;
     this.singleChoiceList=exerciseInfo.singleChoiceList;
     this.multiChoiceList=exerciseInfo.multiChoiceList;

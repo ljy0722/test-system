@@ -2095,7 +2095,7 @@ export default {
       }).then(res=>{
         this.setDetail=res.data;
         console.log(this.setDetail);
-        if(this.setDetail.groups.length!=0){
+        if(this.setDetail.groups.length!==0){
           this.chooseGroup=this.setDetail.groups[0].groupId;
         }
         this.getStudentsInExercise();
@@ -2228,15 +2228,15 @@ export default {
     },
     remove(row){
       let page=1;
-      if(row.type=='单项选择题'){
+      if(row.type==='单项选择题'){
         page=this.pageSingle;
       }
-      if(row.type=='多项选择题'){
+      if(row.type==='多项选择题'){
         page=this.pageMulti;
       }
-      if(row.type=='填空题'){
+      if(row.type==='填空题'){
         page=this.pageFill;
-      }if(row.type=='问答题'){
+      }if(row.type==='问答题'){
         page=this.pageQa;
       }
       axios({
