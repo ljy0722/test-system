@@ -10,7 +10,7 @@
           <el-menu default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>概览</el-menu-item>
             <el-menu-item index="2"><i class="el-icon-s-order"></i>题目集 </el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-s-grid"></i>题目 </el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-s-grid"></i>我的题目 </el-menu-item>
             <el-menu-item index="4"><i class="el-icon-s-custom"></i>用户组 </el-menu-item>
           </el-menu>
         </el-aside>
@@ -519,7 +519,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange1" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -627,7 +627,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange1" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -734,7 +734,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange1" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -816,7 +816,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange1" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -911,7 +911,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
-                    <el-form-item label="范围">
+                    <el-form-item label="考点">
                       <el-input v-model="addques.content_type_new"></el-input>
                     </el-form-item>
                   </el-col>
@@ -960,7 +960,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
-                    <el-form-item label="范围">
+                    <el-form-item label="考点">
                       <el-input v-model="addques.content_type_new"></el-input>
                     </el-form-item>
                   </el-col>
@@ -1009,7 +1009,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
-                    <el-form-item label="范围">
+                    <el-form-item label="考点">
                       <el-input v-model="addques.content_type_new"></el-input>
                     </el-form-item>
                   </el-col>
@@ -1033,7 +1033,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
-                    <el-form-item label="范围">
+                    <el-form-item label="考点">
                       <el-input v-model="addques.content_type_new"></el-input>
                     </el-form-item>
                   </el-col>
@@ -1072,7 +1072,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange2" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -1180,7 +1180,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange2" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -1288,7 +1288,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="3" :offset="1">
-                      <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
+                      <el-select v-model="selectRange2" placeholder="选择考点" style="float: left" align="left">
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
@@ -1554,7 +1554,7 @@
             <el-dialog title="添加用户" :visible.sync="addUser">
               <el-row>
                 <el-col :span="4">
-                  <el-input v-model="searchUserId" placeholder="通过ID搜索" style="width: 200px;float: left"></el-input>
+                  <el-input v-model="searchUserId" placeholder="通过ID或用户姓名搜索" style="width: 200px;float: left"></el-input>
                 </el-col>
                 <el-col :span="2" :offset="5">
                   <el-button size="mini" type="plain" @click="searchUser" style="margin-top: 7px">搜索</el-button>
@@ -1594,6 +1594,13 @@
                   </template>
                 </el-table-column>
               </el-table>
+              <div class="block">
+                <el-pagination
+                  :current-change="change12"
+                  layout="prev, pager, next"
+                  :total="totalSearchUser">
+                </el-pagination>
+              </div>
             </el-dialog>
             <el-dialog title="批量导入" :visible.sync="addUsers" align="left">
               <el-upload
@@ -1669,6 +1676,7 @@ export default {
       totalGroup:1,
       totalUser:1,
       totalSetUser:1,
+      totalSearchUser:1,
       pageSet:1,
       pageSingle:1,
       pageMulti:1,
@@ -1680,6 +1688,7 @@ export default {
       pageAllQa:1,
       pageGroup:1,
       pageUser:1,
+      pageSearchUser:1,
       pageSetUser:1,
       showStudentsInAGroup:[],
       sortInfo:[
@@ -1881,39 +1890,55 @@ export default {
 
     change(val){
       this.pageSet=val;
+      this.getTeacherExercise();
     },
     change1(val){
       this.pageSingle=val;
+      this.getTeacherProblems();
     },
     change2(val){
       this.pageMulti=val;
+      this.getTeacherProblems();
     },
     change3(val){
       this.pageFill=val;
+      this.getTeacherProblems();
     },
     change4(val){
       this.pageQa=val;
+      this.getTeacherProblems();
     },
     change5(val){
       this.pageAllSingle=val;
+      this.getAllproblems();
     },
     change6(val){
       this.pageAllMulti=val;
+      this.getAllproblems();
     },
     change7(val){
       this.pageAllFill=val;
+      this.getAllproblems();
     },
     change8(val){
       this.pageAllQa=val;
+      this.getAllproblems();
     },
     change9(val){
       this.pageGroup=val;
+      this.getUserGroups();
     },
     change10(val){
       this.pageUser=val;
+      this.viewGroup();
     },
     change11(val){
       this.pageSetUser=val;
+      this.getStudentsInExercise()
+    },
+    change12(val){
+      this.pageSearchUser=val;
+      this.searchUser();
     },
     getAllproblems(){
       axios.all([
@@ -2033,9 +2058,7 @@ export default {
       })
     },
 
-    checkGroupDetail(id){
-      this.userGroupDetail=true;
-      this.viewGroupId=id;
+    viewGroup(){
       axios({
         url:"/user/groupDetail",
         params:{
@@ -2045,6 +2068,11 @@ export default {
       }).then(res=>{
         this.userGroup=res.data.data;
       })
+    },
+    checkGroupDetail(id){
+      this.userGroupDetail=true;
+      this.viewGroupId=id;
+      this.viewGroup();
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -2086,7 +2114,7 @@ export default {
           exerciseId:exerciseId,
         }
       }).then(res=>{
-        this.$router.push({path:'/viewset',query:{
+        this.$router.push({name:'viewset',params:{
           setname:res.data.setname,
           score:res.data.score,
           single:res.data.singleChoiceList,
@@ -2335,7 +2363,8 @@ export default {
       axios({
         url:"user/searchuser",
         params:{
-          id:this.searchUserId,
+          keyWord:this.searchUserId,
+          pageNum:this.pageSearchUser
         }
       }).then(res=>{
         var user=new Object();
@@ -2388,6 +2417,20 @@ export default {
         this.ranges=res.data;
       })
     },
+    getTeacherExercise(){
+      axios({
+        url:"/exercise/getTeacherExercise",
+        params:{
+          pageNum:this.pageSet,
+        }
+      }).then(res=>{
+        if(res.data.size!=0){
+          this.exerciseSets=res.data.data;
+        }
+      }).catch(err=>{
+
+      });
+    }
   },
   computed:{
     getval1(){
@@ -2503,18 +2546,7 @@ export default {
     },
   },
   created() {
-    axios({
-      url:"/exercise/getTeacherExercise",
-      params:{
-        pageNum:this.pageSet,
-      }
-    }).then(res=>{
-      if(res.data.size!=0){
-        this.exerciseSets=res.data.data;
-      }
-    }).catch(err=>{
-
-    });
+    this.getTeacherExercise();
     this.getSubjects();
     this.getTeacherProblems();
   },

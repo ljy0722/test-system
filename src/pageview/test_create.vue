@@ -696,6 +696,8 @@ export default {
           this.problemSelection.push(pro)
         })
         console.log(this.problemSelection);
+        this.time1[0]=new Date((+new Date(this.time1[0]))+8*3600*1000);
+        this.time1[1]=new Date((+new Date(this.time1[1]))+8*3600*1000);
         var manual=new Object();
         manual["testname"]=this.testname;
         manual["time1"]=this.time1;
@@ -716,6 +718,8 @@ export default {
           })
       }
       else if(this.method1==='zidong'){
+        this.time1[0]=new Date((+new Date(this.time1[0]))+8*3600*1000);
+        this.time1[1]=new Date((+new Date(this.time1[1]))+8*3600*1000);
         var auto=new Object();
         auto["testname"]=this.testname;
         auto["danxuan"]=this.danxuan;

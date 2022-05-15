@@ -553,6 +553,7 @@ export default {
       let mm=now.getMonth()+1;
       this.startTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
       this.endTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+this.$route.params.endTime;
+      console.log("ssss");
       console.log(this.endTime);
     }
   },

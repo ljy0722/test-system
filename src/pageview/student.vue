@@ -778,7 +778,7 @@ export default {
       if(timeState==='1'){
         alert("题目集未到开放时间！");
       }
-      else if(timeState==='2'&&(state==='U'||state==='P')){
+      else if(timeState==='2'&&(state==='D'||state==='P'||state==='U')){
         axios({
           url:"/test/take",
           params:{
@@ -787,19 +787,25 @@ export default {
         })
         .then(res=>{
           var lasttime=res.data.lastTime;
+          const hourTime = parseInt(lasttime.slice(0,2));
+          const minuteTime = parseInt(lasttime.slice(3,5));
+          let t=hourTime*60+minuteTime;
           var now=new Date();
-          var hh=now.getHours()+parseInt(parseInt("50")/60);
-          var mm=now.getMinutes()+parseInt("50")%60;
+          var hh=now.getHours()+parseInt(parseInt(t)/60);
+          var mm=now.getMinutes()+parseInt(t)%60;
           var ss=now.getSeconds();
           if(mm>=60){
             mm=mm-60;
             hh=hh+1;
           }
-          var endTime=hh+":"+mm+":"+ss;
+          let endTime=("0"+hh).slice(-2)+":"+("0"+mm).slice(-2)+":"+("0"+ss).slice(-2);
+          console.log(endTime);
           let end1=end.slice(11,19);
-          if(endTime>end1){
-            endTime=end1
-          }
+          console.log(end1);
+          // if(endTime>end1){
+          //   endTime=end1
+          // }
+          console.log(endTime);
           this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       }
