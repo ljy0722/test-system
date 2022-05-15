@@ -40,7 +40,7 @@
               </div>
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
-                <p>练习范围</p>
+                <p>选择考点</p>
                 <el-select v-model="exercise.range" multiple>
                   <el-option
                     v-for="item in ranges"
@@ -116,7 +116,7 @@
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='3'">已结束</span></i>
               </el-row>
               <el-row style="margin-top: -5px;float: right">
-                <span style="float: left;font-size: small">起止时间：{{i.endTime}}--{{i.startTime}}</span>
+                <span style="float: left;font-size: small">起止时间：{{i.startTime}}--{{i.endTime}}</span>
               </el-row>
             </el-card>
             <div class="block">
@@ -143,7 +143,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -247,7 +247,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -349,7 +349,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -426,7 +426,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -755,8 +755,10 @@ export default {
           if(this.exerciseSets[i].test===false){
             this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-9);
           }
-          this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
-          this.exerciseSets[i].startTime=this.exerciseSets[i].startTime.slice(0,10)+" "+this.exerciseSets[i].startTime.slice(11,19);
+          this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))+8*3600*1000).Format("yyyy-MM-dd hh:mm:ss");
+          this.exerciseSets[i].startTime=new Date((+new Date(this.exerciseSets[i].startTime))+8*3600*1000).Format("yyyy-MM-dd hh:mm:ss");
+          //this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
+          //this.exerciseSets[i].startTime=this.exerciseSets[i].startTime.slice(0,10)+" "+this.exerciseSets[i].startTime.slice(11,19);
           var now=new Date();
           //let nowTime=now.getFullYear()+"-"+String(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
           let nowTime=now.Format("yyyy-MM-dd hh:mm:ss");
@@ -771,6 +773,7 @@ export default {
             this.exerciseSets[i]["timeState"]='3';
           }
         }
+
         this.totalSets=res.data.total;
       })
     },
@@ -778,7 +781,7 @@ export default {
       if(timeState==='1'){
         alert("题目集未到开放时间！");
       }
-      else if(timeState==='2'&&(state==='D'||state==='P'||state==='U')){
+      else if(timeState==='2'&&(state==='D'||state==='U')){
         axios({
           url:"/test/take",
           params:{
@@ -792,6 +795,9 @@ export default {
           let t=hourTime*60+minuteTime;
           var now=new Date();
           var hh=now.getHours()+parseInt(parseInt(t)/60);
+          if(hh>=24){
+            hh=hh-24;
+          }
           var mm=now.getMinutes()+parseInt(t)%60;
           var ss=now.getSeconds();
           if(mm>=60){

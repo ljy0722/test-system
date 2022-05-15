@@ -73,7 +73,7 @@
                   <div style="width: 50px;margin-top: 10px">排序:</div>
                 </el-col>
                 <el-col :span="3">
-                  <el-select v-model="sortvalue" placeholder="排序方式" @change="sortBy(sortvalue)">
+                  <el-select v-model="sortvalue" placeholder="排序方式" @change="getTeacherExercise">
                     <el-option
                       v-for="item in sortInfo"
                       :key="item.value"
@@ -87,7 +87,7 @@
                   <div style="width: 50px;margin-top: 10px">筛选:</div>
                 </el-col>
                 <el-col :span="3">
-                  <el-select v-model="shaixuan" placeholder="筛选方式">
+                  <el-select v-model="shaixuan" placeholder="筛选方式" @change="getTeacherExercise">
                     <el-option
                       v-for="item in shaixuanInfo"
                       :key="item.value"
@@ -110,7 +110,7 @@
                     <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='3'">已结束</span></i>
                   </el-row>
                   <el-row style="margin-top: -5px;float: right">
-                    <span style="float: left;font-size: small">结束时间：{{i.endTime}}</span>
+                    <span style="float: left;font-size: small">起止时间：{{i.startTime}}--{{i.endTime}}</span>
                   </el-row>
                 </el-card>
               </el-row>
@@ -1663,7 +1663,7 @@ export default {
       search1:'',
       keywords1:'',
       subject1:'',
-      sortvalue:'',
+      sortvalue:'1',
       totalSet:1,
       totalSingle:1,
       totalMulti:1,
@@ -1694,11 +1694,19 @@ export default {
       sortInfo:[
         {
           value:'1',
-          label:'最近结束',
+          label:'最早开始',
         },
         {
           value:'2',
-          label:'最早创建',
+          label:'最早结束',
+        },
+        {
+          value:'3',
+          label:'最晚开始',
+        },
+        {
+          value:'4',
+          label:'最晚结束',
         },
       ],
       shaixuan:'',
@@ -2116,11 +2124,13 @@ export default {
       }).then(res=>{
         this.$router.push({name:'viewset',params:{
           setname:res.data.setname,
-          score:res.data.score,
-          single:res.data.singleChoiceList,
-          multi:res.data.multiChoiceList,
-          fill:res.data.fillBlankList,
-          qa:res.data.questionAnswerList}})
+          grade:res.data.score,
+          single:JSON.stringify(res.data.singleChoiceList),
+          multi:JSON.stringify(res.data.multiChoiceList),
+          fill:JSON.stringify(res.data.fillBlankList),
+          qa:JSON.stringify(res.data.questionAnswerList)}})
+      }).catch(err=>{
+        alert("学生未参加考试");
       })
     },
     seeAnalyse(groupId){
@@ -2237,15 +2247,15 @@ export default {
           page:page
         }
       }).then(res=>{
-        if(row.type=='单项选择题'){
+        if(row.type==='单项选择题'){
           this.problems.single=res.data;
         }
-        if(row.type=='多项选择题'){
+        if(row.type==='多项选择题'){
           this.problems.multi=res.data;
         }
-        if(row.type=='填空题'){
+        if(row.type==='填空题'){
           this.problems.fill=res.data;
-        }if(row.type=='问答题'){
+        }if(row.type==='问答题'){
           this.problems.quesans=res.data;
         }
       })
@@ -2422,10 +2432,13 @@ export default {
         url:"/exercise/getTeacherExercise",
         params:{
           pageNum:this.pageSet,
+          state:Number(this.shaixuan)-1,
+          order:this.sortvalue
         }
       }).then(res=>{
         if(res.data.size!=0){
           this.exerciseSets=res.data.data;
+          this.totalSet=res.data.total;
         }
       }).catch(err=>{
 

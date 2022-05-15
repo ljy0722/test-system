@@ -175,6 +175,8 @@ export default {
     return {
       //id:this.$route.query.exerciseId,
       setName:'',
+      exerciseId:null,
+      isTest:false,
       resTime: "", // 剩余时间
       startTime: "2022-5-8 12:00:00", // 开始时间，自己设置或数据库获取
       endTime: "2022-5-30 22:00:00", // 结束时间，自己设置或数据库获取
@@ -426,12 +428,15 @@ export default {
         let ans=this.multiChoiceList[i].myAnswer.join(" ");
         this.multiChoiceList[i].myAnswer=ans;
       }
+
       axios({
         url:"/test/submit",
         method:"POST",
         data:{
-          id:null,
+          id:this.exerciseId,
           setname:this.setname,
+          score:null,
+          isTest:this.isTest,
           singleChoiceList:this.singleChoiceList,
           multiChoiceList:this.multiChoiceList,
           fillBlankList:this.fillBlankList,
@@ -439,7 +444,13 @@ export default {
         }
       }).then(res=>{
         this.$message("提交成功");
-        this.$router.push({name:'viewset',params:{grade:50,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
+        if(this.isTest===true){
+          this.$router.go(-1);
+        }
+        else{
+          this.$router.push({name:'viewset',params:{grade:res.data,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
+        }
+
       })
       //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
     },
@@ -449,56 +460,7 @@ export default {
     gotobutton2(index){
       this.$data.multiChoiceList[index].show = 'background: #00ABEA;';
     },
-//     countDown(times) {
-//       const _this = this
-//       let timer = null
-//       timer = setInterval(function() {
-//         let day = 0,
-//           hour = 0,
-//           minute = 0,
-//           second = 0// 时间默认值
-//         if (times > 0) {
-//           day = Math.floor(times / (60 * 60 * 24))
-//           hour = Math.floor(times / (60 * 60)) - (day * 24)
-//           minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60)
-//           second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60)
-//         }
-//         if (day <= 9) day = '0' + day
-//         if (hour <= 9) hour = '0' + hour
-//         if (minute <= 9) minute = '0' + minute
-//         if (second <= 9) second = '0' + second
-//         _this.$set(_this.letTimes, 'nowTime', `${day !== '00' ? `${day}天:` : ''}${hour}小时：${minute}分钟：${second}秒`)
-//         times--
-//       }, 1000)
-//       if (times <= 0) {
-//         _this.$set(_this.letTimes, 'nowTime', '')
-//         clearInterval(timer)
-//       }
-//     },
-//   resetTime(time){
-//   var timer=null;
-//   var t=time;
-//   var m=0;
-//   var s=0;
-//   m=Math.floor(t/60%60);
-//   m<10&&(m='0'+m);
-//   s=Math.floor(t%60);
-//   function countDown(){
-//     s--;
-//     s<10&&(s='0'+s);
-//     if(s.length>=3){
-//       s=59;
-//       m="0"+(Number(m)-1);
-//     }
-//     if(m.length>=3){
-//       m='00';
-//       s='00';
-//       clearInterval(timer);
-//     }
-//     console.log(m+"分钟"+s+"秒");
-//   }
-//   timer=setInterval(countDown,1000);
-// },
+
     // 时间戳转时分秒
     toHHmmss (data) {
       var s;
@@ -583,6 +545,9 @@ export default {
     //   // this.multiChoiceList=res.data.exerciseSets.multiChoiceList;
     // })
     let exerciseInfo=JSON.parse(this.$route.params.exerciseInfo);
+    console.log(exerciseInfo);
+    this.isTest=exerciseInfo.isTest;
+    this.exerciseId=exerciseInfo.id;
     this.singleChoiceList=exerciseInfo.singleChoiceList;
     this.multiChoiceList=exerciseInfo.multiChoiceList;
     this.fillBlankList=exerciseInfo.fillBlankList;

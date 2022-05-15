@@ -414,8 +414,8 @@ export default {
     },
   },
   created() {
-    //this.setname=JSON.parse(this.$route.params.setname);
-    this.score=JSON.parse(this.$route.params.grade);
+    this.setname=this.$route.params.setname;
+    this.score=this.$route.params.grade;
     this.singleChoiceList=JSON.parse(this.$route.params.single);
     this.multiChoiceList=JSON.parse(this.$route.params.multi);
     console.log(this.multiChoiceList);

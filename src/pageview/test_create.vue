@@ -4,7 +4,13 @@
       <el-row>
         <Top></Top>
       </el-row>
-
+      <el-row>
+        <el-col :span="1" :offset="2">
+          <br>
+          <br>
+          <el-button @click="back">返回</el-button>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col style="width: 80%" :offset="2">
           <el-row><p></p></el-row>
@@ -761,6 +767,9 @@ export default {
     },
     chooseProblem(row){
 
+    },
+    back(){
+      this.$router.go(-1)
     },
     addUserGroup(checked,id){
       if(checked==true)

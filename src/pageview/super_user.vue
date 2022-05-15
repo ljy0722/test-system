@@ -267,7 +267,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange1" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -381,7 +381,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange1" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -495,7 +495,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange1" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -585,7 +585,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange1" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange1" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -680,7 +680,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange2" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -794,7 +794,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange2" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -908,7 +908,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange2" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -998,7 +998,7 @@
                     </el-select>
                   </el-col>
                   <el-col :span="3">
-                    <el-select v-model="searchRange2" placeholder="选择范围" style="float: left" align="left">
+                    <el-select v-model="searchRange2" placeholder="选择考点" style="float: left" align="left">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
