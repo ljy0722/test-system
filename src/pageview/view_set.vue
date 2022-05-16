@@ -88,11 +88,11 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-input v-model="item.blank"></el-input>
+                            <el-input v-model="item.myAnswer"></el-input>
                             <el-row style="color: dodgerblue;margin-top: 20px">
-                              正确答案：{{item.answer}}
+                              正确答案：{{item.problemInfo.answer}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -111,11 +111,11 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-input v-model="item.blank"></el-input>
+                            <el-input v-model="item.myAnswer"></el-input>
                             <el-row style="color: dodgerblue;margin-top: 20px">
-                              正确答案：{{item.answer}}
+                              正确答案：{{item.problemInfo.answer}}
                             </el-row>
                           </el-col>
                         </el-row>

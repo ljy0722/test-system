@@ -81,9 +81,9 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-input v-model="item.blank"></el-input>
+                            <el-input v-model="item.myAnswer"></el-input>
                           </el-col>
                         </el-row>
                         <el-row>
@@ -101,9 +101,9 @@
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
-                              {{item.question}}
+                              {{item.problemInfo.question}}
                             </el-row>
-                            <el-input v-model="item.blank"></el-input>
+                            <el-input v-model="item.myAnswer"></el-input>
                           </el-col>
                         </el-row>
                         <el-row style="margin-top: 60px;text-align: center;">

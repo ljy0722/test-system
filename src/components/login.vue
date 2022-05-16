@@ -17,6 +17,7 @@
           </el-form-item>
 <!--          <router-link to="/">找回密码</router-link>-->
           <router-link to="/register">没有账号？注册一个</router-link>
+          <Vcode :show="isShow" @success="success" @close="close" />
           <el-form-item>
             <el-button type="primary" icon="el-icon-upload" @click="doLogin()">登 录</el-button>
           </el-form-item>
@@ -29,6 +30,7 @@
 <script>
 import axios from "axios";
 import Cookie from "js-cookie";
+import Vcode from "vue-puzzle-vcode";
 export default {
   name: "login",
   data() {
@@ -43,20 +45,28 @@ export default {
           trigger:['blur','change']
         }],
 
-      }
+      },
+      isShow: false // 验证码模态框是否出现
     };
+  },
+  components: {
+    Vcode
   },
   created() {},
   methods: {
-    doLogin() {
-      //this.setCookie(this.user.username,this.user.password,7);
+    // submit() {
+    //   this.isShow = true;
+    // },
+    // 用户通过了验证
+    success(msg) {
+      this.isShow = false; // 通过验证后，需要手动隐藏模态框
       if (!this.user.userId) {
         this.$message.error("请输入注册id！");
         return;
       } else if (!this.user.password) {
         this.$message.error("请输入密码！");
         return;
-      } else {
+      } else{
         //校验用户名和密码是否正确;
         //this.$router.push({ path: "/navi" });
         let token = localStorage.getItem("token")
@@ -68,9 +78,9 @@ export default {
             userId: this.user.userId,
             password: this.user.password
           }
-          })
+        })
           .then(res => {
-             //console.log("输出response.data.status", res.data.status);
+            //console.log("输出response.data.status", res.data.status);
             if (res.data.result === true) {
               var userToken=res.data.token;
               this.$store.dispatch('saveUserInfo',res.data.userInfo.userId);
@@ -96,6 +106,15 @@ export default {
             }
           });
       }
+    },
+    // 用户点击遮罩层，应该关闭模态框
+    close() {
+      this.isShow = false;
+    },
+    doLogin() {
+      this.isShow=true;
+      //this.setCookie(this.user.username,this.user.password,7);
+
     },
     setCookie(c_email,c_pwd,exdays){
       var exdate=new Date();
