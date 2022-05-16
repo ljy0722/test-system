@@ -1,7 +1,7 @@
 <template>
   <div id="test-create">
     <div>
-      <el-row>
+      <el-row style="padding: 0">
         <Top></Top>
       </el-row>
       <el-row>
@@ -510,7 +510,7 @@
 
         </el-col>
       </el-row>
-      <el-row>
+      <el-row style="padding: 0">
         <Down style="margin-top: 100px"></Down>
       </el-row>
 
@@ -800,7 +800,11 @@ export default {
         url:"/problem/allsubjects",
       }).then(res=>{
         this.subjects=res.data;
-        this.subjects.shift();
+        for(let i=0;i<this.subjects.length;i++){
+          if(this.subjects[i].label==='全部'){
+            this.subjects.remove(this.subjects[i]);
+          }
+        }
       })
     },
     getRanges(){
@@ -811,7 +815,11 @@ export default {
         }
       }).then(res=>{
         this.ranges=res.data;
-        this.ranges.shift();
+        for(let i=0;i<this.ranges.length;i++){
+          if(this.ranges[i].label==='全部'){
+            this.ranges.remove(this.ranges[i]);
+          }
+        }
       })
     },
     getUserGroups() {

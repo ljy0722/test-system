@@ -1,6 +1,6 @@
 <template>
   <div id="test">
-    <el-header>
+    <el-header style="padding: 0">
       <Top></Top>
     </el-header>
     <el-main style="margin-top: 80px">
@@ -158,7 +158,7 @@
       </el-row>
       <el-backtop></el-backtop>
     </el-main>
-    <el-footer>
+    <el-footer style="padding: 0">
       <Down></Down>
     </el-footer>
   </div>

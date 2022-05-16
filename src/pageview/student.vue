@@ -1,7 +1,7 @@
 <template>
   <div id="student">
     <el-container>
-      <el-header>
+      <el-header style="padding: 0">
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
@@ -30,9 +30,9 @@
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
                 <p>选择科目</p>
-                <el-select v-model="exercise.subject" @change="getRange">
+                <el-select v-model="exercise.subject" @change="getRange1">
                   <el-option
-                    v-for="item in subjects"
+                    v-for="item in subjects1"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"></el-option>
@@ -43,7 +43,7 @@
                 <p>选择考点</p>
                 <el-select v-model="exercise.range" multiple>
                   <el-option
-                    v-for="item in ranges"
+                    v-for="item in ranges1"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"></el-option>
@@ -161,6 +161,7 @@
 
                 <el-table
                   :data="wrongProblemSingle"
+                  stripe
                   ref="wrongProblem"
                   style="width: 100%;white-space: pre-line">
                   <el-table-column
@@ -264,6 +265,7 @@
                 </el-row>
                 <el-table
                   :data="wrongProblemMulti"
+                  stripe
                   ref="wrongProblem"
                   style="width: 100%">
                   <el-table-column
@@ -366,6 +368,7 @@
                 </el-row>
                 <el-table
                   :data="wrongProblemFill"
+                  stripe
                   ref="wrongProblem"
                   style="width: 100%">
                   <el-table-column
@@ -443,6 +446,7 @@
                 </el-row>
                 <el-table
                   :data="wrongProblemQa"
+                  stripe
                   ref="wrongProblem"
                   style="width: 100%">
                   <el-table-column
@@ -530,12 +534,12 @@
               <chart3 :xaxis="[1,2,3,4,5]" :yaxis="[50,60,30,90,100]"></chart3>
               <chart4 :value1=user.typeNum[0] :value2=user.typeNum[1] :value3=user.typeNum[2] :value4=user.typeNum[3]></chart4>
               <br>
-              <Chart5></Chart5>
+              <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
             </el-col>
           </div>
         </el-main>
       </el-container>
-      <el-footer>
+      <el-footer style="padding: 0">
         <Down></Down>
       </el-footer>
 
@@ -569,6 +573,8 @@ export default {
       selectSubject:null,
       subjects:[],
       ranges:[],
+      subjects1:[],
+      ranges1:[],
       searchSubject:null,
       searchRange:null,
       searchWrongPro:null,
@@ -687,7 +693,9 @@ export default {
           value:true,
           label: '我的考试'
         },
-      ]
+      ],
+      theSubjects:[],
+      subjectsRate:[]
     }
   },
   methods:{
@@ -736,8 +744,13 @@ export default {
             this.user.typeNum[3]=res.data.typeStatistics[i].number;
           }
         }
-        console.log(this.user.typeNum[0]);
-        console.log(this.user.typeNum[1]);
+        res.data.correctRates.forEach(item=>{
+          this.theSubjects.push(item.contentType);
+          let rate=(parseInt(item.correctNum)*100)/(parseInt(item.correctNum)+parseInt(item.wrongNum));
+          this.subjectsRate.push(rate);
+        });
+        console.log(this.subjectsRate);
+        console.log(this.theSubjects);
       })
     },
     getStudentExercise(){
@@ -755,10 +768,12 @@ export default {
           if(this.exerciseSets[i].test===false){
             this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-9);
           }
-          this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))+8*3600*1000).Format("yyyy-MM-dd hh:mm:ss");
-          this.exerciseSets[i].startTime=new Date((+new Date(this.exerciseSets[i].startTime))+8*3600*1000).Format("yyyy-MM-dd hh:mm:ss");
+          console.log(this.exerciseSets[i].endTime);
+          this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))).Format("yyyy-MM-dd hh:mm:ss");
+          this.exerciseSets[i].startTime=new Date((+new Date(this.exerciseSets[i].startTime))).Format("yyyy-MM-dd hh:mm:ss");
           //this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
           //this.exerciseSets[i].startTime=this.exerciseSets[i].startTime.slice(0,10)+" "+this.exerciseSets[i].startTime.slice(11,19);
+          console.log(this.exerciseSets[i].endTime);
           var now=new Date();
           //let nowTime=now.getFullYear()+"-"+String(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
           let nowTime=now.Format("yyyy-MM-dd hh:mm:ss");
@@ -771,6 +786,9 @@ export default {
           }
           else{
             this.exerciseSets[i]["timeState"]='3';
+          }
+          if(this.exerciseSets[i].test===false){
+            this.exerciseSets[i].startTime=null;
           }
         }
 
@@ -971,6 +989,22 @@ export default {
       arr[arr.length - i - 1] = item;
     }
   },
+    getRange1(){
+      axios({
+        url:"/problem/ranges",
+        params:{
+          subject:this.exercise.subject
+        }
+      }).then(res=>{
+        this.ranges1=res.data;
+        for(let i=0;i<this.ranges1.length;i++){
+          if(this.ranges1[i].label==='全部'){
+            this.ranges1.remove(this.ranges1[i]);
+          }
+        }
+        //this.ranges1.shift();
+      })
+    },
     getRange(){
       axios({
         url:"/problem/ranges",
@@ -979,9 +1013,8 @@ export default {
         }
       }).then(res=>{
         this.ranges=res.data;
-        this.ranges.shift();
       })
-    }
+    },
 
   },
   components:{Top,Down,Chart3,Chart4,Chart5},
@@ -1047,7 +1080,12 @@ export default {
       url:"/problem/allsubjects",
     }).then(res=>{
       this.subjects=res.data;
-      this.subjects.shift();
+      this.subjects1=this.subjects;
+      for(let i=0;i<this.subjects1.length;i++){
+        if(this.subjects1[i].label==='全部'){
+          this.subjects1.remove(this.subjects1[i]);
+        }
+      }
     })
     this.getStuInfo();
   }

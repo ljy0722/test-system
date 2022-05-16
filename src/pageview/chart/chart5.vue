@@ -8,15 +8,27 @@
 <script>
 export default {
   name: 'chart5',
+  props:[
+    // opinion:{
+    //   type:Array,
+    //   default:[]
+    // },
+    // opinionData:{
+    //   type:Array,
+    //   default: []
+    // }
+    'opinion',
+    'opinionData'
+  ],
   data () {
     return {
       myChart4: '',
-      opinion: ['中医学基础', '温病学','中医外科学'],
-      opinionData: [
-        { value: 85, itemStyle: '#37eaf0' },
-        { value: 15, itemStyle: '#37eaf0' },
-        { value: 25, itemStyle: '#37eaf0' }
-      ]
+      // opinion: ['中医学基础', '温病学','中医外科学'],
+      // opinionData: [
+      //   { value: 85, itemStyle: '#37eaf0' },
+      //   { value: 15, itemStyle: '#37eaf0' },
+      //   { value: 25, itemStyle: '#37eaf0' }
+      // ]
     }
   },
   mounted: function () {

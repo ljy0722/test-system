@@ -1,7 +1,7 @@
 <template>
   <div id="super_user">
     <el-container>
-      <el-header>
+      <el-header style="padding: 0">
         <Top></Top>
       </el-header>
       <br>
@@ -1093,16 +1093,16 @@
                 <el-form-item label="题目:">
                   <el-input v-model="modifyProblem.question"></el-input>
                 </el-form-item>
-                <el-form-item label="选项A:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                <el-form-item label="选项A:" v-if="modifyProblem.questionType==='单项选择题'||modifyProblem.questionType==='多项选择题'">
                   <el-input v-model="modifyProblem.answerA"></el-input>
                 </el-form-item>
-                <el-form-item label="选项B:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                <el-form-item label="选项B:" v-if="modifyProblem.questionType==='单项选择题'||modifyProblem.questionType==='多项选择题'">
                   <el-input v-model="modifyProblem.answerB"></el-input>
                 </el-form-item>
-                <el-form-item label="选项C:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                <el-form-item label="选项C:" v-if="modifyProblem.questionType==='单项选择题'||modifyProblem.questionType==='多项选择题'">
                   <el-input v-model="modifyProblem.answerC"></el-input>
                 </el-form-item>
-                <el-form-item label="选项D:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
+                <el-form-item label="选项D:" v-if="modifyProblem.questionType==='单项选择题'||modifyProblem.questionType==='多项选择题'">
                   <el-input v-model="modifyProblem.answerD"></el-input>
                 </el-form-item>
                 <el-form-item label="选项E:" v-if="modifyProblem.questionType=='单项选择题'||modifyProblem.questionType=='多项选择题'">
@@ -1142,7 +1142,7 @@
           </div>
         </el-main>
       </el-container>
-      <el-footer>
+      <el-footer style="padding: 0">
         <Down></Down>
       </el-footer>
 

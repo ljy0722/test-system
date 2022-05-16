@@ -1,6 +1,6 @@
 <template>
   <div class="login clearfix">
-    <div style="margin-bottom: 50px">
+    <div style="margin-bottom: 50px;margin-top: 100px">
       <span style="font-size: xx-large;font-weight: bolder">中医药在线考试系统</span>
     </div>
     <div class="login-wrap">
@@ -142,12 +142,12 @@ export default {
 .login {
   width: 100%;
   height: 740px;
-  background: url("../assets/images/loginbg.png") no-repeat;
+  background: url("../assets/images/login_register.png") no-repeat;
   background-size: cover;
   overflow: hidden;
 }
 .login-wrap {
-  background: url("../assets/images/img.png");
+  background: white;
   border-color: black;
   background-size: cover;
   width: 400px;
@@ -156,6 +156,7 @@ export default {
   overflow: hidden;
   padding-top: 10px;
   line-height: 20px;
+  padding-bottom: 10px;
 }
 
 h3 {

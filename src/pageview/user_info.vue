@@ -1,7 +1,7 @@
 <template>
   <div id="user_info">
     <div>
-      <el-row>
+      <el-row style="padding: 0">
         <Top></Top>
       </el-row>
       <el-row>
@@ -86,7 +86,7 @@
           </el-card>
 
       </el-row>
-      <el-row>
+      <el-row style="padding: 0">
         <Down></Down>
       </el-row>
 
@@ -191,13 +191,13 @@ export default {
       this.user_info.address=res.data.address;
       this.user_info.birthday=res.data.birthday;
       this.user_info.phoneNum=res.data.phone;
-      if(res.data.type==='T'){
+      if(res.data.type==="T"){
         this.user_info.identity='教师';
       }
-      else if(res.data.type==='S'){
+      else if(res.data.type==="S"){
         this.user_info.identity='学生';
       }
-      else if(res.data.type==='A'){
+      else if(res.data.type==="A"){
         this.user_info.identity='管理员';
       }
     }).catch(err=>{

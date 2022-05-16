@@ -1,7 +1,7 @@
 <template>
   <div id="teacher">
     <el-container>
-      <el-header>
+      <el-header style="padding: 0">
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
@@ -123,7 +123,7 @@
               </div>
             </div>
             <div v-if="setdetail==true" style="margin-top: 80px">
-              <el-button type="plain" style="float: left" size="mini" @click="setdetail=false">返回</el-button>
+              <el-button type="plain" style="float: left" size="mini" @click="setdetail=false;seechart=false">返回</el-button>
               <span style="font-size: x-large;font-weight: bold;margin-left: -6%">{{ setDetail.setname }}</span>
               <br>
               <br>
@@ -484,10 +484,11 @@
               </div>
               <el-row style="margin-top: 80px">
                 <el-col :span="12">
-                  <Chart :value1="10" :value2="10" :value3="10" :value4="10"></Chart>
+<!--                  <Chart :value1="1" :value2="0" :value3="0" :value4="1"></Chart>-->
+                  <Chart v-if="seechart===true" :value1="rate[0]" :value2="rate[1]" :value3="rate[2]" :value4="rate[3]"></Chart>
                 </el-col>
                 <el-col :span="12">
-                  <chart2 :xaxis="[1,2,3,4]" :yaxis="[100,90,80,23]"></chart2>
+                  <chart2 v-if="seechart===true" :xaxis="problemids" :yaxis="problemRate"></chart2>
                 </el-col>
                 <br>
 
@@ -1625,7 +1626,7 @@
           </div>
         </el-main>
       </el-container>
-      <el-footer>
+      <el-footer style="padding: 0">
         <Down></Down>
       </el-footer>
 
@@ -1649,6 +1650,10 @@ export default {
   data(){
     return{
       // getactive:this.$route.params.active,
+      rate:[0,0,0,0],
+      problemids:[],
+      problemRate:[],
+      seechart:false,
       file:'',
       filename:'',
       active:null,
@@ -2033,20 +2038,28 @@ export default {
       switch (key){
         case '1':
           this.active='1';
+          this.seechart=false;
+          this.setdetail=false;
           console.log(1);
           break;
         case '2':
           this.active='2';
+          this.seechart=false;
+          this.setdetail=false;
           console.log(2);
           break;
         case '3':
           this.active='3';
+          this.seechart=false;
+          this.setdetail=false;
           this.getTeacherProblems();
           this.getAllproblems();
           console.log(3);
           break;
         case '4':
           this.active='4';
+          this.seechart=false;
+          this.setdetail=false;
           this.getUserGroups();
           console.log(4);
           break;
@@ -2063,6 +2076,7 @@ export default {
         }
       }).then(res=>{
         this.user_groups=res.data.data;
+        this.totalGroup=res.data.total;
       })
     },
 
@@ -2071,10 +2085,11 @@ export default {
         url:"/user/groupDetail",
         params:{
           page:this.pageUser,
-          groupId:id,
+          groupId:this.viewGroupId,
         }
       }).then(res=>{
         this.userGroup=res.data.data;
+        this.totalUser=res.data.total;
       })
     },
     checkGroupDetail(id){
@@ -2112,6 +2127,42 @@ export default {
       }).then(res=>{
         this.showStudentsInAGroup=res.data.data;
         this.totalSetUser=res.data.total;
+        let n1=0;
+        let n2=0;
+        let n3=0;
+        let n4=0;
+        res.data.data.forEach(item=>{
+          if(item.totalScore!==0){
+            if(parseInt(item.score)/parseInt(item.totalScore)*100<60){
+              n1=n1+1;
+            }
+            else if(parseInt(item.score)/parseInt(item.totalScore)*100<70){
+              n2=n2+1;
+            }
+            else if(parseInt(item.score)/parseInt(item.totalScore)*100<90){
+              n3=n3+1;
+            }
+            else{
+              n4=n4+1;
+            }
+          }
+          this.rate=[n1,n2,n3,n4];
+        })
+        console.log(this.rate);
+        let ids=[];
+        let prate=[];
+        if(res.data.data.length!==0){
+          for(let i=1;i<=res.data.data[0].correctStuNum.length;i++){
+            ids.push(i);
+            prate.push(res.data.data[0].correctStuNum[i-1]*100/res.data.data.length);
+          }
+        }
+        this.problemids=ids;
+        this.problemRate=prate;
+        console.log(this.problemids);
+        console.log(this.problemRate);
+        this.problemRate=[50,100];
+        this.seechart=true;
       })
     },
     viewStudentSet(studentId,exerciseId){
@@ -2313,7 +2364,8 @@ export default {
       }
       else{
         let form=new FormData();
-        form.append('file',this.fileList2);
+        form.append("groupId",this.viewGroupId.toString())
+        form.append("file",this.fileList2[0]);
         console.log("from");
         console.log(form);
         axios({
@@ -2324,7 +2376,9 @@ export default {
           },
           data:form
         }).then(res=>{
-          this.userGroup=res.data.data;
+          //this.userGroup=res.data.data;
+          this.fileList2=[];
+          this.viewGroup();
         }).catch(err=>{
 
         });
@@ -2377,13 +2431,14 @@ export default {
           pageNum:this.pageSearchUser
         }
       }).then(res=>{
-        var user=new Object();
-        user["id"]=res.data.userId;
-        user["sex"]=res.data.sex;
-        user["email"]=res.data.email;
-        user["name"]=res.data.userName;
+        // var user=new Object();
+        // user["id"]=res.data.userId;
+        // user["sex"]=res.data.sex;
+        // user["email"]=res.data.email;
+        // user["name"]=res.data.userName;
         this.searchUserInfo=[];
-        this.searchUserInfo.push(user);
+        //this.searchUserInfo.push(user);
+        this.searchUserInfo=res.data.data;
       })
     },
     deleteUser(id){
