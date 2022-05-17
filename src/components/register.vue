@@ -124,9 +124,12 @@ export default {
               // console.log("输出response.data", res.data);
               // console.log("输出response.data.status", res.data.status);
               if (res.data.result === true) {
+                if(this.user.applyTeacher===true){
+                  alert("请等待管理员进行审核");
+                }
                 this.$router.push({ path: "/" });
               } else {
-                alert("请等待管理员进行审核");
+
                 this.$router.push({path:"/"});
               }
             });

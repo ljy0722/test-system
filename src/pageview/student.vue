@@ -8,28 +8,43 @@
         <el-aside style="margin-top: 100px" width="140px">
           <div class="toggle-btn" >|||</div>
           <el-menu default-active="active" style="width: 130px" @select="handleSelect">
-            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>开始练习</el-menu-item>
-            <el-menu-item index="2"><i class="el-icon-s-order"></i>题目集 </el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-s-release"></i>我的错题 </el-menu-item>
-            <el-menu-item index="4"><i class="el-icon-s-grid"></i>数据与分析 </el-menu-item>
+            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>创建练习</el-menu-item>
+            <el-menu-item index="2" v-if="haveTest===true">我的考试</el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-s-order"></i>历次题目集 </el-menu-item>
+            <el-menu-item index="4"><i class="el-icon-s-release"></i>我的错题 </el-menu-item>
+            <el-menu-item index="5"><i class="el-icon-s-grid"></i>数据与分析 </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main style="margin-top: 80px">
-          <div v-if="active=='1'">
+          <div v-if="active==='1'">
             <el-card id="create-exercise" style="width: 75%;" align="left">
               <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R'">
                 <span>练习生成选项</span>
               </div>
-              <div style="width: 30%;margin-left: 15px">
-                <p>题量设置</p>
-                <el-input v-model="exercise.danxuan" placeholder="单选题"></el-input>
-                <el-input v-model="exercise.duoxuan" placeholder="多选题"></el-input>
-                <el-input v-model="exercise.tiankong" placeholder="填空题"></el-input>
-                <el-input v-model="exercise.wenda" placeholder="问答题"></el-input>
+              <div style="margin-left: 15px">
+                <h3>题量设置</h3>
+                <el-row>
+                  <span>单项选择题</span>
+                  <el-input style="width: 30%" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input>
+                </el-row>
+                <el-row>
+                  <span>多项选择题</span>
+                  <el-input  style="width: 30%" v-model="exercise.duoxuan" placeholder="多选题数量"></el-input>
+                </el-row>
+                <el-row>
+                  <span>填空题</span>
+                  <el-input style="width: 30%;margin-left: 33px" v-model="exercise.tiankong" placeholder="填空题数量"></el-input>
+                </el-row>
+                <el-row>
+                  <span>问答题</span>
+                  <el-input style="width: 30%;margin-left: 33px" v-model="exercise.wenda" placeholder="问答题数量"></el-input>
+                </el-row>
+
+
               </div>
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
-                <p>选择科目</p>
+                <h3>选择科目</h3>
                 <el-select v-model="exercise.subject" @change="getRange1">
                   <el-option
                     v-for="item in subjects1"
@@ -40,7 +55,7 @@
               </div>
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
-                <p>选择考点</p>
+                <h3>选择考点</h3>
                 <el-select v-model="exercise.range" multiple>
                   <el-option
                     v-for="item in ranges1"
@@ -51,7 +66,7 @@
               </div>
               <el-divider></el-divider>
               <div style="width: 30%;margin-left: 15px">
-                <p>练习时长</p>
+                <h3>练习时长</h3>
                 <el-input v-model="exercise.time"><template slot="append">分钟</template></el-input>
               </div>
               <el-divider></el-divider>
@@ -60,7 +75,10 @@
               </div>
             </el-card>
           </div>
-          <div v-if="active=='2'">
+          <div v-if="active==='2'">
+
+          </div>
+          <div v-if="active==='3'">
             <el-row>
               <el-col :span="1">
                 <div style="width: 50px;margin-top: 10px">排序:</div>
@@ -129,12 +147,12 @@
               </el-pagination>
             </div>
           </div>
-          <div v-if="active=='3'">
+          <div v-if="active==='4'">
             <el-tabs type="border-card" >
               <el-tab-pane label="单选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -239,7 +257,7 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -342,7 +360,7 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -420,7 +438,7 @@
               <el-tab-pane label="问答题">
                 <el-row>
                   <el-col :span="3">
-                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange">
+                    <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -494,19 +512,12 @@
 
             </el-tabs>
           </div>
-          <div v-if="active=='4'" align="left">
+          <div v-if="active==='5'" align="left">
             <el-col :span="8">
               <span style="font-size: x-large">练习数据</span>
               <br>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <div style="font-size: x-large">{{user.exer_num}}</div>
-                <br>
-                <div>
-                  <span style="color: #868686">做过的题目数</span>
-                </div>
-              </el-card>
-              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <div style="font-size: x-large">{{user.test_num}}</div>
+                <div style="font-size: x-large" @click="gotoTest">{{user.test_num}}</div>
                 <br>
                 <div>
                   <span style="color: #868686">完成的考试数</span>
@@ -517,6 +528,13 @@
                 <br>
                 <div>
                   <span style="color: #868686">完成的练习数</span>
+                </div>
+              </el-card>
+              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
+                <div style="font-size: x-large">{{user.exer_num}}</div>
+                <br>
+                <div>
+                  <span style="color: #868686">做过的题目数</span>
                 </div>
               </el-card>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
@@ -560,6 +578,7 @@ export default {
   data(){
     return{
       active:'',
+      haveTest:true,
       totalSets:1,
       pageSets:1,
       totalWrongSingle:1,
@@ -703,20 +722,20 @@ export default {
       switch (key){
         case '1':
           this.active='1';
-          console.log(1);
           break;
         case '2':
           this.active='2';
-          console.log(2);
-          this.getStudentExercise();
           break;
         case '3':
           this.active='3';
-          console.log(3);
-          this.getWrongQuestion();
+          this.getStudentExercise();
           break;
         case '4':
           this.active='4';
+          this.getWrongQuestion();
+          break;
+        case '5':
+          this.active='5';
 
           console.log(4);
           break;
@@ -1005,16 +1024,21 @@ export default {
         //this.ranges1.shift();
       })
     },
-    getRange(){
+    getRange(sub){
       axios({
         url:"/problem/ranges",
         params:{
-          subject:this.exercise.subject
+          subject:sub
         }
       }).then(res=>{
         this.ranges=res.data;
       })
     },
+    gotoTest(){
+      this.setType=true;
+      this.active='3';
+      this.getStudentExercise();
+    }
 
   },
   components:{Top,Down,Chart3,Chart4,Chart5},

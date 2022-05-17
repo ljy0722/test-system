@@ -7,8 +7,8 @@
       <br>
       <br>
       <br>
-      <el-container style="min-height: 500px">
-        <el-aside style="margin-top: 50px" width="170px">
+      <el-container style="min-height: 500px;margin-top: 50px">
+        <el-aside style="margin-top: 100px" width="170px">
           <div class="toggle-btn" >|||</div>
           <el-menu default-active="active" style="width: 160px" @select="handleSelect">
             <el-submenu index="11">

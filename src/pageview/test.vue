@@ -176,6 +176,7 @@ export default {
       //id:this.$route.query.exerciseId,
       setName:'',
       exerciseId:null,
+      startDoingTime:null,
       isTest:0,
       resTime: "", // 剩余时间
       startTime: "2022-5-8 12:00:00", // 开始时间，自己设置或数据库获取
@@ -441,6 +442,7 @@ export default {
           setname:this.setname,
           score:null,
           isTest:test,
+          startDoingTime:this.startDoingTime,
           singleChoiceList:this.singleChoiceList,
           multiChoiceList:this.multiChoiceList,
           fillBlankList:this.fillBlankList,
@@ -570,6 +572,7 @@ export default {
     // })
     let exerciseInfo=JSON.parse(this.$route.params.exerciseInfo);
     console.log(exerciseInfo);
+    this.startDoingTime=exerciseInfo.startDoingTime;
     if(exerciseInfo.isTest!==null){
       this.isTest=exerciseInfo.isTest;
     }
