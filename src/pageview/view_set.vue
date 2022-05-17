@@ -41,6 +41,9 @@
                             <el-row style="color: dodgerblue;margin-top: 20px">
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
+                            <el-row style="color: red;margin-top: 10px">
+                              分值：{{item.fenzhi}}
+                            </el-row>
                           </el-col>
                         </el-row>
                         <el-row>
@@ -71,6 +74,9 @@
                             <el-row style="color: dodgerblue;margin-top: 20px">
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
+                            <el-row style="color: red;margin-top: 10px">
+                              分值：{{item.fenzhi}}
+                            </el-row>
                           </el-col>
                         </el-row>
                         <el-row>
@@ -94,6 +100,9 @@
                             <el-row style="color: dodgerblue;margin-top: 20px">
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
+                            <el-row style="color: red;margin-top: 10px">
+                              分值：{{item.fenzhi}}
+                            </el-row>
                           </el-col>
                         </el-row>
                         <el-row>
@@ -116,6 +125,9 @@
                             <el-input v-model="item.myAnswer"></el-input>
                             <el-row style="color: dodgerblue;margin-top: 20px">
                               正确答案：{{item.problemInfo.answer}}
+                            </el-row>
+                            <el-row style="color: red;margin-top: 10px">
+                              分值：{{item.fenzhi}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -181,6 +193,7 @@
 <script>
 import Top from '../components/navigation/top.vue'
 import Down from '../components/navigation/down.vue'
+import axios from "axios";
 
 export default {
   data() {
@@ -240,7 +253,17 @@ export default {
       });
     },
     back(){
-      this.$router.push({path:'/student'})
+      axios({
+        url:"/user/userInfo",
+      }).then(res=>{
+        if(res.data.type==='S'){
+          this.$router.push({path:'/student'})
+        }
+        else{
+          this.$router.go(-1);
+        }
+      })
+
     },
     PrintGrade() {
       let a;
@@ -272,7 +295,7 @@ export default {
     this.fillBlankList=JSON.parse(this.$route.params.fill);
     this.questionAnswerList=JSON.parse(this.$route.params.qa);
     for(let i=0;i<this.singleChoiceList.length;i++){
-      if(this.singleChoiceList[i].problemInfo.answer===this.singleChoiceList[i].myAnswer){
+      if(this.singleChoiceList[i].correct===true){
         this.singleChoiceList[i]["show"] = 'background: #00ABEA;';
       }
       else{
@@ -280,7 +303,7 @@ export default {
       }
     }
     for(let i=0;i<this.multiChoiceList.length;i++){
-      if(this.multiChoiceList[i].problemInfo.answer===this.multiChoiceList[i].myAnswer){
+      if(this.multiChoiceList[i].correct===true){
         this.multiChoiceList[i]["show"] = 'background: #00ABEA;';
       }
       else{

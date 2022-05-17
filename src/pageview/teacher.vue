@@ -29,7 +29,7 @@
                     <el-row><span>已结束：   {{getval3}}</span></el-row>
                   </div>
                 </el-card>
-                <Chart6 v-if="see===true" :value1="getval1" :value2="getval2" :value3="getval3" style="margin-top: 60px"></Chart6>
+                <Chart6 v-if="getsee" :value1="getval1" :value2="getval2" :value3="getval3" style="margin-top: 60px"></Chart6>
               </el-col>
               <el-col :span="8">
                 <el-card style="background:#eeeeee;min-height: 150px;width:250px;margin-top: 80px">
@@ -44,7 +44,7 @@
                     <el-row><span>问答题：   {{totalQa}}</span></el-row>
                   </div>
                 </el-card>
-                <Chart7 v-if="see===true" :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
+                <Chart7 v-if="getsee" :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
               </el-col>
               <el-col :span="8">
                 <el-card style="background:#eeeeee;width: 270px;min-height: 150px;margin-top: 80px;margin-right: 40px">
@@ -144,6 +144,7 @@
                 <el-tab-pane label="单选题" style="margin-bottom: 30px">
                   <el-table
                     :data="setDetail.singleChoiceList"
+                    stripe
                     ref="setDetail.problems.single"
                     style="width: 100%;margin-bottom: 30px;white-space: pre-wrap">
                     <el-table-column
@@ -223,6 +224,7 @@
                 <el-tab-pane label="多选题">
                   <el-table
                     :data="setDetail.multiChoiceList"
+                    stripe
                     ref="setDetail.problems.multi"
                     style="width: 100%">
                     <el-table-column
@@ -302,6 +304,7 @@
                 <el-tab-pane label="填空题">
                   <el-table
                     :data="setDetail.fillBlankList"
+                    stripe
                     ref="setDetail.problems.fill"
                     style="width: 100%">
                     <el-table-column
@@ -356,6 +359,7 @@
                 <el-tab-pane label="问答题">
                   <el-table
                     :data="setDetail.questionAnswerList"
+                    stripe
                     ref="setDetail.problems.quesans"
                     style="width: 100%">
                     <el-table-column
@@ -436,6 +440,7 @@
               </el-row>
               <el-table
                 :data="showStudentsInAGroup"
+                stripe
               >
                 <el-table-column
                   prop="id"
@@ -539,6 +544,7 @@
 
                   <el-table
                     :data="problems.single"
+                    stripe
                     ref="problems.single"
                     style="width: 100%">
                     <el-table-column
@@ -646,6 +652,7 @@
                   </el-row>
                   <el-table
                     :data="problems.multi"
+                    stripe
                     ref="problems.multi"
                     style="width: 100%">
                     <el-table-column
@@ -753,6 +760,7 @@
                   </el-row>
                   <el-table
                     :data="problems.fill"
+                    stripe
                     ref="problems.fill"
                     style="width: 100%">
                     <el-table-column
@@ -835,6 +843,7 @@
                   </el-row>
                   <el-table
                     :data="problems.quesans"
+                    stripe
                     ref="problems.quesans"
                     style="width: 100%">
                     <el-table-column
@@ -1091,6 +1100,7 @@
                   </el-row>
                   <el-table
                     :data="allProblemSingle"
+                    stripe
                     ref="problems"
                     style="width: 100%">
                     <el-table-column
@@ -1150,7 +1160,7 @@
                     <el-table-column
                       prop="source"
                       label="来源"
-                      width="55">
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right"
@@ -1199,6 +1209,7 @@
                   </el-row>
                   <el-table
                     :data="allProblemMulti"
+                    stripe
                     ref="problems2Check"
                     style="width: 100%">
                     <el-table-column
@@ -1258,7 +1269,7 @@
                     <el-table-column
                       prop="source"
                       label="来源"
-                      width="55">
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right"
@@ -1307,6 +1318,7 @@
                   </el-row>
                   <el-table
                     :data="allProblemFill"
+                    stripe
                     ref="problems2Check"
                     style="width: 100%">
                     <el-table-column
@@ -1342,7 +1354,7 @@
                     <el-table-column
                       prop="source"
                       label="来源"
-                      width="55">
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right"
@@ -1391,6 +1403,7 @@
                   </el-row>
                   <el-table
                     :data="allProblemQa"
+                    stripe
                     ref="problems2Check"
                     style="width: 100%">
                     <el-table-column
@@ -1426,7 +1439,7 @@
                     <el-table-column
                       prop="source"
                       label="来源"
-                      width="55">
+                      width="150">
                     </el-table-column>
                     <el-table-column
                       fixed="right"
@@ -1516,6 +1529,7 @@
             </el-row>
             <el-table
               :data="userGroup"
+              stripe
             >
               <el-table-column
                 prop="id"
@@ -1566,6 +1580,7 @@
               <el-table
                 ref="multipleTable"
                 :data="searchUserInfo"
+                stripe
               >
                 <el-table-column
                   prop="id"
@@ -1658,7 +1673,7 @@ export default {
       see:false,
       file:'',
       filename:'',
-      active:'1',
+      active:null,
       isCollapse:false,
       dispatch:false,
       dispatch2:false,
@@ -1899,7 +1914,7 @@ export default {
     }
   },
   mounted() {
-
+    this.see=true;
   },
   methods:{
 
@@ -2503,6 +2518,10 @@ export default {
     }
   },
   computed:{
+    getsee(){
+      this.active='1';
+      return true;
+    },
     getval1(){
       let l=0;
       for(let i=0;i<this.exerciseSets.length;i++){
@@ -2615,14 +2634,13 @@ export default {
       return this.setDetail.groups[0].users;
     },
   },
-  
+
   created() {
     this.getTeacherExercise();
     this.getSubjects();
     this.getTeacherProblems();
-    this.see=true;
-    this.active='2';
-    this.active='1';
+
+   //this.see=true;
   },
 
 
