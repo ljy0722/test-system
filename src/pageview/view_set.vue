@@ -313,11 +313,11 @@ export default {
       this.multiChoiceList[i].myAnswer=radio;
     }
     for(let i=0;i<this.fillBlankList.length;i++){
-      if(this.$data.fillBlankList[i].answer===this.$data.fillBlankList[i].blank){
-        this.$data.fillBlankList[i].show='background: #00ABEA;';
+      if(this.fillBlankList[i].correct===true){
+        this.fillBlankList[i]["show"]='background: #00ABEA;';
       }
       else{
-        this.$data.fillBlankList[i].show='background: red;';
+        this.fillBlankList[i]["show"]='background: red;';
       }
     }
   },
