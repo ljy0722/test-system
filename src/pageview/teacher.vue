@@ -10,7 +10,7 @@
           <el-menu default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>概览</el-menu-item>
             <el-menu-item index="2"><i class="el-icon-s-order"></i>题目集 </el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-s-grid"></i>我的题目 </el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-s-grid"></i>收藏题目 </el-menu-item>
             <el-menu-item index="4"><i class="el-icon-s-custom"></i>用户组 </el-menu-item>
           </el-menu>
         </el-aside>
@@ -29,7 +29,7 @@
                     <el-row><span>已结束：   {{getval3}}</span></el-row>
                   </div>
                 </el-card>
-                <Chart6 :value1="getval1" :value2="getval2" :value3="getval3" style="margin-top: 60px"></Chart6>
+                <Chart6 v-if="see===true" :value1="getval1" :value2="getval2" :value3="getval3" style="margin-top: 60px"></Chart6>
               </el-col>
               <el-col :span="8">
                 <el-card style="background:#eeeeee;min-height: 150px;width:250px;margin-top: 80px">
@@ -44,7 +44,7 @@
                     <el-row><span>问答题：   {{totalQa}}</span></el-row>
                   </div>
                 </el-card>
-                <Chart7 :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
+                <Chart7 v-if="see===true" :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
               </el-col>
               <el-col :span="8">
                 <el-card style="background:#eeeeee;width: 270px;min-height: 150px;margin-top: 80px;margin-right: 40px">
@@ -1655,9 +1655,10 @@ export default {
       problemids:[],
       problemRate:[],
       seechart:false,
+      see:false,
       file:'',
       filename:'',
-      active:null,
+      active:'1',
       isCollapse:false,
       dispatch:false,
       dispatch2:false,
@@ -2614,11 +2615,16 @@ export default {
       return this.setDetail.groups[0].users;
     },
   },
+  
   created() {
     this.getTeacherExercise();
     this.getSubjects();
     this.getTeacherProblems();
+    this.see=true;
+    this.active='2';
+    this.active='1';
   },
+
 
 
 }

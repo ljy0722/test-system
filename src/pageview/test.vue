@@ -469,8 +469,12 @@ export default {
           exerciseId:eId,
         }
       }).then(res=>{
+        let name=res.data.setname;
+        if(res.data.test===0){
+          name="";
+        }
         this.$router.push({name:'viewset',params:{
-            setname:res.data.setname,
+            setname:name,
             grade:res.data.score,
             single:JSON.stringify(res.data.singleChoiceList),
             multi:JSON.stringify(res.data.multiChoiceList),

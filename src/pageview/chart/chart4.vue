@@ -1,6 +1,6 @@
 <template>
-  <div class="test" style="width:500px;height:300px;">
-    <div id="myChart" style="width:100%;height:278px;float:left;"></div>
+  <div class="test" style="width:500px;height:350px;">
+    <div id="myChart" style="width:100%;height:300px;"></div>
   </div>
 </template>
 
@@ -57,7 +57,7 @@ export default {
             name: '',
             type: 'pie',
             radius: ['50%', '70%'],
-            avoidLabelOverlap: false,
+            avoidLabelOverlap: true,
             center: ['40%', '50%'],
             itemStyle: {
               emphasis: {

@@ -5,7 +5,7 @@
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
-        <el-aside style="margin-top: 100px" width="140px">
+        <el-aside style="margin-top: 100px;position: fixed" width="140px">
           <div class="toggle-btn" >|||</div>
           <el-menu default-active="active" style="width: 130px" @select="handleSelect">
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>创建练习</el-menu-item>
@@ -15,7 +15,7 @@
             <el-menu-item index="5"><i class="el-icon-s-grid"></i>数据与分析 </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main style="margin-top: 80px">
+        <el-main style="margin-top: 80px;margin-left: 130px">
           <div v-if="active==='1'">
             <el-card id="create-exercise" style="width: 75%;" align="left">
               <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R'">
@@ -517,28 +517,28 @@
               <span style="font-size: x-large">练习数据</span>
               <br>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <div style="font-size: x-large" @click="gotoTest">{{user.test_num}}</div>
+                <el-button type="text" style="font-size: x-large" @click="gotoTest">{{user.test_num}}</el-button>
                 <br>
                 <div>
                   <span style="color: #868686">完成的考试数</span>
                 </div>
               </el-card>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <div style="font-size: x-large">{{user.practiceAttendedNum}}</div>
+                <el-button type="text" style="font-size: x-large" @click="gotoExercise">{{user.practiceAttendedNum}}</el-button>
                 <br>
                 <div>
                   <span style="color: #868686">完成的练习数</span>
                 </div>
               </el-card>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <div style="font-size: x-large">{{user.exer_num}}</div>
+                <el-button type="text" style="font-size: x-large">{{user.exer_num}}</el-button>
                 <br>
                 <div>
                   <span style="color: #868686">做过的题目数</span>
                 </div>
               </el-card>
               <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <div style="font-size: x-large">{{user.wrong_num}}</div>
+                <el-button type="text" style="font-size: x-large" @click="gotoWrong">{{user.wrong_num}}</el-button>
                 <br>
                 <div>
                   <span style="color: #868686">错题数</span>
@@ -609,47 +609,10 @@ export default {
         endTimeS:'',
       },
       exerciseSets:[],
-      wrongProblemSingle:[
-        {
-          id:'1',
-          subject:'中医学基础',
-          contentType:'绪论',
-          type:'单项选择题',
-          question:'我国现存最早的医学专著是（  ）',
-          option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》\nD．《中藏经》\nE．《难经》',
-          answer:'A',
-          myanswer:'B',
-          score:'2'
-        },
-      ],
-      wrongProblemMulti:[
-        {
-          id:'700',
-          subject:'温病学',
-          contentType:'温病的辩证',
-          type:'多项选择题',
-          question:'肾阴耗损证的辨证要点是：',
-          option:'A．手指蠕动或瘛疭，舌干绛而萎，脉虚\nB．夜热早凉，热退无汗，能食消瘦，舌红苔少\nC．手足心热甚于手足背，口燥咽干，舌绛不鲜，干枯而萎，脉虚\nD．神昏肢厥，舌绛\nE．神志时清时寐，舌苔垢腻',
-          answer:'AC',
-          myanswer: 'AB',
-          score: '2'
-        },
-      ],
-      wrongProblemFill:[
-        {
-          id:'3',
-          subject:'中药',
-          contentType:'基础',
-          type:'填空题',
-          question:'《金匮要略》约成书于________年，是我国现存最早的一部________的专书，作者是我国________著名医学家',
-          option:'',
-          answer:'公元205 诊治杂病 东汉 张仲景（张机）',
-          score: '4'
-        }
-      ],
-      wrongProblemQa:[
-
-      ],
+      wrongProblemSingle:[],
+      wrongProblemMulti:[],
+      wrongProblemFill:[],
+      wrongProblemQa:[],
       search:'',
       user:{
         exer_num:10,
@@ -658,12 +621,7 @@ export default {
         practiceAttendedNum:10,
         typeNum:[0,0,0,0]
       },
-      pagination: {
-        //分页后的考试信息
-        current: 1, //当前页
-        total: null, //记录条数
-        size: 6 //每页条数
-      },
+
       sortvalue:'1',
       sortInfo:[
         {
@@ -695,7 +653,7 @@ export default {
         },
         {
           value: '3',
-          label: '已完成',
+          label: '已结束',
         },
         {
           value: '',
@@ -806,9 +764,9 @@ export default {
           else{
             this.exerciseSets[i]["timeState"]='3';
           }
-          if(this.exerciseSets[i].test===false){
-            this.exerciseSets[i].startTime=null;
-          }
+          // if(this.exerciseSets[i].test===false){
+          //   this.exerciseSets[i].startTime=null;
+          // }
         }
 
         this.totalSets=res.data.total;
@@ -869,7 +827,15 @@ export default {
             hh=hh+1;
           }
           var endTime=hh+":"+mm+":"+ss;
-          this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
+          this.$router.push({name:'viewset',params:{
+              setname:res.data.setname,
+              grade:res.data.score,
+              single:JSON.stringify(res.data.singleChoiceList),
+              multi:JSON.stringify(res.data.multiChoiceList),
+              fill:JSON.stringify(res.data.fillBlankList),
+              qa:JSON.stringify(res.data.questionAnswerList)}})
+        }).catch(err=>{
+          alert("您未参加该场考试，无法查看信息");
         })
       }
     },
@@ -1038,6 +1004,15 @@ export default {
       this.setType=true;
       this.active='3';
       this.getStudentExercise();
+    },
+    gotoExercise(){
+      this.setType=false;
+      this.active='3';
+      this.getStudentExercise();
+    },
+    gotoWrong(){
+      this.active='4';
+      this.getWrongQuestion();
     }
 
   },
