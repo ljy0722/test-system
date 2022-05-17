@@ -176,7 +176,7 @@ export default {
       //id:this.$route.query.exerciseId,
       setName:'',
       exerciseId:null,
-      isTest:false,
+      isTest:0,
       resTime: "", // 剩余时间
       startTime: "2022-5-8 12:00:00", // 开始时间，自己设置或数据库获取
       endTime: "2022-5-30 22:00:00", // 结束时间，自己设置或数据库获取
@@ -428,9 +428,9 @@ export default {
         let ans=this.multiChoiceList[i].myAnswer.join(" ");
         this.multiChoiceList[i].myAnswer=ans;
       }
-      let test=false;
-      if(this.isTest===true){
-        test=true;
+      let test=0;
+      if(this.isTest===1){
+        test=1;
       }
 
       axios({
@@ -448,15 +448,35 @@ export default {
         }
       }).then(res=>{
         this.$message("提交成功");
-        if(this.isTest===true){
+        if(test===1){
           this.$router.go(-1);
         }
         else{
-          this.$router.push({name:'viewset',params:{grade:res.data,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
+          this.viewStudentSet(res.data);
+          //this.$router.push({name:'viewset',params:{grade:res.data,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
         }
 
       })
       //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
+    },
+    viewStudentSet(eId){
+      axios({
+        url:"/exercise/viewStudentSet",
+        params:{
+          studentId:null,
+          exerciseId:eId,
+        }
+      }).then(res=>{
+        this.$router.push({name:'viewset',params:{
+            setname:res.data.setname,
+            grade:res.data.score,
+            single:JSON.stringify(res.data.singleChoiceList),
+            multi:JSON.stringify(res.data.multiChoiceList),
+            fill:JSON.stringify(res.data.fillBlankList),
+            qa:JSON.stringify(res.data.questionAnswerList)}})
+      }).catch(err=>{
+        alert("学生未参加考试");
+      })
     },
     gotobutton1(index) {
       this.$data.singleChoiceList[index].show = 'background: #00ABEA;';

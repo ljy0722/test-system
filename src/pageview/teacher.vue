@@ -118,6 +118,7 @@
                 <el-pagination
                   :current-change="change"
                   layout="prev, pager, next"
+                  :page-size=20
                   :total="totalSet">
                 </el-pagination>
               </div>
