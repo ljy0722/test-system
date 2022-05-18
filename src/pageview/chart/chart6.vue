@@ -20,7 +20,7 @@ export default {
       opinionData6: [
         { value: this.value1, name: '未开始', itemStyle: '#46d4bc' },
         { value: this.value2, name: '正在进行', itemStyle: '#4699d4' },
-        { value: this.value3, name: '已结束', itemStyle: '#6b4d38' },
+        { value: this.value3, name: '已结束', itemStyle: '#eccd6e' },
       ]
     }
   },
@@ -64,7 +64,7 @@ export default {
               },
               color: function (params) {
                 // 自定义颜色
-                var colorList = ['#46d4bc', '#4699d4','#6b4d38']
+                var colorList = ['#46d4bc', '#4699d4','#eccd6e']
                 return colorList[params.dataIndex]
               }
             }

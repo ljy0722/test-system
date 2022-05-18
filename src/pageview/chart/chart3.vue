@@ -27,7 +27,7 @@ export default {
       // 绘制图表
       this.myChart2.setOption({
         title: {
-          text: '近五次考试得分率', // 主标题
+          text: '近五次考试得分率及预测', // 主标题
           subtext: '', // 副标题
           x: 'left' // x轴方向对齐方式
         },
@@ -55,7 +55,7 @@ export default {
         },
         legend: {
           orient: 'vertical',
-          x: 'center',
+          x: 'right',
           y: 'top',
           data: ['得分率']
         },

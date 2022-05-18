@@ -49,7 +49,7 @@ export default {
           icon: 'circle',
           align: 'left',
           x: 'right',
-          y: 'bottom',
+          y: 'top',
           data: ['单项选择题', '多项选择题', '填空题', '问答题']
         },
         series: [

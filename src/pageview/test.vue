@@ -547,7 +547,10 @@ export default {
       this.endTime=now.getFullYear()+"-"+mm+"-"+now.getDate()+" "+this.$route.params.endTime;
       console.log("ssss");
       console.log(this.endTime);
-    }
+    },
+    beforeUnloadHandler(e) {
+      e.returnValue = "离开此页面？" // 此处返回任意字符串，不返回null即可，不能修改默认提示内容
+    },
   },
   created() {
     // axios({
@@ -597,10 +600,14 @@ export default {
     console.log(this.endTime);
   },
   mounted() {
-    this.timer = setInterval(this.getRestTime,1000)
+    this.timer = setInterval(this.getRestTime,1000);
+    window.addEventListener("beforeunload", this.beforeUnloadHandler, false);
   },
   beforeDestroy() {
     clearInterval(this.timer);
+  },
+  destroyed() {
+    window.removeEventListener("beforeunload", this.beforeUnloadHandler, false)
   },
   components:{Top,Down}
 }

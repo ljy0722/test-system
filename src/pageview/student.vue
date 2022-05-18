@@ -5,19 +5,60 @@
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
-        <el-aside style="margin-top: 100px;position: fixed" width="140px">
+        <el-aside style="margin-top: 100px" width="140px">
           <div class="toggle-btn" >|||</div>
           <el-menu default-active="active" style="width: 130px" @select="handleSelect">
-            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>创建练习</el-menu-item>
-            <el-menu-item index="2" v-if="haveTest===true">我的考试</el-menu-item>
+            <el-menu-item index="0"><i class="el-icon-s-home"></i>首页</el-menu-item>
+            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>开始练习</el-menu-item>
+            <el-menu-item index="2" v-if="haveTest===true"><i class="el-icon-timer"></i>开始考试 </el-menu-item>
             <el-menu-item index="3"><i class="el-icon-s-order"></i>历次题目集 </el-menu-item>
             <el-menu-item index="4"><i class="el-icon-s-release"></i>我的错题 </el-menu-item>
             <el-menu-item index="5"><i class="el-icon-s-grid"></i>数据与分析 </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main style="margin-top: 80px;margin-left: 130px">
+        <el-main style="margin-top: 80px;min-height: 600px">
+          <div v-if="active==='0'">
+            <el-col :span="17">
+              <calinder></calinder>
+            </el-col>
+            <el-col :span="6">
+              <div class="block" @click="showAnswer=true">
+                <el-carousel autoplay="false" trigger="click" height="400px" @change="showAnswer=false" class="random">
+                  <el-carousel-item v-for="item in randomProblems" :key="item">
+                    <div style="background: #e7f499;">
+                      <p class="small" style="font-size: large;margin-top: 20px;margin-left: 10px;margin-right: 10px">{{ item.question }}</p>
+                    </div>
+                    <el-row style="margin-top: 20px">
+                      <el-col :span="2" :offset="4" style="color: grey">A:</el-col>
+                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerA }}</el-col>
+                    </el-row>
+                    <el-row style="margin-top: 20px">
+                      <el-col :span="2" :offset="4" style="color: grey">B:</el-col>
+                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerB }}</el-col>
+                    </el-row>
+                    <el-row style="margin-top: 20px">
+                      <el-col :span="2" :offset="4" style="color: grey">C:</el-col>
+                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerC }}</el-col>
+                    </el-row>
+                    <el-row style="margin-top: 20px">
+                      <el-col :span="2" :offset="4" style="color: grey">D:</el-col>
+                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerD }}</el-col>
+                    </el-row>
+                    <el-row style="margin-top: 20px">
+                      <el-col :span="2" :offset="4" style="color: grey">E:</el-col>
+                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerE }}</el-col>
+                    </el-row>
+                    <p class="small" v-if="showAnswer===true">答案:{{ item.answer }}</p>
+                  </el-carousel-item>
+                </el-carousel>
+              </div>
+            </el-col>
+
+
+
+          </div>
           <div v-if="active==='1'">
-            <el-card id="create-exercise" style="width: 75%;" align="left">
+            <el-card id="create-exercise" style="width: 75%;margin-left: 10%" align="left">
               <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R'">
                 <span>练习生成选项</span>
               </div>
@@ -76,7 +117,28 @@
             </el-card>
           </div>
           <div v-if="active==='2'">
-
+            <el-card style="margin-bottom: 5px;height: 60px"
+                     v-for="(i,index) in exerciseSets"
+                     v-bind:key="index"
+                     v-if="i.state==='U'"
+            >
+              <el-row style="margin-top: -15px">
+                <el-button type="text"   style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state,i.timeState,i.endTime)"> {{ i.exerciseName }}</el-button>
+<!--                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='1'">未开始</span></i>-->
+                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='2'">正在进行</span></i>
+<!--                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='3'">已结束</span></i>-->
+              </el-row>
+              <el-row style="margin-top: -5px;float: right">
+                <span style="float: left;font-size: small">起止时间：{{i.startTime}}--{{i.endTime}}</span>
+              </el-row>
+            </el-card>
+            <el-pagination
+              @current-change="change00"
+              page-size="20"
+              :hide-on-single-page="true"
+              layout="prev, pager, next"
+              :total="totalTests">
+            </el-pagination>
           </div>
           <div v-if="active==='3'">
             <el-row>
@@ -241,6 +303,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deletewrong(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -344,6 +407,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deletewrong(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -422,6 +486,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deletewrong(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -496,6 +561,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
+                        type="danger"
                         @click="deletewrong(scope.row.id)">删除</el-button>
                     </template>
                   </el-table-column>
@@ -513,47 +579,72 @@
             </el-tabs>
           </div>
           <div v-if="active==='5'" align="left">
-            <el-col :span="8">
-              <span style="font-size: x-large">练习数据</span>
-              <br>
-              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <el-button type="text" style="font-size: x-large" @click="gotoTest">{{user.test_num}}</el-button>
+            <el-row>
+              <span style="font-size: x-large">做题数据</span>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
                 <br>
-                <div>
-                  <span style="color: #868686">完成的考试数</span>
-                </div>
-              </el-card>
-              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <el-button type="text" style="font-size: x-large" @click="gotoExercise">{{user.practiceAttendedNum}}</el-button>
+                <el-card class="exer-info" style="width: 100%">
+                  <el-button type="text" style="font-size: x-large" @click="gotoTest">{{user.test_num}}</el-button>
+                  <br>
+                  <div>
+                    <span style="color: #868686">完成的考试次数</span>
+                  </div>
+                </el-card>
+                <el-card class="exer-info" style="width: 100%;margin-top: 10px">
+                  <el-button type="text" style="font-size: x-large" @click="gotoExercise">{{user.practiceAttendedNum}}</el-button>
+                  <br>
+                  <div>
+                    <span style="color: #868686">完成的练习次数</span>
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :span="8" :offset="1">
+                <el-card class="exer-info" style="width: 100%;margin-top: 22px">
+                  <el-button type="text" style="font-size: x-large" @click="gotoDone">{{user.exer_num}}</el-button>
+                  <br>
+                  <div>
+                    <span style="color: #868686">做过的题目数量</span>
+                  </div>
+                </el-card>
+                <el-card class="exer-info" style="width: 100%;margin-top: 10px">
+                  <el-button type="text" style="font-size: x-large" @click="gotoWrong">{{user.wrong_num}}</el-button>
+                  <br>
+                  <div>
+                    <span style="color: #868686">错题数量</span>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+            <br>
+            <br>
+            <el-row>
+              <span style="font-size: x-large;margin-top: 20px">分析与总结</span>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
                 <br>
-                <div>
-                  <span style="color: #868686">完成的练习数</span>
-                </div>
-              </el-card>
-              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <el-button type="text" style="font-size: x-large">{{user.exer_num}}</el-button>
                 <br>
-                <div>
-                  <span style="color: #868686">做过的题目数</span>
-                </div>
-              </el-card>
-              <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                <el-button type="text" style="font-size: x-large" @click="gotoWrong">{{user.wrong_num}}</el-button>
+                <chart3 :xaxis="[1,2,3,4,5,'下一次']" :yaxis="yaxis"></chart3>
                 <br>
-                <div>
-                  <span style="color: #868686">错题数</span>
-                </div>
-              </el-card>
-            </el-col>
-            <el-col :span="8" :offset="2">
-              <span style="font-size: x-large">分析与总结</span>
-              <br>
-              <br>
-              <chart3 :xaxis="[1,2,3,4,5]" :yaxis="[50,60,30,90,100]"></chart3>
-              <chart4 :value1=user.typeNum[0] :value2=user.typeNum[1] :value3=user.typeNum[2] :value4=user.typeNum[3]></chart4>
-              <br>
-              <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
-            </el-col>
+              </el-col>
+              <el-col :span="8" :offset="2">
+                <chart4 style="margin-top: 40px" :value1=user.typeNum[0] :value2=user.typeNum[1] :value3=user.typeNum[2] :value4=user.typeNum[3]></chart4>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
+              </el-col>
+              <el-col :span="8" :offset="3">
+                <Rader :opinion="theSubjects" :opinion-data="subjectsRate"></Rader>
+              </el-col>
+            </el-row>
+            <el-row>
+
+            </el-row>
           </div>
         </el-main>
       </el-container>
@@ -571,6 +662,8 @@ import Down from '../components/navigation/down.vue'
 import Chart3 from './chart/chart3'
 import Chart4 from './chart/chart4'
 import Chart5 from './chart/chart5'
+import Calinder from './chart/calinder'
+import Rader from './chart/rader'
 import axios from "axios";
 
 export default {
@@ -578,7 +671,17 @@ export default {
   data(){
     return{
       active:'',
+      showAnswer:false,
+      randomProblems:[],
+      thesubjects1:[],
+      yaxis:[10,20,30,40,50],
       haveTest:true,
+      setstotal:0,
+      setstodo:0,
+      setsdoing:0,
+      setsundo:0,
+      pageTests:1,
+      totalTests:1,
       totalSets:1,
       pageSets:1,
       totalWrongSingle:1,
@@ -678,11 +781,15 @@ export default {
   methods:{
     handleSelect:function (key,keyPath){
       switch (key){
+        case '0':
+          this.active='0';
+          break;
         case '1':
           this.active='1';
           break;
         case '2':
           this.active='2';
+          this.getStudentTests();
           break;
         case '3':
           this.active='3';
@@ -726,8 +833,84 @@ export default {
           let rate=(parseInt(item.correctNum)*100)/(parseInt(item.correctNum)+parseInt(item.wrongNum));
           this.subjectsRate.push(rate);
         });
-        console.log(this.subjectsRate);
-        console.log(this.theSubjects);
+        this.computeNext();
+        this.setstotal=res.data.allSets;
+        this.setstodo=res.data.todo;
+        this.setsdoing=res.data.doing;
+        this.setsundo=res.data.undo;
+      })
+    },
+    computeNext(){
+      var avg=function (arr){
+        var len=arr.length;
+        var sum=0;
+        for(var i=0;i<len;i++){
+          sum+=arr[i]*1;
+        }
+        return sum/len;
+      }
+      var sampleAvg=avg(this.yaxis);
+      var length=5;
+      var temp=new Array(length);
+      for(var i=0;i<length;i++){
+        var dev=parseFloat(this.yaxis[i])-sampleAvg;
+        temp[i]=Math.pow(dev,2);
+      }
+      var powSum=0;
+      for(var j=0;j<temp.length;j++){
+        if(temp[j].toString()!=""||temp[j].toString()!=null){
+          powSum=parseFloat(powSum)+parseFloat(temp[j].toString());
+        }
+      }
+      var stddev=Math.sqrt(parseFloat(powSum)/parseFloat(length));
+      if(this.yaxis[3]>this.yaxis[4]){
+        this.yaxis.push((sampleAvg-stddev));
+      }
+      else{
+        this.yaxis.push((sampleAvg+stddev));
+      }
+
+    },
+    getStudentTests(){
+      axios({
+        url:"/exercise/getStudentExercise",
+        params:{
+          pageNum:this.pageTests,
+          test:true,
+          state:1,
+          order:4
+        }
+      }).then(res=>{
+        this.exerciseSets=res.data.data;
+        for(let i=0;i<this.exerciseSets.length;i++){
+          if(this.exerciseSets[i].test===false){
+            this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-1)+"0"
+          }
+          console.log(this.exerciseSets[i].endTime);
+          this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))).Format("yyyy-MM-dd hh:mm:ss");
+          this.exerciseSets[i].startTime=new Date((+new Date(this.exerciseSets[i].startTime))).Format("yyyy-MM-dd hh:mm:ss");
+          //this.exerciseSets[i].endTime=this.exerciseSets[i].endTime.slice(0,10)+" "+this.exerciseSets[i].endTime.slice(11,19);
+          //this.exerciseSets[i].startTime=this.exerciseSets[i].startTime.slice(0,10)+" "+this.exerciseSets[i].startTime.slice(11,19);
+          console.log(this.exerciseSets[i].endTime);
+          var now=new Date();
+          //let nowTime=now.getFullYear()+"-"+String(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+          let nowTime=now.Format("yyyy-MM-dd hh:mm:ss");
+          console.log(nowTime);
+          if(nowTime<this.exerciseSets[i].startTime){
+            this.exerciseSets[i]["timeState"]='1';
+          }
+          else if(nowTime<this.exerciseSets[i].endTime){
+            this.exerciseSets[i]["timeState"]='2';
+          }
+          else{
+            this.exerciseSets[i]["timeState"]='3';
+          }
+          // if(this.exerciseSets[i].test===false){
+          //   this.exerciseSets[i].startTime=null;
+          // }
+        }
+
+        this.totalTests=res.data.total;
       })
     },
     getStudentExercise(){
@@ -743,7 +926,7 @@ export default {
         this.exerciseSets=res.data.data;
         for(let i=0;i<this.exerciseSets.length;i++){
           if(this.exerciseSets[i].test===false){
-            this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-9);
+            this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-1)+"0"
           }
           console.log(this.exerciseSets[i].endTime);
           this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))).Format("yyyy-MM-dd hh:mm:ss");
@@ -892,7 +1075,10 @@ export default {
         //console.log("返回错题")
       }))
     },
-
+    change00(val){
+      this.pageTests=val;
+      this.getStudentTests();
+    },
     change0(val){
       this.pageSets=val;
       this.getStudentExercise();
@@ -976,17 +1162,12 @@ export default {
   },
     getRange1(){
       axios({
-        url:"/problem/ranges",
+        url:"/problem/rangesnopub",
         params:{
           subject:this.exercise.subject
         }
       }).then(res=>{
         this.ranges1=res.data;
-        for(let i=0;i<this.ranges1.length;i++){
-          if(this.ranges1[i].label==='全部'){
-            this.ranges1.remove(this.ranges1[i]);
-          }
-        }
         //this.ranges1.shift();
       })
     },
@@ -1005,6 +1186,12 @@ export default {
       this.active='3';
       this.getStudentExercise();
     },
+    gotoDone(){
+      this.setType=false;
+      this.shaixuan='3';
+      this.active='3';
+      this.getStudentExercise();
+    },
     gotoExercise(){
       this.setType=false;
       this.active='3';
@@ -1013,80 +1200,32 @@ export default {
     gotoWrong(){
       this.active='4';
       this.getWrongQuestion();
+    },
+    getRandomProblems(){
+      axios({
+        url:"/problem/randon",
+      }).then(res=>{
+        this.randomProblems=res.data;
+      })
     }
 
   },
-  components:{Top,Down,Chart3,Chart4,Chart5},
+  components:{Top,Down,Chart3,Chart4,Chart5,Calinder,Rader},
   computed:{
-    // exerciseSetsFilter(shaixuan){
-    //   if(shaixuan=='1'){
-    //     let _this=this;
-    //     let exer= _this.exerciseSets.filter(item=>item.state==='1').reverse();
-    //     return exer;
-    //   }
-    // },
-    // table1() {
-    //   //const search1='单项选择题';
-    //   const search=this.search;
-    //   if(search!=''){
-    //     return this.wrongProblemSingle.filter(data=>{
-    //       return Object.keys(data).some(key=>{
-    //         return String(data[key]).toLowerCase().indexOf(search)>-1
-    //       })
-    //     })
-    //   }
-    //   return this.wrongProblemSingle;
-    // },
-    // table2() {
-    //   //const search='多项选择题'
-    //   const search=this.search;
-    //   if(search!=''){
-    //     return this.wrongProblemMulti.filter(data=>{
-    //       return Object.keys(data).some(key=>{
-    //         return String(data[key]).toLowerCase().indexOf(search)>-1
-    //       })
-    //     })
-    //   }
-    //   return this.wrongProblemMulti;
-    // },
-    // table3() {
-    //   //const search='填空题'
-    //   const search=this.search;
-    //   if(search!=''){
-    //     return this.wrongProblemFill.filter(data=>{
-    //       return Object.keys(data).some(key=>{
-    //         return String(data[key]).toLowerCase().indexOf(search)>-1
-    //       })
-    //     })
-    //   }
-    //   return this.wrongProblemFill;
-    // },
-    // table4() {
-    //   //const search='问答题'
-    //   const search=this.search;
-    //   if(search!=''){
-    //     return this.wrongProblemQa.filter(data=>{
-    //       return Object.keys(data).some(key=>{
-    //         return String(data[key]).toLowerCase().indexOf(search)>-1
-    //       })
-    //     })
-    //   }
-    //   return this.wrongProblemQa;
-    // },
   },
   created() {
     axios({
       url:"/problem/allsubjects",
     }).then(res=>{
       this.subjects=res.data;
-      this.subjects1=this.subjects;
-      for(let i=0;i<this.subjects1.length;i++){
-        if(this.subjects1[i].label==='全部'){
-          this.subjects1.remove(this.subjects1[i]);
-        }
-      }
+    })
+    axios({
+      url:"/problem/allsubjectsnopub",
+    }).then(res=>{
+      this.subjects1=res.data;
     })
     this.getStuInfo();
+    this.getRandomProblems();
   }
 }
 </script>
@@ -1109,6 +1248,25 @@ export default {
 }
 .el-table.cell{
   white-space: pre-line;
+}
+.el-carousel__item p {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 40px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #f8fbe3;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
+}
+
+.random{
+
 }
 
 </style>

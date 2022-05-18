@@ -42,7 +42,7 @@
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
                             <el-row style="color: red;margin-top: 10px">
-                              分值：{{item.fenzhi}}
+                              得分：{{item.fenzhi}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -75,7 +75,7 @@
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
                             <el-row style="color: red;margin-top: 10px">
-                              分值：{{item.fenzhi}}
+                              得分：{{item.fenzhi}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -101,7 +101,7 @@
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
                             <el-row style="color: red;margin-top: 10px">
-                              分值：{{item.fenzhi}}
+                              得分：{{item.fenzhi}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -127,7 +127,7 @@
                               正确答案：{{item.problemInfo.answer}}
                             </el-row>
                             <el-row style="color: red;margin-top: 10px">
-                              分值：{{item.fenzhi}}
+                              得分：{{item.fenzhi}}
                             </el-row>
                           </el-col>
                         </el-row>
@@ -146,7 +146,7 @@
             </el-container>
           </el-col>
           <el-col :span="6">
-            <el-container style="margin-right: 50px;margin-top: -60px;height: 80%;position:fixed">
+            <el-container style="margin-right: 50px;margin-top: -60px;height: 80%;position:fixed;min-width: 250px">
               <el-header class="header_style" style="line-height: 40px;height: 40px;background-color: lightblue"><span style="font-size: large;font-family: 'Adobe 黑体 Std R'">答题卡</span></el-header>
               <el-main class="content_style">
                 <el-row style="margin-top: -15px;">

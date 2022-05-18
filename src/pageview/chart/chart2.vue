@@ -1,5 +1,5 @@
 <template>
-  <div class="test2" style="width:400px;height:300px;">
+  <div class="test2" style="width:100%;height:300px;">
     <div id="myChart2" style="width:100%;height:278px;"></div>
   </div>
 </template>

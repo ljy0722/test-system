@@ -1,6 +1,6 @@
 <template>
   <div class="login" clearfix>
-    <div style="margin-bottom: 50px;margin-top: 100px">
+    <div style="margin-bottom: 50px;margin-top: 40px">
       <span style="font-size: xx-large;font-weight: bolder">中医药在线考试系统</span>
     </div>
     <div class="login-wrap">
@@ -150,7 +150,7 @@ export default {
 <style scoped>
 .login {
   width: 100%;
-  height: 740px;
+  height: 550px;
   background: url("../assets/images/login_register.png") no-repeat;
   background-size: cover;
   overflow: hidden;

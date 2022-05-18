@@ -797,29 +797,19 @@ export default {
     },
     getSubjects(){
       axios({
-        url:"/problem/allsubjects",
+        url:"/problem/allsubjectsnopub",
       }).then(res=>{
         this.subjects=res.data;
-        for(let i=0;i<this.subjects.length;i++){
-          if(this.subjects[i].label==='全部'){
-            this.subjects.remove(this.subjects[i]);
-          }
-        }
       })
     },
     getRanges(){
       axios({
-        url:"/problem/ranges",
+        url:"/problem/rangesnopub",
         params:{
           subject:this.autoSubject
         }
       }).then(res=>{
         this.ranges=res.data;
-        for(let i=0;i<this.ranges.length;i++){
-          if(this.ranges[i].label==='全部'){
-            this.ranges.remove(this.ranges[i]);
-          }
-        }
       })
     },
     getUserGroups() {

@@ -9,7 +9,7 @@
           <div class="toggle-btn" @click="toggleCollapse">|||</div>
           <el-menu default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>概览</el-menu-item>
-            <el-menu-item index="2"><i class="el-icon-s-order"></i>题目集 </el-menu-item>
+            <el-menu-item index="2"><i class="el-icon-s-order"></i>我的考试 </el-menu-item>
             <el-menu-item index="3"><i class="el-icon-s-grid"></i>收藏题目 </el-menu-item>
             <el-menu-item index="4"><i class="el-icon-s-custom"></i>用户组 </el-menu-item>
           </el-menu>
@@ -18,38 +18,42 @@
           <div v-if="active=='1'">
             <el-row>
               <el-col :span="8">
-                <el-card style="background:#eeeeee;min-height: 150px;width:250px;margin-top: 80px">
-                  <div slot="header" style="color: #409EFF;font-size: large">
-                    <span>题目集</span>
-                  </div>
-                  <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
-                    <el-row><span>总数：     {{exerciseSets.length}}</span></el-row>
-                    <el-row><span>未开始：   {{getval1}}</span></el-row>
-                    <el-row><span>正在进行：  {{getval2}}</span></el-row>
-                    <el-row><span>已结束：   {{getval3}}</span></el-row>
-                  </div>
-                </el-card>
-                <Chart6 v-if="getsee" :value1="getval1" :value2="getval2" :value3="getval3" style="margin-top: 60px"></Chart6>
+                <div style="background: #f4f6ed">
+                  <el-card style="background:#f4f6ed;min-height: 222px;width:100%;margin-top: 80px">
+                    <div slot="header" style="color: #409EFF;font-size: large">
+                      <el-button type="text" @click="active='2'" style="font-size: large;font-weight: 900">我创建的考试</el-button>
+                    </div>
+                    <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
+                      <el-row><span>总数：     {{setstotal}}</span></el-row>
+                      <el-row><span>未开始：   {{setstodo}}</span></el-row>
+                      <el-row><span>正在进行：  {{setsdoing}}</span></el-row>
+                      <el-row><span>已结束：   {{setsdone}}</span></el-row>
+                    </div>
+                  </el-card>
+                  <Chart6 v-if="getsee" :value1="setstodo" :value2="setsdoing" :value3="setsdone" style="margin-top: 60px"></Chart6>
+                </div>
               </el-col>
               <el-col :span="8">
-                <el-card style="background:#eeeeee;min-height: 150px;width:250px;margin-top: 80px">
-                  <div slot="header" style="color: #409EFF;font-size: large">
-                    <span>题目</span>
-                  </div>
-                  <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
-                    <el-row><span>总数：     {{totalSingle+totalMulti+totalFill+totalQa}}</span></el-row>
-                    <el-row><span>单项选择题：   {{totalSingle}}</span></el-row>
-                    <el-row><span>多项选择题：  {{totalMulti}}</span></el-row>
-                    <el-row><span>填空题：   {{totalFill}}</span></el-row>
-                    <el-row><span>问答题：   {{totalQa}}</span></el-row>
-                  </div>
-                </el-card>
-                <Chart7 v-if="getsee" :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
+                <div style="background: #f1f4e4;min-height: 685px">
+                  <el-card style="background:#f1f4e4;min-height: 222px;width:100%;margin-top: 80px">
+                    <div slot="header" style="color: #409EFF;font-size: large">
+                      <el-button type="text" @click="active='3'" style="font-size: large;font-weight: 900">我收藏的题目</el-button>
+                    </div>
+                    <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
+                      <el-row><span>总数：     {{totalSingle+totalMulti+totalFill+totalQa}}</span></el-row>
+                      <el-row><span>单项选择题：   {{totalSingle}}</span></el-row>
+                      <el-row><span>多项选择题：  {{totalMulti}}</span></el-row>
+                      <el-row><span>填空题：   {{totalFill}}</span></el-row>
+                      <el-row><span>问答题：   {{totalQa}}</span></el-row>
+                    </div>
+                  </el-card>
+                  <Chart7 v-if="getsee" :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
+                </div>
               </el-col>
               <el-col :span="8">
-                <el-card style="background:#eeeeee;width: 270px;min-height: 150px;margin-top: 80px;margin-right: 40px">
+                <el-card style="background:#f5f9da;min-height: 222px;margin-top: 80px;margin-right: 40px">
                   <div slot="header" style="color: #409EFF;font-size: large">
-                    <span>用户组</span>
+                    <el-button type="text" @click="active='4'" style="font-size: large;font-weight: 900">我创建的用户组</el-button>
                   </div>
                   <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
                     <el-row><span>总数：   {{user_groups.length}}</span></el-row>
@@ -67,7 +71,7 @@
             <div v-if="setdetail==false">
               <el-row style="margin-top: 80px;">
                 <el-col :span="2">
-                  <el-button type="primary" align="left"  @click="handleCreate">创建题目集</el-button>
+                  <el-button type="primary" align="left"  @click="handleCreate">创建考试</el-button>
                 </el-col>
                 <el-col :span="1" :offset="2">
                   <div style="width: 50px;margin-top: 10px">排序:</div>
@@ -102,7 +106,7 @@
                 <el-card style="margin-bottom: 5px;height: 60px"
                          v-for="(i,index) in exerciseSets"
                          v-bind:key="index"
-                         v-if="shaixuan==''||i.state==shaixuan">
+                         >
                   <el-row style="margin-top: -15px">
                     <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId)"> {{ i.exerciseName }}</el-button>
                     <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='1'">未开始</span></i>
@@ -211,6 +215,15 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      prop="EHU"
+                      label="难度评价"
+                      width="60">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.EHU" max="3">
+                        </el-rate>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
                       align="right">
                       <template slot-scope="scope">
                         <el-button
@@ -291,6 +304,15 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      prop="EHU"
+                      label="难度评价"
+                      width="60">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.EHU" max="3">
+                        </el-rate>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
                       align="right">
                       <template slot-scope="scope">
                         <el-button
@@ -346,6 +368,15 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      prop="EHU"
+                      label="难度评价"
+                      width="60">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.EHU" max="3">
+                        </el-rate>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
                       align="right">
                       <template slot-scope="scope">
                         <el-button
@@ -399,6 +430,15 @@
                       prop="source"
                       label="来源"
                       width="150">
+                    </el-table-column>
+                    <el-table-column
+                      prop="EHU"
+                      label="难度评价"
+                      width="60">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.EHU" max="3">
+                        </el-rate>
+                      </template>
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -489,18 +529,15 @@
                 </el-pagination>
               </div>
               <el-row style="margin-top: 80px">
-                <el-col :span="12">
+                <el-col :span="24">
 <!--                  <Chart :value1="1" :value2="0" :value3="0" :value4="1"></Chart>-->
-                  <Chart v-if="seechart===true" :value1="rate[0]" :value2="rate[1]" :value3="rate[2]" :value4="rate[3]"></Chart>
+                  <Chart8 v-if="seechart===true" :opinion="['0-10','10-20','20-30','30-40','40-50','50-60','70-80','80-90','90-100']" :opinion-data="rate" ></Chart8>
                 </el-col>
-                <el-col :span="12">
-                  <chart2 v-if="seechart===true" :xaxis="problemids" :yaxis="problemRate"></chart2>
+                <el-col :span="24">
+                  <chart9 v-if="seechart===true" :opinion="problemids" :opinion-data="problemRate"></chart9>
                 </el-col>
                 <br>
-
               </el-row>
-
-
             </div>
           </div>
           <div v-if="active=='3'">
@@ -611,7 +648,8 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          @click="remove(scope.$index,scope.row)">删除</el-button>
+                          type="danger"
+                          @click="remove(scope.row)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -719,7 +757,8 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          @click="remove(scope.$index,scope.row)">删除</el-button>
+                          type="danger"
+                          @click="remove(scope.row)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -802,7 +841,8 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          @click="remove(scope.$index,scope.row)">删除</el-button>
+                          type="danger"
+                          @click="remove(scope.row)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -885,7 +925,8 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          @click="remove(scope.$index,scope.row)">删除</el-button>
+                          type="danger"
+                          @click="remove(scope.row)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -1469,23 +1510,35 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-card style="margin-bottom: 5px"
-                       v-for="(i,index) in user_groups"
-                       v-bind:key="index">
-                <div style="margin-top: -15px">
-                  <el-button type="text" style="float: left;color: black" @click="checkGroupDetail(i.groupId)">{{ i.groupName }}</el-button>
-                  <el-button align="right" class="card-button" type="danger" icon="el-icon-delete" @click="deleteGroup(i.groupId)" circle></el-button>
-                  <el-button align="right" class="card-button" type="primary" icon="el-icon-view" style="margin-right: 10px" @click="checkGroupDetail(i.groupId)" circle></el-button>
-                </div>
-              </el-card>
+              <div>
+                <el-card style="margin-left: 10px;margin-bottom: 5px;width: 22%;min-height: 100px;margin-left: auto;float: left;display: flex;justify-content: center"
+                         v-for="(i,index) in user_groups"
+                         v-bind:key="index">
+                  <div style="margin-top: -15px">
+                    <el-row>
+                      <el-button type="text" size="mini" style="color: gray;font-size: large" @click="checkGroupDetail(i.groupId)">{{ i.groupName }}</el-button>
+                    </el-row>
+                    <el-row>
+                      <div style="display: flex;margin-top: 20px">
+                        <el-button style="display: flex" type="primary" size="mini"  @click="checkGroupDetail(i.groupId)">查看</el-button>
+                        <el-button style="display: flex" type="danger" size="mini"  @click="deleteGroup(i.groupId)">删除</el-button>
+                      </div>
+                    </el-row>
+                  </div>
+                </el-card>
+              </div>
             </el-row>
-            <div class="block" style="float: right">
-              <el-pagination
-                :current-change="change9"
-                layout="prev, pager, next"
-                :total="totalGroup">
-              </el-pagination>
-            </div>
+            <el-row>
+              <div class="block" style="margin-top: 50px">
+                <el-pagination
+                  :current-change="change9"
+                  :hide-on-single-page="true"
+                  layout="prev, pager, next"
+                  :total="totalGroup">
+                </el-pagination>
+              </div>
+            </el-row>
+
             <el-dialog title="创建用户组" :visible.sync="createUserGroup">
               <el-form ref="newUserGroup" :model="newUserGroup" label-width="150px" align="left">
                 <el-form-item label="用户组名称">
@@ -1556,6 +1609,7 @@
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
+                    type="danger"
                     @click="deleteUser(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
@@ -1658,15 +1712,21 @@ import Chart from './chart/chart'
 import Chart2 from './chart/chart2'
 import Chart6 from './chart/chart6'
 import Chart7 from './chart/chart7'
+import Chart8 from './chart/chart8'
+import Chart9 from './chart/chart9'
 import Problems from '../components/AllProblems.vue'
 import axios from "axios";
 export default {
   name: "teacher",
-  components: {Top, Down,Chart,Chart2,Chart6,Chart7,Problems},
+  components: {Top, Down,Chart,Chart2,Chart6,Chart7,Chart8,Chart9,Problems},
   data(){
     return{
       // getactive:this.$route.params.active,
-      rate:[0,0,0,0],
+      setstotal:0,
+      setstodo:0,
+      setsdoing:0,
+      setsdone:0,
+      rate:[0,0,0,0,0,0,0,0,0,0],
       problemids:[],
       problemRate:[],
       seechart:false,
@@ -1981,6 +2041,11 @@ export default {
         this.allProblemMulti=multi.data.data;
         this.allProblemFill=fill.data.data;
         this.allProblemQa=qa.data.data;
+        this.totalAllSingle=single.data.total;
+        this.totalAllMulti=multi.data.total;
+        this.totalAllFill=fill.data.total;
+        this.totalAllQa=qa.data.total;
+        console.log(this.totalAllSingle);
       }))
     },
     getTeacherProblems(){
@@ -2144,27 +2209,22 @@ export default {
       }).then(res=>{
         this.showStudentsInAGroup=res.data.data;
         this.totalSetUser=res.data.total;
-        let n1=0;
-        let n2=0;
-        let n3=0;
-        let n4=0;
+        var n=new Array();
+        n=[0,0,0,0,0,0,0,0,0,0];
         res.data.data.forEach(item=>{
-          if(item.totalScore!==0){
-            if(parseInt(item.score)/parseInt(item.totalScore)*100<60){
-              n1=n1+1;
+          if(item.totalScore>=0){
+            if(parseInt(item.score)===0){
+              n[0]=n[0]+1;
             }
-            else if(parseInt(item.score)/parseInt(item.totalScore)*100<70){
-              n2=n2+1;
-            }
-            else if(parseInt(item.score)/parseInt(item.totalScore)*100<90){
-              n3=n3+1;
-            }
-            else{
-              n4=n4+1;
+            for(let i=0;i<10;i++){
+              if(parseInt(item.score)/parseInt(item.totalScore)*100<=(i+1)*10&&parseInt(item.score)/parseInt(item.totalScore)*100>i*10){
+                n[i]=n[i]+1;
+              }
             }
           }
-          this.rate=[n1,n2,n3,n4];
         })
+        this.rate=n;
+        console.log("rate")
         console.log(this.rate);
         let ids=[];
         let prate=[];
@@ -2178,7 +2238,7 @@ export default {
         this.problemRate=prate;
         console.log(this.problemids);
         console.log(this.problemRate);
-        this.problemRate=[50,100];
+        //this.problemRate=[50,100];
         this.seechart=true;
       })
     },
@@ -2283,6 +2343,7 @@ export default {
         else if(type==='问答题'){
           this.problems.quesans=res.data.data;
         }
+        this.getAllproblems();
       })
     },
     createProblem(){
@@ -2295,36 +2356,37 @@ export default {
       })
     },
     remove(row){
+      console.log(row);
       let page=1;
-      if(row.type==='单项选择题'){
+      if(row.questionType==='单项选择题'){
         page=this.pageSingle;
       }
-      if(row.type==='多项选择题'){
+      if(row.questionType==='多项选择题'){
         page=this.pageMulti;
       }
-      if(row.type==='填空题'){
+      if(row.questionType==='填空题'){
         page=this.pageFill;
-      }if(row.type==='问答题'){
+      }if(row.questionType==='问答题'){
         page=this.pageQa;
       }
       axios({
         url:"/problem/deleteTeacherProblem",
         params:{
           problemId:row.id,
-          type:row.type,
+          type:row.questionType,
           page:page
         }
       }).then(res=>{
-        if(row.type==='单项选择题'){
-          this.problems.single=res.data;
+        if(row.questionType==='单项选择题'){
+          this.problems.single=res.data.data;
         }
-        if(row.type==='多项选择题'){
-          this.problems.multi=res.data;
+        if(row.questionType==='多项选择题'){
+          this.problems.multi=res.data.data;
         }
-        if(row.type==='填空题'){
-          this.problems.fill=res.data;
-        }if(row.type==='问答题'){
-          this.problems.quesans=res.data;
+        if(row.questionType==='填空题'){
+          this.problems.fill=res.data.data;
+        }if(row.questionType==='问答题'){
+          this.problems.quesans=res.data.data;
         }
       })
     },
@@ -2508,13 +2570,23 @@ export default {
           order:this.sortvalue
         }
       }).then(res=>{
-        if(res.data.size!=0){
+        if(res.data.size!==0){
           this.exerciseSets=res.data.data;
           this.totalSet=res.data.total;
         }
       }).catch(err=>{
 
       });
+    },
+    getOverView(){
+      axios({
+        url:"/user/teacheroverview"
+      }).then(res=>{
+        this.setstotal=res.data.allSets;
+        this.setstodo=res.data.todo;
+        this.setsdoing=res.data.doing;
+        this.setsdone=res.data.done;
+      })
     }
   },
   computed:{
@@ -2549,96 +2621,14 @@ export default {
       }
       return l;
     },
-    table1() {
-      const search1='中医学基础';
-      if(this.active=='2'){
-        return this.setDetail.problems.single.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search1)>-1
-          })
-        })
-        return this.setDetail.problems.single;
-      }
-      if(this.active=='3'){
-        return this.problems.single.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search1)>-1
-          })
-        })
-        return this.problems.single;
-      }
-    },
-    table2() {
-      const search='多项选择题'
-      if(this.active=='2'){
-        return this.setDetail.problems.multi.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-        return this.setDetail.problems.multi;
-      }
-      if(this.active=='3'){
-        return this.problems.multi.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-        return this.problems.multi;
-      }
-    },
-    table3() {
-      const search='填空题'
-      if(this.active=='2'){
-        return this.setDetail.problems.fill.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-        return this.setDetail.problems.fill;
-      }
-      if(this.active=='3'){
-        return this.problems.fill.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-        return this.problems.fill;
-      }
-    },
-    table4() {
-      const search='问答题'
-      if(this.active=='2'){
-        return this.setDetail.problems.quesans.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-        return this.setDetail.problems.quesans;
-      }
-      if(this.active=='3'){
-        return this.problems.quesans.filter(data=>{
-          return Object.keys(data).some(key=>{
-            return String(data[key]).toLowerCase().indexOf(search)>-1
-          })
-        })
-        return this.problems.quesans;
-      }
-    },
-    showGroup(){
-      for(let i=0;i<this.setDetail.groups.length;i++){
-        if(this.setDetail.groups[i].id==this.chooseGroup){
-          return this.setDetail.groups[i].users;
-        }
-      }
-      return this.setDetail.groups[0].users;
-    },
+
   },
 
   created() {
     this.getTeacherExercise();
     this.getSubjects();
     this.getTeacherProblems();
+    this.getOverView();
 
    //this.see=true;
   },

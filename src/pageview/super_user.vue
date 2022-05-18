@@ -8,7 +8,7 @@
       <br>
       <br>
       <el-container style="min-height: 500px;margin-top: 50px">
-        <el-aside style="margin-top: 100px" width="170px">
+        <el-aside style="margin-top: 50px" width="170px">
           <div class="toggle-btn" >|||</div>
           <el-menu default-active="active" style="width: 160px" @select="handleSelect">
             <el-submenu index="11">
@@ -1114,7 +1114,7 @@
                 <el-form-item label="难度:">
                   <el-input v-model="modifyProblem.difficultScore"></el-input>
                 </el-form-item>
-                <el-button type="primary" @click="submitmodify"></el-button>
+                <el-button type="primary" @click="submitmodify">确定</el-button>
               </el-form>
             </el-dialog>
           </div>

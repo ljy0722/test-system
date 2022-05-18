@@ -1,13 +1,13 @@
 <template>
-  <div class="test2" style="width:100%;height:400px;">
-    <div id="myChart4" style="width:100%;height:400px;"></div>
+  <div class="test2" style="width:100%;height:300px;">
+    <div id="myChart8" style="width:100%;height:250px;float:left;"></div>
   </div>
 </template>
 
 
 <script>
 export default {
-  name: 'chart5',
+  name: 'chart8',
   props:[
     // opinion:{
     //   type:Array,
@@ -36,43 +36,38 @@ export default {
   },
   methods: {
     drawLine4 () {
-      this.myChart4 = this.$echarts.init(document.getElementById('myChart4'))
+      this.myChart4 = this.$echarts.init(document.getElementById('myChart8'))
       this.myChart4.setOption({
         title: {
-          text: '学科考点正确率'
+          text: '各分数段人数分布'
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c}%'
+          formatter: '{a} <br/>{b} : {c}'
         },
         legend: {
           orient: 'vertical',
           x: 'right',
           y: 'top',
-          data: ['得分']
+          data: ['得分情况']
         },
         xAxis: {
-          data: this.opinion,
-          axisLabel:{
-            interval:0,
-            rotate:30
-          }
+          data: this.opinion
         },
         yAxis: {},
         series: [{
-          name: '得分情况',
+          name: '人数',
           type: 'bar',
           data: this.opinionData,
-          barMaxWidth:'60',
           itemStyle: {
             emphasis: {
               shadowBlur: 10,
               shadowOffsetX: 0,
-              shadowColor: '#1FC48D'
+              shadowColor: 'rgba(255, 0, 0, 0.5)'
             },
             color: function (params) {
               // 自定义颜色
-              var colorList = ['#1FC48D', '#1FC48D','#1FC48D']
+              var colorList = ['#37eaf0', '#37eaf0','#37eaf0']
               return colorList[params.dataIndex]
             }
           }
