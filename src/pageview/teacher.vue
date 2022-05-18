@@ -1637,12 +1637,12 @@
                 stripe
               >
                 <el-table-column
-                  prop="id"
+                  prop="userId"
                   label="用户ID"
                   width="70">
                 </el-table-column>
                 <el-table-column
-                  prop="name"
+                  prop="userName"
                   label="姓名"
                   width="100">
                 </el-table-column>
