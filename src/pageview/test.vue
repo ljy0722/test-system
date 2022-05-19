@@ -14,10 +14,10 @@
                     <el-header class="other_header" style="height: 40px;line-height: 40px;text-align: center; color:black;font-weight: bold ;">
                       {{ setName }}</el-header>
                     <el-main>
-                      <el-row style="background: #ffffff">
+                      <el-row style="background: #ffffff;border-radius: 10px">
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">单项选择题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ singleChoiceList.length }}</i>
                             <span>题</span>
@@ -26,7 +26,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classa${index+1}`" v-for="(item,index) in singleChoiceList" :key="'single'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -41,7 +41,7 @@
                         </el-row>
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">多项选择题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ multiChoiceList.length }}</i>
                             <span>题</span>
@@ -50,7 +50,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classb${index+1}`" v-for="(item,index) in multiChoiceList" :key="'multi'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -68,7 +68,7 @@
                         </el-row>
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">填空题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ fillBlankList.length }}</i>
                             <span>题</span>
@@ -77,7 +77,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classc${index+1}`" v-for="(item,index) in fillBlankList" :key="'fill'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -88,7 +88,7 @@
                         </el-row>
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">问答题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ questionAnswerList.length }}</i>
                             <span>题</span>
@@ -97,7 +97,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classd${index+1}`" v-for="(item,index) in questionAnswerList" :key="'question'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -121,7 +121,7 @@
             </el-container>
           </el-col>
           <el-col :span="6">
-            <el-container style="margin-right: 50px;margin-top: -80px;height: 80%;position: fixed">
+            <el-container style="background: #EEE8D5;border-radius: 10px;margin-right: 50px;margin-top: -80px;height: 80%;position: fixed">
               <el-header class="header_style" style="line-height: 40px;height: 40px;background-color: lightblue"><span style="font-size: large;font-family: 'Adobe 黑体 Std R'">答题卡</span><span style="margin-left: 15px;color: red">{{resTime}}</span></el-header>
               <el-main class="content_style">
                 <el-row style="margin-top: -15px;">
@@ -641,9 +641,12 @@ export default {
 }
 
 .i_style {
-  background: rgb(93, 156, 236);
+  background: #ade1f7;
   font-weight: bold;
-  border-radius: 50%;
+  border-radius: 13px;
+  margin-top: 8px;
+  margin-left: 5px;
+
 }
 
 /deep/ .el-radio__inner {}

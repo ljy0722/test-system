@@ -8,9 +8,10 @@
       <br>
       <br>
       <el-container style="min-height: 500px;margin-top: 50px">
-        <el-aside style="margin-top: 50px" width="170px">
+        <el-aside style="margin-top: 50px;" width="170px">
           <div class="toggle-btn" >|||</div>
-          <el-menu default-active="active" style="width: 160px" @select="handleSelect">
+          <el-menu :default-active="active" :unique-opened="true" style="width: 160px" @select="handleSelect">
+            <el-menu-item index="0"><i class="el-icon-s-home"></i>首页 </el-menu-item>
             <el-submenu index="11">
               <template slot="title">
                 <i class="el-icon-user"></i>
@@ -33,11 +34,109 @@
                 <el-menu-item index="6"><i class="el-icon-circle-plus"></i>习题上传 </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-
           </el-menu>
         </el-aside>
         <el-main style="margin-top: 50px">
-          <div v-if="active=='1'">
+          <div v-if="active==='0'">
+            <el-card style="width: 100%;">
+              <div slot="header" align="left">
+                <span style="font-size: large;font-weight: 600">用户情况概览</span>
+              </div>
+              <div>
+                <el-row>
+                  <el-col :span="12">
+                    <el-row style="float: left;color: grey">
+                      用户数量
+                    </el-row>
+                    <el-row>
+                      <UserChart ></UserChart>
+                    </el-row>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-row style="float: left;color: grey">
+                      通知
+                    </el-row>
+                    <el-row>
+                      <div>
+                        <el-card style="border-radius: 10px;margin-top: 10%;width: 80%">
+                          <div v-if="totalTocheck===0">
+                            <span style="color: #40f23a;font-weight: 400;font-size: 20px">无消息</span>
+                          </div>
+                          <div v-if="totalTocheck!==0">
+                            <span style="color: #f23a3a;font-weight: 400;font-size: 20px"><i class="el-icon-s-flag"></i>当前有未审核教师{{totalTocheck}}人，请前往审核！</span>
+                          </div>
+                        </el-card>
+                      </div>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+            <el-card style="width: 100%;">
+              <div slot="header" align="left">
+                <span style="font-size: large;font-weight: 600">题库情况概览</span>
+              </div>
+              <div>
+                <el-row>
+                  <el-col :span="10">
+                    <el-row style="color: grey;text-align: left">
+                    <span>
+                      各题型数量
+                    </span>
+                    </el-row>
+                    <br>
+                    <br>
+                    <el-row align="left">
+                      <el-col :span="5" >
+                        <span style="margin-top: 30px">选择科目</span>
+                      </el-col>
+                      <el-col :span="10">
+                        <el-select v-model="tikusubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(0)">
+                          <el-option
+                            v-for="item in subjects"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
+                      </el-col>
+                    </el-row>
+                    <el-row align="left" style="margin-top: 30px">
+                      <el-col :span="5" >
+                        <span style="margin-top: 30px">选择考点</span>
+                      </el-col>
+                      <el-col :span="10">
+                        <el-select v-model="tikurange" placeholder="选择考点" style="float: left" align="left" @change="gettikuinfo">
+                          <el-option
+                            v-for="item in ranges"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                        </el-select>
+                      </el-col>
+                    </el-row>
+                  </el-col>
+                  <el-col :span="10">
+<!--                    <Tiku :a="totalAllSingle" :b="totalAllMulti" :c="totalAllFill" :d="totalAllQa"></Tiku>-->
+                    <div class="test2" style="width:100%;height:300px;">
+                      <div id="tiku1" style="width:100%;height:100%"></div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <el-row style="float: left;color: grey">
+                      题目难度分布
+                    </el-row>
+                    <el-row>
+                      <Diff style="margin-top: 20px"></Diff>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+
+          </div>
+          <div v-if="active==='1'">
             <el-table
               :data="users"
               border
@@ -80,7 +179,7 @@
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
-                    type="info"
+                    type="primary"
                     @click="modifyUser(scope.row)">修改信息</el-button>
                 </template>
               </el-table-column>
@@ -167,7 +266,7 @@
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
-                    type="info"
+                    type="primary"
                     @click="modifyUser(scope.row)">修改信息</el-button>
                 </template>
               </el-table-column>
@@ -284,6 +383,8 @@
                 </el-row>
                 <el-table
                   :data="problems2CheckSingle"
+                  stripe
+                  border
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -298,7 +399,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -398,6 +499,8 @@
                 </el-row>
                 <el-table
                   :data="problems2CheckMulti"
+                  stripe
+                  border
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -412,7 +515,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -512,6 +615,8 @@
                 </el-row>
                 <el-table
                   :data="problems2CheckFill"
+                  stripe
+                  border
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -526,7 +631,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -602,6 +707,8 @@
                 </el-row>
                 <el-table
                   :data="problems2CheckQa"
+                  stripe
+                  border
                   ref="problems2Check"
                   style="width: 100%">
                   <el-table-column
@@ -616,7 +723,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -697,6 +804,8 @@
                 </el-row>
                 <el-table
                   :data="problemsSingle"
+                  stripe
+                  border
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -711,7 +820,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -764,7 +873,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
-                        type="info"
+                        type="primary"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
@@ -811,6 +920,8 @@
                 </el-row>
                 <el-table
                   :data="problemsMulti"
+                  stripe
+                  border
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -825,7 +936,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -878,7 +989,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
-                        type="info"
+                        type="primary"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
@@ -925,6 +1036,8 @@
                 </el-row>
                 <el-table
                   :data="problemsFill"
+                  stripe
+                  border
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -939,7 +1052,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -968,7 +1081,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
-                        type="info"
+                        type="primary"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
@@ -1015,6 +1128,8 @@
                 </el-row>
                 <el-table
                   :data="problemsQa"
+                  stripe
+                  border
                   ref="problems"
                   style="width: 100%">
                   <el-table-column
@@ -1029,7 +1144,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="100">
                   </el-table-column>
                   <el-table-column
@@ -1058,7 +1173,7 @@
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
-                        type="info"
+                        type="primary"
                         @click="modifyproblem(scope.row)">修改</el-button>
                       <el-button
                         size="mini"
@@ -1085,10 +1200,10 @@
                   <span style="float: left">{{modifyProblem.id}}</span>
                 </el-form-item>
                 <el-form-item label="学科:">
-                  <el-input v-model="modifyProblem.subject"></el-input>
+                  <el-input :disabled="true" v-model="modifyProblem.subject"></el-input>
                 </el-form-item>
-                <el-form-item label="内容:">
-                  <el-input v-model="modifyProblem.contentType"></el-input>
+                <el-form-item label="考点:">
+                  <el-input :disabled="true" v-model="modifyProblem.contentType"></el-input>
                 </el-form-item>
                 <el-form-item label="题目:">
                   <el-input v-model="modifyProblem.question"></el-input>
@@ -1119,26 +1234,197 @@
             </el-dialog>
           </div>
           <div v-if="active=='6'">
-            <el-card  style="width: 600px">
-              <div slot="header" align="left">
-                <span>导入题库</span>
-              </div>
-              <el-upload
-                class="upload-demo"
-                ref="upload"
-                :limit="1"
-                :on-change="handleChange"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :file-list="fileList"
-                accept=".xlsx"
-                :auto-upload="false"
-                align="left">
-                <el-button  size="small" type="primary">点击上传</el-button>
-                <div slot="tip" align="left" class="el-upload__tip">只能上传.xslx文件，一次上传一份文件，仅限单选题、多选题、填空题和多选题四种题型,具体格式请下载模板查看</div>
-                <el-button @click="download" size="small" type="plain">下载模板</el-button>
-              </el-upload>
-              <el-button type="primary" size="small" style="margin-top: 60px;margin-bottom: 20px;float: left" @click="uploadFile">导入题库</el-button>
-            </el-card>
+            <el-row>
+              <el-col :span="12">
+                <el-card style="width:100%;margin-left: 5%;margin-bottom: 50px">
+                  <div slot="header" align="left">
+                    <span>管理员新建题目</span>
+                  </div>
+                  <div align="left">
+                    <span style="font-weight: 200;font-size: small">选择题型</span>
+                    <el-select style="margin-left: 40px" v-model="addques.type" default-first-option>
+                      <el-option
+                        v-for="item in tixing"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </div>
+                  <br>
+                  <el-form  v-if="addques.type==='单项选择题'" :model="addques" label-position="left" label-width="100px">
+                    <el-row>
+                      <el-col :span="10">
+                        <el-form-item label="学科">
+                          <el-input v-model="addques.subject_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="10" :offset="1">
+                        <el-form-item label="考点">
+                          <el-input v-model="addques.content_type_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-form-item label="题目">
+                      <el-col :span="20">
+                        <el-input type="textarea" v-model="addques.question_new"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项A">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerA"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项B">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerB"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项C">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerC"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项D">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerD"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项E">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerE"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="答案">
+                      <el-col :span="6">
+                        <el-input v-model="addques.answer"></el-input>
+                      </el-col>
+                    </el-form-item>
+                  </el-form>
+                  <el-form  v-if="addques.type==='多项选择题'" :model="addques" label-position="left" label-width="100px">
+                    <el-row>
+                      <el-col :span="10">
+                        <el-form-item label="学科">
+                          <el-input v-model="addques.subject_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="10" :offset="1">
+                        <el-form-item label="考点">
+                          <el-input v-model="addques.content_type_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-form-item label="题目">
+                      <el-col :span="20">
+                        <el-input type="textarea" v-model="addques.question_new"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项A">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerA"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项B">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerB"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项C">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerC"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项D">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerD"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="选项E">
+                      <el-col :span="18">
+                        <el-input v-model="addques.answerE"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="答案">
+                      <el-col :span="6">
+                        <el-input v-model="addques.answer"></el-input>
+                      </el-col>
+                    </el-form-item>
+                  </el-form>
+                  <el-form  v-if="addques.type==='填空题'" :model="addques" label-position="left" label-width="100px">
+                    <el-row>
+                      <el-col :span="10">
+                        <el-form-item label="学科">
+                          <el-input v-model="addques.subject_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="10" :offset="1">
+                        <el-form-item label="考点">
+                          <el-input v-model="addques.content_type_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-form-item label="题目">
+                      <el-col :span="20">
+                        <el-input type="textarea" v-model="addques.question_new"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="答案">
+                      <el-col :span="18">
+                        <el-input type="textarea" v-model="addques.answer"></el-input>
+                      </el-col>
+                    </el-form-item>
+                  </el-form>
+                  <el-form  v-if="addques.type==='问答题'" :model="addques" label-position="left" label-width="100px">
+                    <el-row>
+                      <el-col :span="10">
+                        <el-form-item label="学科">
+                          <el-input v-model="addques.subject_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="10" :offset="1">
+                        <el-form-item label="考点">
+                          <el-input v-model="addques.content_type_new"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-form-item label="题目">
+                      <el-col :span="20">
+                        <el-input type="textarea" v-model="addques.question_new"></el-input>
+                      </el-col>
+                    </el-form-item>
+                    <el-form-item label="答案">
+                      <el-col :span="18">
+                        <el-input type="textarea" v-model="addques.answer"></el-input>
+                      </el-col>
+                    </el-form-item>
+                  </el-form>
+                  <el-button type="primary" @click="createProblem">添加</el-button>
+                </el-card>
+              </el-col>
+              <el-col :span="12">
+                <el-card  style="width: 80%;margin-left: 20%">
+                  <div slot="header" align="left">
+                    <span>批量导入题库</span>
+                  </div>
+                  <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    :limit="1"
+                    :on-change="handleChange"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :file-list="fileList"
+                    accept=".xlsx"
+                    :auto-upload="false"
+                    align="left">
+                    <el-button  size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" align="left" class="el-upload__tip">批量导入说明：只能上传.xslx文件，一次上传一份文件，仅限单选题、多选题、填空题和多选题四种题型,具体格式请下载模板查看</div>
+                    <el-button @click="download" size="small" type="plain">下载模板</el-button>
+                  </el-upload>
+                  <el-button type="primary" size="small" style="margin-top: 60px;margin-bottom: 20px;float: left" @click="uploadFile">导入题库</el-button>
+                </el-card>
+              </el-col>
+            </el-row>
+
+
           </div>
         </el-main>
       </el-container>
@@ -1153,22 +1439,30 @@
 <script>
 import Top from '../components/navigation/top.vue'
 import Down from '../components/navigation/down.vue'
+import UserChart from './chart/userchart'
+import ProblemNumChart from './chart/problemchart'
+import Tiku from './chart/tiku'
+import Diff from './chart/difficultchart'
 import axios from "axios";
 export default {
   name: "super_user",
 
   data(){
     return{
-      active:'',
+      active:'0',
+      num:[],
+      mychart:'',
+      tikusubject:'',
+      tikurange:'',
       totalUser:1,
       pageUser:1,
       totalTeacher:1,
       pageTeacher:1,
       totalTocheck:1,
       pageTocheck:1,
-      totalAllSingle:1,
+      totalAllSingle:2098,
       pageAllSingle:1,
-      totalAllMulti:1,
+      totalAllMulti:1076,
       pageAllMulti:1,
       totalAllFill:1,
       pageAllFill:1,
@@ -1186,97 +1480,18 @@ export default {
       searchcontent2:'',
       subject1:'',
       subject2:'',
-      users:[{
-        id:'1',
-        name:"张三",
-        sex:'男',
-        email:'1092743@qq.com'
-      }],
-      teacher:[{
-        id:'1',
-        name:"张三",
-        sex:'男',
-        email:'1092743@qq.com'
-      }],
-      teacher2Check:[{
-        id:'1',
-        name:"张三",
-        sex:'男',
-        email:'1092743@qq.com'
-      }],
+      users:[],
+      teacher:[],
+      teacher2Check:[],
       fileList:[],
-      problems2CheckSingle:[
-        {
-          id:'1',
-          subject:'中医学基础',
-          contentType:'绪论',
-          type:'单项选择题',
-          question:'我国现存最早的医学专著是（  ）',
-          option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》',
-          answer:'A'
-        },
-      ],
-      problems2CheckMulti:[
-        {
-          id:'2',
-          subject:'中医学基础',
-          contentType:'绪论22',
-          type:'多项选择题',
-          question:'',
-          option:'',
-          answer:'A'
-        },
-      ],
-      problems2CheckFill:[
-        {
-          id:'3',
-          subject: '中药',
-          contentType: '第二章',
-          type: '填空题',
-          question: '',
-          option: '',
-          answer: ''
-        }
-      ],
-      problems2CheckQa:[
-
-      ],
-      problemsSingle:[
-        {
-          id:'1',
-          subject:'中医学基础',
-          contentType:'绪论',
-          type:'单项选择题',
-          question:'我国现存最早的医学专著是（  ）',
-          option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》',
-          answer:'A'
-        },
-      ],
-      problemsMulti:[
-        {
-          id:'2',
-          subject:'中医学基础',
-          contentType:'绪论22',
-          type:'多项选择题',
-          question:'',
-          option:'',
-          answer:'A'
-        },
-      ],
-      problemsFill:[
-        {
-          id:'3',
-          subject: '中药',
-          contentType: '第二章',
-          type: '填空题',
-          question: '',
-          option: '',
-          answer: ''
-        }
-      ],
-      problemsQa:[
-
-      ],
+      problems2CheckSingle:[],
+      problems2CheckMulti:[],
+      problems2CheckFill:[],
+      problems2CheckQa:[],
+      problemsSingle:[],
+      problemsMulti:[],
+      problemsFill:[],
+      problemsQa:[],
       modify:false,
       modifyProblem:{
         id:'',
@@ -1309,15 +1524,94 @@ export default {
         address:'',
         sex:'',
         phone:''
-      }
+      },
+      addques:{
+        type:'单项选择题',
+        subject_new:'',
+        content_type_new:'',
+        question_new:'',
+        answerA:'',
+        answerB:'',
+        answerC:'',
+        answerD:'',
+        answerE:'',
+        answer:'',
+        source:''
+      },
+      tixing:[
+        {
+          value:'单项选择题',
+          label:'单项选择题'
+        },
+        {
+          value:'多项选择题',
+          label:'多项选择题'
+        },
+        {
+          value:'填空题',
+          label:'填空题'
+        },
+        {
+          value:'问答题',
+          label:'问答题'
+        },
+      ],
     }
   },
+  mounted() {
+    this.$nextTick(this.drawLine());
+  },
   components:{
-    Top,Down
+    Top,Down,UserChart,ProblemNumChart,Tiku,Diff
   },
   methods:{
+    drawLine(){
+      this.mychart = this.$echarts.init(document.getElementById('tiku1'));
+      var option;
+
+      option = {
+        title: {
+          text: '题型数量占比',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'right'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: this.totalAllSingle, name: '单项选择题' },
+              { value: this.totalAllMulti, name: '多项选择题' },
+              { value: this.totalAllFill, name: '填空题' },
+              { value: this.totalAllQa, name: '问答题' },
+
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      this.mychart.setOption(option,true);
+    },
     handleSelect:function (key,keyPath){
       switch (key){
+        case '0':
+          this.active='0';
+
+          console.log(this.active);
+          break;
         case '1':
           this.active='1';
           this.getAllUsers();
@@ -1638,6 +1932,14 @@ export default {
     handleChange(file, fileList) {
       this.fileList.push(file.raw);
     },
+    createProblem(){
+      axios({
+        url:"/problem/newTeacherProblem",
+        method:"POST",
+        data:this.addques
+      }).then(res=>{
+      })
+    },
     uploadFile(){
       if(this.fileList.length===0){
         this.$message.warning('请上传文件');
@@ -1664,6 +1966,9 @@ export default {
       if(n===2){
         sub=this.searchSubject2;
       }
+      if (n===0){
+        sub=this.tikusubject;
+      }
       axios({
         url:"/problem/ranges",
         params:{
@@ -1672,6 +1977,25 @@ export default {
       }).then(res=>{
         this.ranges=res.data;
       })
+    },
+    gettikuinfo(){
+      axios.all([
+        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:this.searchAllPro,subject:this.tikusubject,contentType:this.tikurange,type:'单项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:this.searchAllPro,subject:this.tikusubject,contentType:this.tikurange,type:'多项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:this.searchAllPro,subject:this.tikusubject,contentType:this.tikurange,type:'填空题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:this.searchAllPro,subject:this.tikusubject,contentType:this.tikurange,type:'问答题'}}),
+      ]).then(axios.spread((single,multi,fill,qa)=>{
+        this.problemsSingle=single.data.data;
+        this.problemsMulti=multi.data.data;
+        this.problemsFill=fill.data.data;
+        this.problemsQa=qa.data.data;
+        this.totalAllSingle=single.data.total;
+        this.totalAllMulti=multi.data.total;
+        this.totalAllFill=fill.data.total;
+        this.totalAllQa=qa.data.total;
+      }))
+      this.drawLine();
+      this.$forceUpdate();
     }
   },
   computed: {
@@ -1782,6 +2106,10 @@ export default {
     }).then(res=>{
       this.subjects=res.data;
     })
+    this.getAllproblems();
+    this.getTocheckTeachers();
+
+    //console.log(this.num);
   }
 }
 </script>

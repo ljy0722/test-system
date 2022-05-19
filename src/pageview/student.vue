@@ -7,13 +7,13 @@
       <el-container style="min-height: 500px;">
         <el-aside style="margin-top: 100px" width="140px">
           <div class="toggle-btn" >|||</div>
-          <el-menu default-active="active" style="width: 130px" @select="handleSelect">
+          <el-menu :default-active="active" style="width: 130px" @select="handleSelect">
             <el-menu-item index="0"><i class="el-icon-s-home"></i>首页</el-menu-item>
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>开始练习</el-menu-item>
             <el-menu-item index="2" v-if="haveTest===true"><i class="el-icon-timer"></i>开始考试 </el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-s-order"></i>历次题目集 </el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-s-order"></i>历次题集 </el-menu-item>
             <el-menu-item index="4"><i class="el-icon-s-release"></i>我的错题 </el-menu-item>
-            <el-menu-item index="5"><i class="el-icon-s-grid"></i>数据与分析 </el-menu-item>
+            <el-menu-item index="5"><i class="el-icon-s-grid"></i>数据分析 </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main style="margin-top: 80px;min-height: 600px">
@@ -23,32 +23,32 @@
             </el-col>
             <el-col :span="6">
               <div class="block" @click="showAnswer=true">
-                <el-carousel autoplay="false" trigger="click" height="400px" @change="showAnswer=false" class="random">
-                  <el-carousel-item v-for="item in randomProblems" :key="item">
-                    <div style="background: #e7f499;">
-                      <p class="small" style="font-size: large;margin-top: 20px;margin-left: 10px;margin-right: 10px">{{ item.question }}</p>
+                <el-carousel :autoplay=false trigger="click" height="400px" @change="showAnswer=false" class="random">
+                  <el-carousel-item  v-for="item in randomProblems" :key="item">
+                    <div style="text-align: left">
+                      <p class="small" style="font-size: 16px;font-weight: 700;margin-top: 20px;margin-left: 10px;margin-right: 10px">{{ item.question }}</p>
                     </div>
-                    <el-row style="margin-top: 20px">
-                      <el-col :span="2" :offset="4" style="color: grey">A:</el-col>
-                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerA }}</el-col>
+                    <el-divider></el-divider>
+                    <el-row style="margin-top: 20px;font-weight: 600;font-size: 14px">
+                        <div style="color: grey;text-align: center">A:{{ item.answerA }}</div>
                     </el-row>
-                    <el-row style="margin-top: 20px">
-                      <el-col :span="2" :offset="4" style="color: grey">B:</el-col>
-                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerB }}</el-col>
+                    <el-row style="margin-top: 20px;font-weight: 600;font-size: 14px">
+                      <div style="color: grey;text-align: center">B:{{ item.answerB }}</div>
                     </el-row>
-                    <el-row style="margin-top: 20px">
-                      <el-col :span="2" :offset="4" style="color: grey">C:</el-col>
-                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerC }}</el-col>
+                    <el-row style="margin-top: 20px;font-weight: 600;font-size: 14px">
+                      <div style="color: grey;text-align: center">C:{{ item.answerC }}</div>
                     </el-row>
-                    <el-row style="margin-top: 20px">
-                      <el-col :span="2" :offset="4" style="color: grey">D:</el-col>
-                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerD }}</el-col>
+                    <el-row style="margin-top: 20px;font-weight: 600;font-size: 14px">
+                      <div style="color: grey;text-align: center">D:{{ item.answerE }}</div>
                     </el-row>
-                    <el-row style="margin-top: 20px">
-                      <el-col :span="2" :offset="4" style="color: grey">E:</el-col>
-                      <el-col :span="17" :offset="1" style="display: inline-block;color: grey">{{ item.answerE }}</el-col>
+                    <el-row style="margin-top: 20px;font-weight: 600;font-size: 14px">
+                      <div style="color: grey;text-align: center">E:{{ item.answerE }}</div>
                     </el-row>
-                    <p class="small" v-if="showAnswer===true">答案:{{ item.answer }}</p>
+                    <div style="margin-bottom: 5%">
+                      <p class="small"  v-if="showAnswer===false">点击查看答案</p>
+                      <p class="small" style="margin-bottom: 5%" v-if="showAnswer===true">答案:   {{ item.answer }}</p>
+                    </div>
+
                   </el-carousel-item>
                 </el-carousel>
               </div>
@@ -58,63 +58,134 @@
 
           </div>
           <div v-if="active==='1'">
-            <el-card id="create-exercise" style="width: 75%;margin-left: 10%" align="left">
-              <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R'">
-                <span>练习生成选项</span>
-              </div>
-              <div style="margin-left: 15px">
-                <h3>题量设置</h3>
-                <el-row>
-                  <span>单项选择题</span>
-                  <el-input style="width: 30%" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input>
-                </el-row>
-                <el-row>
-                  <span>多项选择题</span>
-                  <el-input  style="width: 30%" v-model="exercise.duoxuan" placeholder="多选题数量"></el-input>
-                </el-row>
-                <el-row>
-                  <span>填空题</span>
-                  <el-input style="width: 30%;margin-left: 33px" v-model="exercise.tiankong" placeholder="填空题数量"></el-input>
-                </el-row>
-                <el-row>
-                  <span>问答题</span>
-                  <el-input style="width: 30%;margin-left: 33px" v-model="exercise.wenda" placeholder="问答题数量"></el-input>
-                </el-row>
+            <el-row>
+              <el-col :span="16">
+                <el-card id="create-exercise" style="width: 90%;margin-left: 10%" align="left">
+                  <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R'">
+                    <span>练习生成选项</span>
+                  </div>
 
+                  <div style="width: 100%;margin-left: 15px">
+                    <h3>选择科目</h3>
+                    <el-row>
+                      <span>学科：</span>
+                      <el-select style="margin-left: 5%;width: 30%" v-model="exercise.subject"  @change="getRange1">
+                        <el-option
+                          v-for="item in subjects1"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-row>
+                  </div>
+                  <el-divider></el-divider>
+                  <div style="width: 100%;margin-left: 15px">
+                    <h3>选择考点</h3>
+                    <el-row>
+                      <span>考点:</span>
+                      <el-select style="margin-left: 7%;width: 30%" v-model="exercise.range" multiple>
+                        <el-option
+                          v-for="item in ranges1"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-row>
 
-              </div>
-              <el-divider></el-divider>
-              <div style="width: 30%;margin-left: 15px">
-                <h3>选择科目</h3>
-                <el-select v-model="exercise.subject" @change="getRange1">
-                  <el-option
-                    v-for="item in subjects1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"></el-option>
-                </el-select>
-              </div>
-              <el-divider></el-divider>
-              <div style="width: 30%;margin-left: 15px">
-                <h3>选择考点</h3>
-                <el-select v-model="exercise.range" multiple>
-                  <el-option
-                    v-for="item in ranges1"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"></el-option>
-                </el-select>
-              </div>
-              <el-divider></el-divider>
-              <div style="width: 30%;margin-left: 15px">
-                <h3>练习时长</h3>
-                <el-input v-model="exercise.time"><template slot="append">分钟</template></el-input>
-              </div>
-              <el-divider></el-divider>
-              <div style="width: 30%;margin-left: 15px">
-                <el-button type="primary" @click="submitTestRequirement">开始练习</el-button>
-              </div>
-            </el-card>
+                  </div>
+                  <el-divider></el-divider>
+                  <div style="margin-left: 15px">
+                    <h3>题量设置</h3>
+                    <el-row>
+                      <span>单项选择题:</span>
+                      <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input-number>
+                    </el-row>
+                    <el-row>
+                      <span>多项选择题:</span>
+                      <el-input-number controls-position="right"  min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.duoxuan" placeholder="多选题数量"></el-input-number>
+                    </el-row>
+                    <el-row>
+                      <span>填空题:</span>
+                      <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="exercise.tiankong" placeholder="填空题数量"></el-input-number>
+                    </el-row>
+                    <el-row>
+                      <span>问答题:</span>
+                      <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="exercise.wenda" placeholder="问答题数量"></el-input-number>
+                    </el-row>
+                  </div>
+                  <el-divider></el-divider>
+                  <div style="width: 100%;margin-left: 15px">
+                    <h3>练习时长</h3>
+                    <el-row>
+                      <span>时长设置:</span>
+                      <el-input-number style="width: 30%;margin-left: 2%" min="1" max="120" controls-position="right" v-model="exercise.time"><template slot="append">分钟</template></el-input-number>
+                    </el-row>
+                  </div>
+                  <el-divider></el-divider>
+                  <div style="width: 50%;margin-left: 15px">
+                    <el-button style="margin-left: 40%" type="primary" @click="submitTestRequirement">开始练习</el-button>
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :span="6">
+                <el-card style="height: 50%;margin-left: 10%">
+                  <div slot="header" class="clearfix" style="background: lightgray;height: border-box">
+                    <span >系统题库中当前有：</span>
+                  </div>
+                  <div style="font-size: 14px">
+                    <el-row>
+                      <el-col :span="12">
+                        学科
+                      </el-col>
+                      <el-col :span="12">
+                        考点
+                      </el-col>
+                    </el-row>
+                    <el-row style="margin-bottom: 10px">
+                      <el-col :span="12">
+                        <span style="font-family: 'Arial Black';font-weight: 200">5</span>
+                      </el-col>
+                      <el-col :span="12">
+                        <span style="font-family: 'Arial Black';font-weight: 200">10</span>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="12">
+                        单选题
+                      </el-col>
+                      <el-col :span="12">
+                        多选题
+                      </el-col>
+                    </el-row>
+                    <el-row style="margin-bottom: 10px">
+                      <el-col :span="12">
+                        <span style="font-family: 'Arial Black';font-weight: 200">1599</span>
+                      </el-col>
+                      <el-col :span="12">
+                        <span style="font-family: 'Arial Black';font-weight: 200">682</span>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="12">
+                        填空题
+                      </el-col>
+                      <el-col :span="12">
+                        问答题
+                      </el-col>
+                    </el-row>
+                    <el-row style="margin-bottom: 10px">
+                      <el-col :span="12">
+                        <span style="font-family: 'Arial Black';font-weight: 200">2</span>
+                      </el-col>
+                      <el-col :span="12">
+                        <span style="font-family: 'Arial Black';font-weight: 200">0</span>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+
           </div>
           <div v-if="active==='2'">
             <el-card style="margin-bottom: 5px;height: 60px"
@@ -586,34 +657,59 @@
               <el-col :span="8">
                 <br>
                 <el-card class="exer-info" style="width: 100%">
-                  <el-button type="text" style="font-size: x-large" @click="gotoTest">{{user.test_num}}</el-button>
+                  <el-button type="text" style="font-size: 50px" @click="gotoTest">{{user.test_num}}</el-button>
+                  <i style="font-size: 60px;margin-left: 60%" class="el-icon-finished"></i>
                   <br>
                   <div>
                     <span style="color: #868686">完成的考试次数</span>
                   </div>
                 </el-card>
                 <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                  <el-button type="text" style="font-size: x-large" @click="gotoExercise">{{user.practiceAttendedNum}}</el-button>
+                  <el-button type="text" style="font-size: 50px" @click="gotoExercise">{{user.practiceAttendedNum}}</el-button>
+                  <i style="font-size: 60px;margin-left: 60%" class="el-icon-check"></i>
                   <br>
                   <div>
                     <span style="color: #868686">完成的练习次数</span>
                   </div>
+                  <div>
+
+                  </div>
                 </el-card>
               </el-col>
               <el-col :span="8" :offset="1">
-                <el-card class="exer-info" style="width: 100%;margin-top: 22px">
-                  <el-button type="text" style="font-size: x-large" @click="gotoDone">{{user.exer_num}}</el-button>
-                  <br>
-                  <div>
-                    <span style="color: #868686">做过的题目数量</span>
-                  </div>
-                </el-card>
-                <el-card class="exer-info" style="width: 100%;margin-top: 10px">
-                  <el-button type="text" style="font-size: x-large" @click="gotoWrong">{{user.wrong_num}}</el-button>
-                  <br>
-                  <div>
+                <el-row>
+                  <el-card class="exer-info" style="width: 100%;margin-top: 22px;height: 135px">
+                    <el-row>
+                      <el-col :span="8">
+                        <el-button type="text" style="font-size: 50px" @click="gotoDone">{{user.exer_num}}</el-button>
+                      </el-col>
+                      <el-col :span="16">
+                        <i style="font-size: 60px;margin-left: 60%;margin-top: 10px" class="el-icon-folder-opened"></i>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <span style="color: #868686">做过的题目数量</span>
+                    </el-row>
+                    <br>
+                    <div>
+
+                    </div>
+                  </el-card>
+                </el-row>
+
+                <el-card class="exer-info" style="width: 100%;margin-top: 10px;height: 135px">
+                  <el-row>
+                    <el-col :span="8">
+                      <el-button type="text" style="font-size: 50px" @click="gotoWrong">{{user.wrong_num}}</el-button>
+                    </el-col>
+                    <el-col :span="16">
+                      <i style="font-size: 60px;margin-left: 60%;margin-top: 10px" class="el-icon-close"></i>
+                    </el-col>
+                  </el-row>
+
+                  <el-row>
                     <span style="color: #868686">错题数量</span>
-                  </div>
+                  </el-row>
                 </el-card>
               </el-col>
             </el-row>
@@ -635,10 +731,10 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="8">
+              <el-col :span="10">
                 <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
               </el-col>
-              <el-col :span="8" :offset="3">
+              <el-col :span="6" :offset="3">
                 <Rader :opinion="theSubjects" :opinion-data="subjectsRate"></Rader>
               </el-col>
             </el-row>
@@ -670,7 +766,7 @@ export default {
   name: "student",
   data(){
     return{
-      active:'',
+      active:'0',
       showAnswer:false,
       randomProblems:[],
       thesubjects1:[],
@@ -701,13 +797,13 @@ export default {
       searchRange:null,
       searchWrongPro:null,
       exercise:{
-        danxuan:'',
-        duoxuan:'',
-        tiankong:'',
-        wenda:'',
+        danxuan:5,
+        duoxuan:5,
+        tiankong:5,
+        wenda:5,
         subject:'',
         range:[],
-        time:'',
+        time:20,
         startTimeS:'',
         endTimeS:'',
       },
@@ -911,6 +1007,13 @@ export default {
         }
 
         this.totalTests=res.data.total;
+        this.haveTest=false;
+        for(let i=0;i<this.exerciseSets.length;i++){
+          if(this.exerciseSets[i].state==='U'){
+            this.haveTest=true;
+          }
+        }
+
       })
     },
     getStudentExercise(){
@@ -1207,6 +1310,13 @@ export default {
       }).then(res=>{
         this.randomProblems=res.data;
       })
+    },
+    getLast5Tests(){
+      axios({
+        url:"/test/last5"
+      }).then(res=>{
+        this.yaxis=res.data;
+      })
     }
 
   },
@@ -1223,9 +1333,12 @@ export default {
       url:"/problem/allsubjectsnopub",
     }).then(res=>{
       this.subjects1=res.data;
+      console.log(this.subjects1);
     })
+    this.getLast5Tests();
     this.getStuInfo();
     this.getRandomProblems();
+    this.getStudentTests();
   }
 }
 </script>
@@ -1258,15 +1371,31 @@ export default {
 }
 
 .el-carousel__item:nth-child(2n) {
-  background-color: #f8fbe3;
+  background-color: #fffbf0;
 }
 
 .el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
+  background-color: #f0ede4;
 }
 
 .random{
+  border-radius: 12px;
+}
 
+.el-carousel__indicator--horizontal .el-carousel__button {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+.el-carousel__indicator--horizontal.is-active .el-carousel__button{
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 50%;
+  opacity: 1;
 }
 
 </style>

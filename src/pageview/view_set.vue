@@ -12,13 +12,13 @@
                   <el-container>
                     <el-header class="other_header" style="height: 40px;line-height: 40px;text-align: center; color:black;font-weight: bold ;">
                       {{ setname }}
-                      <span style="float: right;color: red">{{score}}分</span>
+                      <span style="float: right;color: red">得分：{{score}}</span>
                     </el-header>
                     <el-main>
-                      <el-row style="background: #ffffff">
+                      <el-row style="background: #ffffff;border-radius: 10px">
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">单项选择题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{singleChoiceList.length}}</i>
                             <span>题</span>
@@ -27,7 +27,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classa${index+1}`" v-for="(item,index) in singleChoiceList" :key="'single'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -48,7 +48,7 @@
                         </el-row>
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">多项选择题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ multiChoiceList.length }}</i>
                             <span>题</span>
@@ -57,7 +57,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classb${index+1}`" v-for="(item,index) in multiChoiceList" :key="'multi'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -81,7 +81,7 @@
                         </el-row>
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">填空题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ fillBlankList.length }}</i>
                             <span>题</span>
@@ -90,7 +90,7 @@
                         <el-divider></el-divider>
                         <el-row :class="`classc${index+1}`" v-for="(item,index) in fillBlankList" :key="'fill'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -107,16 +107,16 @@
                         </el-row>
                         <el-row>
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">问答题</h2>
-                          <p style="background: #409EFF;font-size: small;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 50px;line-height: 30px">
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>
                             <i>{{ questionAnswerList.length }}</i>
                             <span>题</span>
                           </p>
                         </el-row>
-                        <el-divider></el-divider>
+                        <el-divider style="height: 10px"></el-divider>
                         <el-row :class="`classd${index+1}`" v-for="(item,index) in questionAnswerList" :key="'qa'+index" style="margin-bottom: 20px;">
                           <el-col :span="2">
-                            <el-button class="i_style">{{index+1}}</el-button>
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
                             <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
@@ -134,7 +134,7 @@
                         <el-row style="margin-top: 60px;text-align: center;">
                           <el-col>
                             <div>
-                              <el-button @click="back" type="primary" round>返回</el-button>
+                              <el-button @click="back" type="primary" style="border-radius: 10px">返回</el-button>
                             </div>
                           </el-col>
                         </el-row>
@@ -146,21 +146,21 @@
             </el-container>
           </el-col>
           <el-col :span="6">
-            <el-container style="margin-right: 50px;margin-top: -60px;height: 80%;position:fixed;min-width: 250px">
+            <el-container style="background: #EEE8D5;border-radius: 10px;margin-right: 50px;margin-top: -60px;height: 80%;position:fixed;min-width: 250px">
               <el-header class="header_style" style="line-height: 40px;height: 40px;background-color: lightblue"><span style="font-size: large;font-family: 'Adobe 黑体 Std R'">答题卡</span></el-header>
               <el-main class="content_style">
                 <el-row style="margin-top: -15px;">
                   单项选择题
                 </el-row>
                 <el-row style="margin-top: 10px;">
-                  <el-button size="mini" @click="Submit1(index+1)" class="button_style" v-for="(item,index) in singleChoiceList" :key="index" :style="item.show">{{index+1}}</el-button>
+                  <el-button size="mini" @click="Submit1(index+1)" class="button_style" v-for="(item,index) in singleChoiceList" :key="index" :style="item.show"><span style="color: #f0f0f0">{{index+1}}</span></el-button>
                 </el-row>
                 <el-divider></el-divider>
                 <el-row style="margin-top: -15px;">
                   多项选择题
                 </el-row>
                 <el-row style="margin-top: 10px;">
-                  <el-button size="mini" @click="Submit2(index+1)" class="button_style" v-for="(item,index) in multiChoiceList" :key="index" :style="item.show">{{index+1}}</el-button>
+                  <el-button size="mini" @click="Submit2(index+1)" class="button_style" v-for="(item,index) in multiChoiceList" :key="index" :style="item.show"><span style="color: #f0f0f0">{{index+1}}</span></el-button>
                 </el-row>
                 <el-divider></el-divider>
                 <el-row style="margin-top: -15px;">
@@ -279,7 +279,7 @@ export default {
         this.$data.singleChoiceList[index].show = 'background: #00ABEA;';
       }
       else{
-        this.$data.singleChoiceList[index].show = 'background: red;';
+        this.$data.singleChoiceList[index].show = 'background: #e14545;';
       }
     },
     gotobutton2(index){
@@ -296,10 +296,10 @@ export default {
     this.questionAnswerList=JSON.parse(this.$route.params.qa);
     for(let i=0;i<this.singleChoiceList.length;i++){
       if(this.singleChoiceList[i].correct===true){
-        this.singleChoiceList[i]["show"] = 'background: #00ABEA;';
+        this.singleChoiceList[i]["show"] = 'background: #00ABEA;color:write;';
       }
       else{
-        this.singleChoiceList[i]["show"] = 'background: red;';
+        this.singleChoiceList[i]["show"] = 'background: #d47373;';
       }
     }
     for(let i=0;i<this.multiChoiceList.length;i++){
@@ -307,7 +307,7 @@ export default {
         this.multiChoiceList[i]["show"] = 'background: #00ABEA;';
       }
       else{
-        this.multiChoiceList[i]["show"] = 'background: red;';
+        this.multiChoiceList[i]["show"] = 'background: #d47373;';
       }
       var radio=this.multiChoiceList[i].myAnswer.split(" ");
       this.multiChoiceList[i].myAnswer=radio;
@@ -317,7 +317,7 @@ export default {
         this.fillBlankList[i]["show"]='background: #00ABEA;';
       }
       else{
-        this.fillBlankList[i]["show"]='background: red;';
+        this.fillBlankList[i]["show"]='background: #d47373;';
       }
     }
   },
@@ -353,9 +353,11 @@ export default {
 }
 
 .i_style {
-  background: rgb(93, 156, 236);
+  background: #ade1f7;
   font-weight: bold;
-  border-radius: 50%;
+  border-radius: 13px;
+  margin-top: 8px;
+  margin-left: 5px;
 }
 
 /deep/ .el-radio__inner {}

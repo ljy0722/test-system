@@ -8,7 +8,7 @@
         <el-aside style="margin-top: 100px" width="140px">
           <div class="toggle-btn" @click="toggleCollapse">|||</div>
           <el-menu default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
-            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>概览</el-menu-item>
+            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>首页</el-menu-item>
             <el-menu-item index="2"><i class="el-icon-s-order"></i>我的考试 </el-menu-item>
             <el-menu-item index="3"><i class="el-icon-s-grid"></i>收藏题目 </el-menu-item>
             <el-menu-item index="4"><i class="el-icon-s-custom"></i>用户组 </el-menu-item>
@@ -18,8 +18,8 @@
           <div v-if="active=='1'">
             <el-row>
               <el-col :span="8">
-                <div style="background: #f4f6ed">
-                  <el-card style="background:#f4f6ed;min-height: 222px;width:100%;margin-top: 80px">
+                <div style="background: #f4f6ed;border-radius: 10px">
+                  <el-card style="background:#f4f6ed;min-height: 222px;width:100%;margin-top: 80px;border-radius: 10px">
                     <div slot="header" style="color: #409EFF;font-size: large">
                       <el-button type="text" @click="active='2'" style="font-size: large;font-weight: 900">我创建的考试</el-button>
                     </div>
@@ -34,8 +34,8 @@
                 </div>
               </el-col>
               <el-col :span="8">
-                <div style="background: #f1f4e4;min-height: 685px">
-                  <el-card style="background:#f1f4e4;min-height: 222px;width:100%;margin-top: 80px">
+                <div style="background: #f1f4e4;min-height: 685px;border-radius: 10px">
+                  <el-card style="background:#f1f4e4;min-height: 222px;width:100%;margin-top: 80px;border-radius: 10px">
                     <div slot="header" style="color: #409EFF;font-size: large">
                       <el-button type="text" @click="active='3'" style="font-size: large;font-weight: 900">我收藏的题目</el-button>
                     </div>
@@ -51,7 +51,7 @@
                 </div>
               </el-col>
               <el-col :span="8">
-                <el-card style="background:#f5f9da;min-height: 222px;margin-top: 80px;margin-right: 40px">
+                <el-card style="background:#f5f9da;min-height: 222px;margin-top: 80px;margin-right: 40px;border-radius: 10px">
                   <div slot="header" style="color: #409EFF;font-size: large">
                     <el-button type="text" @click="active='4'" style="font-size: large;font-weight: 900">我创建的用户组</el-button>
                   </div>
@@ -130,31 +130,27 @@
             <div v-if="setdetail==true" style="margin-top: 80px">
               <el-button type="plain" style="float: left" size="mini" @click="setdetail=false;seechart=false">返回</el-button>
               <span style="font-size: x-large;font-weight: bold;margin-left: -6%">{{ setDetail.setname }}</span>
-              <br>
-              <br>
-              <el-row>
-              </el-row>
 
-
-              <br>
-              <br>
-              <el-row>
-                <el-col>
-                  <span style="margin-bottom: 30px;font-size: large;font-weight: bold;color: #444444">题目</span>
-                </el-col>
-              </el-row>
+              <el-card style="height: 50px">
+                <div style="text-align: left;margin-top: -10px">
+                  <i style="font-size: 30px" class="el-icon-tickets"></i>
+                  <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">题目</span>
+                </div>
+                <el-divider style="font-weight: 500"></el-divider>
+              </el-card>
 
               <el-tabs type="border-card" >
                 <el-tab-pane label="单选题" style="margin-bottom: 30px">
                   <el-table
                     :data="setDetail.singleChoiceList"
                     stripe
+                    border
                     ref="setDetail.problems.single"
                     style="width: 100%;margin-bottom: 30px;white-space: pre-wrap">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -214,15 +210,7 @@
                       label="来源"
                       width="150">
                     </el-table-column>
-                    <el-table-column
-                      prop="EHU"
-                      label="难度评价"
-                      width="60">
-                      <template slot-scope="s">
-                        <el-rate v-model="s.row.EHU" max="3">
-                        </el-rate>
-                      </template>
-                    </el-table-column>
+
                     <el-table-column
                       align="right">
                       <template slot-scope="scope">
@@ -238,12 +226,13 @@
                   <el-table
                     :data="setDetail.multiChoiceList"
                     stripe
+                    border
                     ref="setDetail.problems.multi"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -302,15 +291,6 @@
                       prop="source"
                       label="来源"
                       width="150">
-                    </el-table-column>
-                    <el-table-column
-                      prop="EHU"
-                      label="难度评价"
-                      width="60">
-                      <template slot-scope="s">
-                        <el-rate v-model="s.row.EHU" max="3">
-                        </el-rate>
-                      </template>
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -327,12 +307,13 @@
                   <el-table
                     :data="setDetail.fillBlankList"
                     stripe
+                    border
                     ref="setDetail.problems.fill"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -366,15 +347,6 @@
                       prop="source"
                       label="来源"
                       width="150">
-                    </el-table-column>
-                    <el-table-column
-                      prop="EHU"
-                      label="难度评价"
-                      width="60">
-                      <template slot-scope="s">
-                        <el-rate v-model="s.row.EHU" max="3">
-                        </el-rate>
-                      </template>
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -391,12 +363,13 @@
                   <el-table
                     :data="setDetail.questionAnswerList"
                     stripe
+                    border
                     ref="setDetail.problems.quesans"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -430,15 +403,6 @@
                       prop="source"
                       label="来源"
                       width="150">
-                    </el-table-column>
-                    <el-table-column
-                      prop="EHU"
-                      label="难度评价"
-                      width="60">
-                      <template slot-scope="s">
-                        <el-rate v-model="s.row.EHU" max="3">
-                        </el-rate>
-                      </template>
                     </el-table-column>
                     <el-table-column
                       align="right">
@@ -462,25 +426,33 @@
               </el-dialog>
               <br>
               <br>
-              <span style="font-size: large;margin-top: 100px;font-weight: bold;color: #444444">用户组</span>
               <el-row>
-                <el-col :span="2">
-                  <div style="margin-top: 5px">筛选：</div>
-                </el-col>
-                <el-col :span="3">
-                  <el-select v-model="chooseGroup" @change="seeAnalyse(chooseGroup)" placeholder="选择用户组" style="float: left">
+                <StuPro></StuPro>
+              </el-row>
+              <el-card style="height: 60px">
+                <div style="text-align: left;margin-top: -10px">
+                  <i style="font-size: 30px" class="el-icon-share"></i>
+                  <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">用户组</span>
+                  <span style="margin-left: 60%">筛选：</span>
+                  <el-select style="margin-right: 10px" v-model="chooseGroup" @change="seeAnalyse(chooseGroup)" placeholder="选择用户组">
                     <el-option
                       v-for="(item,index) in setDetail.groups"
                       :key="item.groupId"
                       :label="item.groupName"
                       :value="item.groupId"></el-option>
                   </el-select>
-                </el-col>
+                </div>
+                <div>
 
-              </el-row>
+
+                </div>
+              </el-card>
+
               <el-table
+                style="border-radius: 5px"
                 :data="showStudentsInAGroup"
                 stripe
+                border
               >
                 <el-table-column
                   prop="id"
@@ -500,12 +472,12 @@
                 <el-table-column
                   prop="email"
                   label="邮箱"
-                  width="200">
+                  width="250">
                 </el-table-column>
                 <el-table-column
                   prop="score"
                   label="得分"
-                  width="100">
+                  width="200">
                 </el-table-column>
                 <el-table-column
                   fixed="right"
@@ -582,6 +554,7 @@
                   <el-table
                     :data="problems.single"
                     stripe
+                    border
                     ref="problems.single"
                     style="width: 100%">
                     <el-table-column
@@ -644,6 +617,15 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      prop="difficultLevel"
+                      label="难度评价"
+                      width="130">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.difficultLevel" :max=3 @change="evaluate(s.row.id,s.row.difficultLevel)">
+                        </el-rate>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
@@ -691,6 +673,7 @@
                   <el-table
                     :data="problems.multi"
                     stripe
+                    border
                     ref="problems.multi"
                     style="width: 100%">
                     <el-table-column
@@ -753,6 +736,15 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      prop="difficultLevel"
+                      label="难度评价"
+                      width="130">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.difficultLevel" :max=3 @change="evaluate(s.row.id,s.row.difficultLevel)">
+                        </el-rate>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
@@ -800,6 +792,7 @@
                   <el-table
                     :data="problems.fill"
                     stripe
+                    border
                     ref="problems.fill"
                     style="width: 100%">
                     <el-table-column
@@ -835,6 +828,15 @@
                       prop="source"
                       label="来源"
                       width="150">
+                    </el-table-column>
+                    <el-table-column
+                      prop="difficultLevel"
+                      label="难度评价"
+                      width="130">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.difficultLevel" :max=3 @change="evaluate(s.row.id,s.row.difficultLevel)">
+                        </el-rate>
+                      </template>
                     </el-table-column>
                     <el-table-column
                       fixed="right">
@@ -884,6 +886,7 @@
                   <el-table
                     :data="problems.quesans"
                     stripe
+                    border
                     ref="problems.quesans"
                     style="width: 100%">
                     <el-table-column
@@ -919,6 +922,15 @@
                       prop="source"
                       label="来源"
                       width="150">
+                    </el-table-column>
+                    <el-table-column
+                      prop="difficultLevel"
+                      label="难度评价"
+                      width="130">
+                      <template slot-scope="s">
+                        <el-rate v-model="s.row.difficultLevel" :max=3 @change="evaluate(s.row.id,s.row.difficultLevel)">
+                        </el-rate>
+                      </template>
                     </el-table-column>
                     <el-table-column
                       fixed="right">
@@ -970,7 +982,7 @@
                 </el-row>
                 <el-form-item label="题目">
                   <el-col :span="20">
-                    <el-input v-model="addques.question_new"></el-input>
+                    <el-input type="textarea" v-model="addques.question_new"></el-input>
                   </el-col>
                 </el-form-item>
                 <el-form-item label="选项A">
@@ -1019,7 +1031,7 @@
                 </el-row>
                 <el-form-item label="题目">
                   <el-col :span="20">
-                    <el-input v-model="addques.question_new"></el-input>
+                    <el-input type="textarea" v-model="addques.question_new"></el-input>
                   </el-col>
                 </el-form-item>
                 <el-form-item label="选项A">
@@ -1068,12 +1080,12 @@
                 </el-row>
                 <el-form-item label="题目">
                   <el-col :span="20">
-                    <el-input v-model="addques.question_new"></el-input>
+                    <el-input type="textarea" v-model="addques.question_new"></el-input>
                   </el-col>
                 </el-form-item>
                 <el-form-item label="答案">
                   <el-col :span="18">
-                    <el-input v-model="addques.answer"></el-input>
+                    <el-input type="textarea" v-model="addques.answer"></el-input>
                   </el-col>
                 </el-form-item>
               </el-form>
@@ -1092,12 +1104,12 @@
                 </el-row>
                 <el-form-item label="题目">
                   <el-col :span="20">
-                    <el-input v-model="addques.question_new"></el-input>
+                    <el-input type="textarea" v-model="addques.question_new"></el-input>
                   </el-col>
                 </el-form-item>
                 <el-form-item label="答案">
                   <el-col :span="18">
-                    <el-input v-model="addques.answer"></el-input>
+                    <el-input type="textarea" v-model="addques.answer"></el-input>
                   </el-col>
                 </el-form-item>
               </el-form>
@@ -1142,12 +1154,13 @@
                   <el-table
                     :data="allProblemSingle"
                     stripe
+                    border
                     ref="problems"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -1251,12 +1264,13 @@
                   <el-table
                     :data="allProblemMulti"
                     stripe
+                    border
                     ref="problems2Check"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -1360,12 +1374,13 @@
                   <el-table
                     :data="allProblemFill"
                     stripe
+                    border
                     ref="problems2Check"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -1445,12 +1460,13 @@
                   <el-table
                     :data="allProblemQa"
                     stripe
+                    border
                     ref="problems2Check"
                     style="width: 100%">
                     <el-table-column
                       prop="id"
                       label="题号"
-                      width="50">
+                      width="100">
                     </el-table-column>
                     <el-table-column
                       prop="subject"
@@ -1506,12 +1522,12 @@
           <div v-if="active=='4'&&userGroupDetail==false">
             <el-row>
               <el-col :span="2">
-                <el-button type="primary" align="left" style="margin-top: 80px" @click="createUserGroup=true">创建用户组</el-button>
+                <el-button type="primary" align="left" style="margin-top: 80px;margin-bottom: 10px" @click="createUserGroup=true">创建用户组</el-button>
               </el-col>
             </el-row>
             <el-row>
               <div>
-                <el-card style="margin-left: 10px;margin-bottom: 5px;width: 22%;min-height: 100px;margin-left: auto;float: left;display: flex;justify-content: center"
+                <el-card style="margin-left: 10px;margin-bottom: 10px;width: 22%;min-height: 100px;margin-left: 10px;float: left;display: flex;justify-content: center"
                          v-for="(i,index) in user_groups"
                          v-bind:key="index">
                   <div style="margin-top: -15px">
@@ -1715,13 +1731,16 @@ import Chart7 from './chart/chart7'
 import Chart8 from './chart/chart8'
 import Chart9 from './chart/chart9'
 import Problems from '../components/AllProblems.vue'
+import StuPro from './chart/setudentproblem'
 import axios from "axios";
 export default {
   name: "teacher",
-  components: {Top, Down,Chart,Chart2,Chart6,Chart7,Chart8,Chart9,Problems},
+  components: {Top, Down,Chart,Chart2,Chart6,Chart7,Chart8,Chart9,Problems,StuPro},
   data(){
     return{
       // getactive:this.$route.params.active,
+      staticGroups:[],
+      staticData:[],
       setstotal:0,
       setstodo:0,
       setsdoing:0,
@@ -1845,70 +1864,19 @@ export default {
       },
       chooseGroup:'',
       setDetail:{
-        setname:'中医药基础卷1',
+        setname:'',
         id:'1',
-        singleChoiceList:[
-          {
-            id:'1',
-            subject:'中医学基础',
-            contentType:'绪论',
-            question_type:'单项选择题',
-            question:'我国现存最早的医学专著是（  ）',
-            option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》',
-            answer:'A',
-            score:'2'
-          }
-        ],
-        multiChoiceList:[
-          {
-            id:'700',
-            subject:'温病学',
-            contentType:'温病的辩证',
-            question_type:'多项选择题',
-            question:'肾阴耗损证的辨证要点是：',
-            option:'A．手指蠕动或瘛疭，舌干绛而萎，脉虚\nB．夜热早凉，热退无汗，能食消瘦，舌红苔少\nC．手足心热甚于手足背，口燥咽干，舌绛不鲜，干枯而萎，脉虚\nD．神昏肢厥，舌绛\nE．神志时清时寐，舌苔垢腻',
-            answer:'A',
-            score: '2'
-          }
-        ],
+        singleChoiceList:[],
+        multiChoiceList:[],
         fillBlankList:[],
         questionAnswerList:[],
         groups:[
-          {
-            group_name:'用户组1',
-            id:'1',
-            users:[
-              {
-                id:'1',
-                name:'tom',
-                score:'90',
-                sex:'男',
-                email:'123@qq.com',
-              }
-            ],
-          }
+
         ],
         endTime:'2022-4-30'
       },
       exerciseSets:[
-        {
-          setname:'中医药基础卷1',
-          id:'1',
-          user_group:[
-            {
-              group_name:'',
-              id:''
-            }
-          ],
-          state:'1',
-          endTime:'2022-4-29'
-        },
-        {
-          setname: '中药基础问题',
-          id:'2',
-          state:'2',
-          endTime:'2022-4-30'
-        }
+
       ],
       filter:{
         type:"单项选择题"
@@ -1920,16 +1888,6 @@ export default {
         quesans:[],
       },
       allProblemSingle:[
-        {
-          id:'1',
-          subject:'中医学基础',
-          contentType:'绪论',
-          question_type:'单项选择题',
-          question:'我国现存最早的医学专著是（  ）',
-          option:'A．《五十二病方》\nB．《神农本草经》\nC．《黄帝内经》D．《中藏经》\nE．《难经》',
-          answer:'A',
-          score:'2'
-        }
       ],
       allProblemMulti:[],
       allProblemFill:[],
@@ -2195,7 +2153,18 @@ export default {
         if(this.setDetail.groups.length!==0){
           this.chooseGroup=this.setDetail.groups[0].groupId;
         }
+        res.data.groups.forEach(item=>{
+          this.staticGroups.push(item.exerciseName);
+        })
         this.getStudentsInExercise();
+      })
+    },
+    getEveryProCorrectNum(){
+      axios({
+        url:"/test/correcteverypro",
+        params:{
+          exerciseId:this.setDetail.id
+        }
       })
     },
     getStudentsInExercise(){
@@ -2503,22 +2472,28 @@ export default {
       this.createUserGroup=false;
     },
     searchUser(){
-      axios({
-        url:"user/searchuser",
-        params:{
-          keyWord:this.searchUserId,
-          pageNum:this.pageSearchUser
-        }
-      }).then(res=>{
-        // var user=new Object();
-        // user["id"]=res.data.userId;
-        // user["sex"]=res.data.sex;
-        // user["email"]=res.data.email;
-        // user["name"]=res.data.userName;
-        this.searchUserInfo=[];
-        //this.searchUserInfo.push(user);
-        this.searchUserInfo=res.data.data;
-      })
+      if(this.searchUserId===null||this.searchUserId===''){
+        this.$message.error("请输入学生的ID或姓名进行查找");
+      }
+      else{
+        axios({
+          url:"user/searchuser",
+          params:{
+            keyWord:this.searchUserId,
+            pageNum:this.pageSearchUser
+          }
+        }).then(res=>{
+          // var user=new Object();
+          // user["id"]=res.data.userId;
+          // user["sex"]=res.data.sex;
+          // user["email"]=res.data.email;
+          // user["name"]=res.data.userName;
+          this.searchUserInfo=[];
+          //this.searchUserInfo.push(user);
+          this.searchUserInfo=res.data.data;
+        })
+      }
+
     },
     deleteUser(id){
       axios({
@@ -2586,6 +2561,18 @@ export default {
         this.setstodo=res.data.todo;
         this.setsdoing=res.data.doing;
         this.setsdone=res.data.done;
+      })
+    },
+    evaluate(id,level){
+      console.log(1+level);
+      axios({
+        url:"/problem/evaluate",
+        params:{
+          problemId:id,
+          level:level
+        }
+      }).then(res=>{
+
       })
     }
   },
