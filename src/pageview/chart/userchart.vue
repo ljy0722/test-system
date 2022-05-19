@@ -49,41 +49,43 @@ export default {
           console.log(this.num[i]);
         }
       }))
+      this.$nextTick(axios({
+        url:"/user/usernum",
+      }).then(res=>{
+        console.log(res.data)
+        for(let i=0;i<4;i++){
+          this.num[i]=parseInt(res.data[i]);
+          a[i]=parseInt(res.data[i]);
+          console.log(this.num[i]);
+        }
+        this.mychart.setOption({
+          tooltip: {
+            trigger: 'axis',
+            formatter: '{b} : {c}'
+          },
+          xAxis: {
+            type: 'category',
+            data: ['学生', '教师','未审核教师', '管理员']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: a,
+              type: 'bar'
+            }
+          ]
+        });
+      }))
 
-      this.mychart.setOption({
-        tooltip: {
-          trigger: 'axis',
-          formatter: '{b} : {c}'
-        },
-        xAxis: {
-          type: 'category',
-          data: ['学生', '教师','未审核教师', '管理员']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: a,
-            type: 'bar'
-          }
-        ]
-      });
+
       //console.log(1+a)
 
     }
   },
   created() {
-    this.$nextTick(axios({
-      url:"/user/usernum",
-    }).then(res=>{
-      console.log(res.data)
-      for(let i=0;i<4;i++){
-        this.num[i]=parseInt(res.data[i]);
-        a[i]=parseInt(res.data[i]);
-        console.log(this.num[i]);
-      }
-    }))
+
 
   }
 }

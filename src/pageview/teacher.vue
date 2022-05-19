@@ -7,7 +7,7 @@
       <el-container style="min-height: 500px;">
         <el-aside style="margin-top: 100px" width="140px">
           <div class="toggle-btn" @click="toggleCollapse">|||</div>
-          <el-menu default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
+          <el-menu :default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>首页</el-menu-item>
             <el-menu-item index="2"><i class="el-icon-s-order"></i>我的考试 </el-menu-item>
             <el-menu-item index="3"><i class="el-icon-s-grid"></i>收藏题目 </el-menu-item>
@@ -47,7 +47,7 @@
                       <el-row><span>问答题：   {{totalQa}}</span></el-row>
                     </div>
                   </el-card>
-                  <Chart7 v-if="getsee" :value1="totalSingle" :value2="totalMulti" :value3="totalFill" :value4="totalQa" style="margin-top: 40px"></Chart7>
+                  <Chart7 v-if="getsee" style="margin-top: 40px"></Chart7>
                 </div>
               </el-col>
               <el-col :span="8">
@@ -1752,7 +1752,7 @@ export default {
       see:false,
       file:'',
       filename:'',
-      active:null,
+      active:'1',
       isCollapse:false,
       dispatch:false,
       dispatch2:false,
