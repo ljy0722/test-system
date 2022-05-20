@@ -5,13 +5,13 @@
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
-        <el-aside style="margin-top: 100px" width="140px">
+        <el-aside style="margin-top: 100px" :width="isCollapse ? '64px' : '140px'">
           <div class="toggle-btn" @click="toggleCollapse">|||</div>
-          <el-menu :default-active="active" style="width: 130px;" unique-opened:collapse="true" @select="handleSelect">
-            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>首页</el-menu-item>
-            <el-menu-item index="2"><i class="el-icon-s-order"></i>我的考试 </el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-s-grid"></i>收藏题目 </el-menu-item>
-            <el-menu-item index="4"><i class="el-icon-s-custom"></i>用户组 </el-menu-item>
+          <el-menu class="menuclass" :default-active="active" :collapse-transition="0.3" :collapse="isCollapse" style="border-radius: 10px" unique-opened:collapse="true" @select="handleSelect">
+            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i><span slot="title">首页</span></el-menu-item>
+            <el-menu-item index="2"><i class="el-icon-s-order"></i><span slot="title">我的考试</span> </el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-s-grid"></i><span slot="title">收藏题目</span> </el-menu-item>
+            <el-menu-item index="4"><i class="el-icon-s-custom"></i><span slot="title">用户组</span> </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>
@@ -120,7 +120,7 @@
               </el-row>
               <div class="block" style="float: right;margin-bottom: -200px">
                 <el-pagination
-                  :current-change="change"
+                  @current-change="change"
                   layout="prev, pager, next"
                   :page-size=20
                   :total="totalSet">
@@ -129,6 +129,10 @@
             </div>
             <div v-if="setdetail==true" style="margin-top: 80px">
               <el-button type="plain" style="float: left" size="mini" @click="setdetail=false;seechart=false">返回</el-button>
+              <el-button
+                size="mini" icon="el-icon-download"
+                style="float: left"
+                @click="exportTest(setDetail.id)">导出考试信息</el-button>
               <span style="font-size: x-large;font-weight: bold;margin-left: -6%">{{ setDetail.setname }}</span>
 
               <el-card style="height: 50px">
@@ -427,14 +431,14 @@
               <br>
               <br>
               <el-row>
-                <StuPro></StuPro>
+                <StuPro :pid="setDetail.id"></StuPro>
               </el-row>
               <el-card style="height: 60px">
                 <div style="text-align: left;margin-top: -10px">
                   <i style="font-size: 30px" class="el-icon-share"></i>
                   <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">用户组</span>
-                  <span style="margin-left: 60%">筛选：</span>
-                  <el-select style="margin-right: 10px" v-model="chooseGroup" @change="seeAnalyse(chooseGroup)" placeholder="选择用户组">
+                  <span style="margin-left: 50%">筛选：</span>
+                  <el-select style="margin-right: 10px;width: 20%" v-model="chooseGroup" @change="seeAnalyse(chooseGroup)" placeholder="选择用户组">
                     <el-option
                       v-for="(item,index) in setDetail.groups"
                       :key="item.groupId"
@@ -481,14 +485,11 @@
                 </el-table-column>
                 <el-table-column
                   fixed="right"
-                  width="250">
+                  width="150">
                   <template slot-scope="scope">
                     <el-button
                       size="mini"
                       @click="viewStudentSet(scope.row.id,setDetail.id)">查看试卷</el-button>
-                    <el-button
-                      size="mini" icon="el-icon-download"
-                      @click="exportExercise(scope.row)">导出试卷</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -1677,7 +1678,7 @@
                   <template slot-scope="scope">
                     <el-button
                       size="mini"
-                      @click="addUser2group(scope.row.id)">添加</el-button>
+                      @click="addUser2group(scope.row.userId)">添加</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -1938,6 +1939,7 @@ export default {
 
     change(val){
       this.pageSet=val;
+      console.log(this.pageSet);
       this.getTeacherExercise();
     },
     change1(val){
@@ -2574,6 +2576,30 @@ export default {
       }).then(res=>{
 
       })
+    },
+    exportTest(id){
+      // var chart=document.getElementById('myChart8');
+      // var canvas=$("#charts").find("canvas")[0];
+      // var base64=canvas.toDataURL("image/jpeg",1);
+      axios({
+        url:"/test/exportTest",
+        params:{
+          exerciseId:id,
+        },
+        responseType:'blob',
+      }).then(res=>{
+        let url=window.URL.createObjectURL(new Blob([res.data],{type:'MediaType.APPLICATION_OCTET_STREAM_VALUE'}));
+        let link=document.createElement('a');
+        link.style.display='none';
+        link.href=url;
+        let excelName='考试结果.xls';
+        link.setAttribute('download',excelName);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }).catch(err=>{
+        console.log(err)
+      })
     }
   },
   computed:{
@@ -2632,11 +2658,11 @@ export default {
   margin: 2px;
 }
 #teacher{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 }
 .toggle-btn{
-  width: 130px;
+  width: 150px;
   background: dimgrey;
   font-size:10px;
   line-height:24px;
@@ -2645,5 +2671,12 @@ export default {
   letter-spacing: 0.2em;
   cursor:pointer;
 }
+
+
+.menuclass:not(.el-menu--collapse) {
+  width: 150px;
+  min-height: 200px;
+}
+
 
 </style>

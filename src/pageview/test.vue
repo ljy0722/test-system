@@ -422,43 +422,59 @@ export default {
       alert("提交成功"+this.$data.grades);
     },
     submit(){
-      // 清除定时器
-      clearInterval(this.timer);
-      let multiList=this.multiChoiceList;
-      for(let i=0;i<this.multiChoiceList.length;i++){
-        let ans=this.multiChoiceList[i].myAnswer.join(" ");
-        this.multiChoiceList[i].myAnswer=ans;
-      }
-      let test=0;
-      if(this.isTest===1){
-        test=1;
-      }
-
-      axios({
-        url:"/test/submit",
-        method:"POST",
-        data:{
-          id:this.exerciseId,
-          setname:this.setname,
-          score:null,
-          isTest:test,
-          startDoingTime:this.startDoingTime,
-          singleChoiceList:this.singleChoiceList,
-          multiChoiceList:this.multiChoiceList,
-          fillBlankList:this.fillBlankList,
-          questionAnswerList:this.questionAnswerList
+      this.$confirm('确认提前交卷?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '提交成功!'
+        });
+        // 清除定时器
+        clearInterval(this.timer);
+        let multiList=this.multiChoiceList;
+        for(let i=0;i<this.multiChoiceList.length;i++){
+          let ans=this.multiChoiceList[i].myAnswer.join(" ");
+          this.multiChoiceList[i].myAnswer=ans;
         }
-      }).then(res=>{
-        this.$message("提交成功");
-        if(test===1){
-          this.$router.go(-1);
-        }
-        else{
-          this.viewStudentSet(res.data);
-          //this.$router.push({name:'viewset',params:{grade:res.data,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
+        let test=0;
+        if(this.isTest===1){
+          test=1;
         }
 
-      })
+        axios({
+          url:"/test/submit",
+          method:"POST",
+          data:{
+            id:this.exerciseId,
+            setname:this.setname,
+            score:null,
+            isTest:test,
+            startDoingTime:this.startDoingTime,
+            singleChoiceList:this.singleChoiceList,
+            multiChoiceList:this.multiChoiceList,
+            fillBlankList:this.fillBlankList,
+            questionAnswerList:this.questionAnswerList
+          }
+        }).then(res=>{
+          //this.$message("提交成功");
+          if(test===1){
+            this.$router.go(-1);
+          }
+          else{
+            this.viewStudentSet(res.data);
+            //this.$router.push({name:'viewset',params:{grade:res.data,single:JSON.stringify(this.singleChoiceList),multi:JSON.stringify(multiList),fill:JSON.stringify(this.fillBlankList),qa:JSON.stringify(this.questionAnswerList)}})
+          }
+
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消提交'
+        });
+      });
+
       //this.$router.push({path:'/viewset',query:{'single':JSON.stringify(this.singleChoiceList),'multi':JSON.stringify(this.multiChoiceList),'fill':JSON.stringify(this.fillBlankList),'qa':JSON.stringify(this.questionAnswerList)}})
     },
     viewStudentSet(eId){
@@ -676,7 +692,7 @@ export default {
   padding: 4px 12px;
 }
 #test{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 }
 </style>

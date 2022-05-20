@@ -151,7 +151,7 @@ export default {
 .login {
   width: 100%;
   height: 550px;
-  background: url("../assets/images/login_register.png") no-repeat;
+  background: url("../assets/images/lgbgnew.jpg") no-repeat;
   background-size: cover;
   overflow: hidden;
 }

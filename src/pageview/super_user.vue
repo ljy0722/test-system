@@ -8,10 +8,10 @@
       <br>
       <br>
       <el-container style="min-height: 500px;margin-top: 50px">
-        <el-aside style="margin-top: 50px;" width="170px">
-          <div class="toggle-btn" >|||</div>
-          <el-menu :default-active="active" :unique-opened="true" style="width: 160px" @select="handleSelect">
-            <el-menu-item index="0"><i class="el-icon-s-home"></i>首页 </el-menu-item>
+        <el-aside style="margin-top: 50px;" :width="isCollapse ? '64px' : '170px'">
+          <div class="toggle-btn" @click="toggleCollapse">|||</div>
+          <el-menu class="menuclass" :default-active="active" :collapse="isCollapse" :unique-opened="true" @select="handleSelect">
+            <el-menu-item index="0"><i class="el-icon-s-home"></i><span slot="title">首页</span> </el-menu-item>
             <el-submenu index="11">
               <template slot="title">
                 <i class="el-icon-user"></i>
@@ -1450,6 +1450,7 @@ export default {
   data(){
     return{
       active:'0',
+      isCollapse:false,
       num:[],
       mychart:'',
       tikusubject:'',
@@ -1940,6 +1941,9 @@ export default {
       }).then(res=>{
       })
     },
+    toggleCollapse(){
+      this.isCollapse=!this.isCollapse;
+    },
     uploadFile(){
       if(this.fileList.length===0){
         this.$message.warning('请上传文件');
@@ -2116,11 +2120,11 @@ export default {
 
 <style scoped>
 #super_user{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 }
 .toggle-btn{
-  width: 160px;
+  width: 150px;
   background: dimgrey;
   font-size:10px;
   line-height:24px;
@@ -2128,5 +2132,10 @@ export default {
   text-align: center;
   letter-spacing: 0.2em;
   cursor:pointer;
+}
+.menuclass:not(.el-menu--collapse) {
+  width: 150px;
+  min-height: 200px;
+  border-radius: 10px;
 }
 </style>

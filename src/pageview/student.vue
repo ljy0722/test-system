@@ -5,15 +5,15 @@
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
-        <el-aside style="margin-top: 100px" width="140px">
-          <div class="toggle-btn" >|||</div>
-          <el-menu :default-active="active" style="width: 130px" @select="handleSelect">
-            <el-menu-item index="0"><i class="el-icon-s-home"></i>首页</el-menu-item>
-            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i>开始练习</el-menu-item>
-            <el-menu-item index="2" v-if="haveTest===true"><i class="el-icon-timer"></i>开始考试 </el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-s-order"></i>历次题集 </el-menu-item>
-            <el-menu-item index="4"><i class="el-icon-s-release"></i>我的错题 </el-menu-item>
-            <el-menu-item index="5"><i class="el-icon-s-grid"></i>数据分析 </el-menu-item>
+        <el-aside style="margin-top: 100px" :width="isCollapse ? '64px' : '140px'">
+          <div class="toggle-btn" @click="toggleCollapse">|||</div>
+          <el-menu class="menuclass" :default-active="active" :collapse="isCollapse" @select="handleSelect">
+            <el-menu-item index="0"><i class="el-icon-s-home"></i><span slot="title">首页</span></el-menu-item>
+            <el-menu-item index="1" ><i class="el-icon-s-unfold"></i><span slot="title">开始练习</span></el-menu-item>
+            <el-menu-item index="2" v-if="haveTest===true"><i class="el-icon-timer"></i><span slot="title">开始考试 </span></el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-s-order"></i><span slot="title">历次题集 </span></el-menu-item>
+            <el-menu-item index="4"><i class="el-icon-s-release"></i><span slot="title">我的错题</span> </el-menu-item>
+            <el-menu-item index="5"><i class="el-icon-s-grid"></i><span slot="title">数据分析 </span></el-menu-item>
           </el-menu>
         </el-aside>
         <el-main style="margin-top: 80px;min-height: 600px">
@@ -96,6 +96,7 @@
                   <el-divider></el-divider>
                   <div style="margin-left: 15px">
                     <h3>题量设置</h3>
+                    <p style="font-size: 10px;color: grey">若系统在该考点下的某题型数量小于您所选择的数量，将提供最大数量</p>
                     <el-row>
                       <span>单项选择题:</span>
                       <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input-number>
@@ -143,10 +144,10 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px">
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">5</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">1</span>
                       </el-col>
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">10</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">3</span>
                       </el-col>
                     </el-row>
                     <el-row>
@@ -159,10 +160,10 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px">
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">1599</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">1691</span>
                       </el-col>
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">682</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">397</span>
                       </el-col>
                     </el-row>
                     <el-row>
@@ -191,7 +192,7 @@
             <el-card style="margin-bottom: 5px;height: 60px"
                      v-for="(i,index) in exerciseSets"
                      v-bind:key="index"
-                     v-if="i.state==='U'"
+
             >
               <el-row style="margin-top: -15px">
                 <el-button type="text"   style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state,i.timeState,i.endTime)"> {{ i.exerciseName }}</el-button>
@@ -796,6 +797,7 @@ export default {
       searchSubject:null,
       searchRange:null,
       searchWrongPro:null,
+      isCollapse:false,
       exercise:{
         danxuan:5,
         duoxuan:5,
@@ -1062,7 +1064,8 @@ export default {
       if(timeState==='1'){
         alert("题目集未到开放时间！");
       }
-      else if(timeState==='2'&&(state==='D'||state==='U')){
+      else if(timeState==='2'&&state==='U'){
+        this.$message("请勿中途退出考试！")
         axios({
           url:"/test/take",
           params:{
@@ -1096,6 +1099,9 @@ export default {
           this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
         })
       }
+      else if(state==='P'){
+        alert("考试未结束，无法查看信息");
+      }
       else{
         axios({
           url:"exercise/viewresult",
@@ -1124,6 +1130,9 @@ export default {
           alert("您未参加该场考试，无法查看信息");
         })
       }
+    },
+    toggleCollapse(){
+      this.isCollapse=!this.isCollapse;
     },
     submitTestRequirement(){
       this.exercise.startTimeS='2022-1-1 22:30:00'
@@ -1345,12 +1354,12 @@ export default {
 
 <style>
 #student{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 
 }
 .toggle-btn{
-  width: 130px;
+  width: 150px;
   background: dimgrey;
   font-size:10px;
   line-height:24px;
@@ -1358,6 +1367,11 @@ export default {
   text-align: center;
   letter-spacing: 0.2em;
   cursor:pointer;
+}
+.menuclass:not(.el-menu--collapse) {
+  width: 150px;
+  min-height: 200px;
+  border-radius: 10px;
 }
 .el-table.cell{
   white-space: pre-line;

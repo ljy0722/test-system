@@ -209,7 +209,7 @@ export default {
 
 <style scoped>
 #user_info{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 }
 </style>

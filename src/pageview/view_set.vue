@@ -387,7 +387,7 @@ export default {
   padding: 4px 12px;
 }
 #view_set{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 }
 </style>

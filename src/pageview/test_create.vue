@@ -18,16 +18,16 @@
           <div align="middle">
             <el-row><p></p></el-row>
             <el-row><p></p></el-row>
-            <el-card>
+            <el-card style="border-radius: 10px">
               <div class="step1">
                 <el-row>
-                  <el-col :span="3"><a>习题集名称：</a></el-col>
+                  <el-col :span="3"><span style="margin-left: 10px;vertical-align:middle">习题集名称：</span></el-col>
                   <el-col :span="6" align="left"><el-input v-model="testname"></el-input></el-col>
                 </el-row>
                 <br>
                 <br>
                 <el-row>
-                  <el-col :span="3"><a>组题方式：</a></el-col>
+                  <el-col :span="3"><span style="margin-left: 10px;vertical-align:middle">组题方式：</span></el-col>
                   <el-col :span="6" align="left"><el-select v-model="method1">
                     <el-option
                       v-for="item in options1"
@@ -40,50 +40,74 @@
                 <el-row><p></p></el-row>
                 <el-row><p></p></el-row>
                 <el-row>
-                  <el-col :span="3"><a>起止时间：</a></el-col>
+                  <el-col :span="3"><span style="margin-left: 10px;vertical-align:middle">起止时间：</span></el-col>
                   <el-col :span="6"><el-date-picker type="datetimerange" range-separator="至" v-model="time1" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围" >
                   </el-date-picker></el-col>
                 </el-row>
                 <el-row><p></p></el-row>
                 <el-row><p></p></el-row>
                 <el-row>
-                  <el-col :span="3"><a>考试时长：</a></el-col>
-                  <el-col :span="6"><el-input v-model="time2"><template slot="append">分钟</template></el-input></el-col>
+                  <el-col :span="3"><span style="margin-left: 10px;vertical-align:middle">考试时长：</span></el-col>
+                  <el-col :span="5" align="left"><el-input-number v-model="time2"><template slot="append">分钟</template></el-input-number></el-col>
+                  <el-col :span="3" align="left"><span style="margin-left: 10px;vertical-align:middle">分钟</span></el-col>
                 </el-row>
               </div>
             </el-card>
             <br>
-            <el-card v-if="method1=='zidong'||method1=='shoudong'">
-              <div class="step2.1" v-if="method1=='zidong'" style="margin-left: -500px">
-                <div style="width: 30%" align="left">
-                  <p style="font-size: large">题量设置</p>
-                  <el-input v-model="danxuan" placeholder="单选题"></el-input>
-                  <el-input v-model="duoxuan" placeholder="多选题"></el-input>
-                  <el-input v-model="tiankong" placeholder="填空题"></el-input>
-                  <el-input v-model="wenda" placeholder="问答题"></el-input>
+            <el-card style="border-radius: 10px" v-if="method1=='zidong'||method1=='shoudong'">
+              <div class="step2.1" v-if="method1=='zidong'" style="" align="left">
+
+                <div style="width: 50%" align="left">
+                  <p style="margin-left: 20px">   选择科目</p>
+                  <el-row>
+                    <span style="margin-left: 20px">科目:</span>
+                    <el-select v-model="autoSubject" @change="getRanges" style="margin-left: 8%">
+                      <el-option
+                        v-for="item in subjects"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-row>
+
                 </div>
                 <el-divider></el-divider>
-                <div style="width: 30%" align="left">
-                  <p>选择科目</p>
-                  <el-select v-model="autoSubject" @change="getRanges">
-                    <el-option
-                      v-for="item in subjects"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"></el-option>
-                  </el-select>
+                <div style="width: 50%" align="left">
+                  <p style="margin-left: 20px">   选择考点</p>
+                  <el-row>
+                    <span style="margin-left: 20px">考点:</span>
+                    <el-select v-model="autoRange" multiple style="margin-left: 8%">
+                      <el-option
+                        v-for="item in ranges"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"></el-option>
+                    </el-select>
+                  </el-row>
+
                 </div>
                 <el-divider></el-divider>
-                <div style="width: 30%" align="left">
-                  <p>选择范围</p>
-                  <el-select v-model="autoRange" multiple>
-                    <el-option
-                      v-for="item in ranges"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"></el-option>
-                  </el-select>
+                <div style="margin-left: 15px;width: 60%;" >
+                  <p align="left">题量设置</p>
+                  <p style="font-size: 10px;color: grey">若系统在该考点下的某题型数量小于您所选择的数量，将提供最大数量</p>
+                  <el-row>
+                    <span>单项选择题:</span>
+                    <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="danxuan"  placeholder="单选题数量"></el-input-number>
+                  </el-row>
+                  <el-row>
+                    <span>多项选择题:</span>
+                    <el-input-number controls-position="right"  min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="duoxuan" placeholder="多选题数量"></el-input-number>
+                  </el-row>
+                  <el-row>
+                    <span>填空题:</span>
+                    <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="tiankong" placeholder="填空题数量"></el-input-number>
+                  </el-row>
+                  <el-row>
+                    <span>问答题:</span>
+                    <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="wenda" placeholder="问答题数量"></el-input-number>
+                  </el-row>
                 </div>
+
               </div>
               <br>
               <br>
@@ -474,7 +498,7 @@
               </div>
             </el-card>
             <br>
-            <el-card>
+            <el-card style="border-radius: 10px">
               <div class="step3" align="left">
                 <span>授权用户组</span>
                 <el-divider></el-divider>
@@ -545,7 +569,7 @@ export default {
       ],
       method1:[],
       time1:[new Date(),new Date()],
-      time2:'',
+      time2:60,
       options2:[
         {
           value:'zuti1',
@@ -612,10 +636,10 @@ export default {
       totalQa:1,
       totalGroup:1,
       user_groups:[],
-      danxuan:'',
-      duoxuan:'',
-      tiankong:'',
-      wenda:'',
+      danxuan:5,
+      duoxuan:5,
+      tiankong:5,
+      wenda:5,
       autoSubject:null,
       autoRange:[],
     }
@@ -837,7 +861,7 @@ export default {
   margin: 2px;
 }
 #test-create{
-  background: url("../assets/images/img.png") no-repeat;
+  background: url("../assets/images/bg11.jpg") no-repeat;
   background-size: cover;
 }
 </style>
