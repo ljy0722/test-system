@@ -931,6 +931,7 @@ export default {
           let rate=(parseInt(item.correctNum)*100)/(parseInt(item.correctNum)+parseInt(item.wrongNum));
           this.subjectsRate.push(rate);
         });
+        //this.subjectsRate=[60,70,80];
         this.computeNext();
         this.setstotal=res.data.allSets;
         this.setstodo=res.data.todo;
@@ -1325,6 +1326,7 @@ export default {
         url:"/test/last5"
       }).then(res=>{
         this.yaxis=res.data;
+        //this.yaxis=[50,60,90,70,65];
       })
     }
 

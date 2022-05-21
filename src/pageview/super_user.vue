@@ -1759,12 +1759,7 @@ export default {
         }
       })
       .then(res=>{
-        if(res.data==="通过"){
-          this.$message('审核通过！');
-        }
-        else{
-          this.$message('审核不通过！');
-        }
+        this.$message.success('审核通过！');
         this.getTocheckTeachers();
       })
         .catch(err=>{
@@ -1797,7 +1792,7 @@ export default {
         }
       })
         .then(res=>{
-          this.$message('审核通过！');
+          this.$message.success('审核通过！');
           this.problems2Check=res.data;
           this.getTocheckProblems();
         })
