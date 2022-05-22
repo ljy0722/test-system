@@ -10,6 +10,8 @@ import axios from "axios";
 export default {
   name: "setudentproblem",
   props:[
+    'pnum',
+    'unum',
     'pid'
   ],
   data(){
@@ -35,10 +37,14 @@ export default {
       })
 
 // prettier-ignore
-      const hours = [
-        '1', '2', '3', '4', '5', '6',
-        '7', '8', '9', '10'
-      ];
+//       const hours = [
+//         '1', '2', '3', '4', '5', '6',
+//         '7', '8', '9', '10'
+//       ];
+      var hours=new Array();
+      for(let i=0;i<this.pnum;i++){
+        hours.push(i.toString());
+      }
 // prettier-ignore
       const days = [
         '用户组1', '用户组2'

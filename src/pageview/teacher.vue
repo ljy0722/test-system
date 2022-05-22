@@ -220,7 +220,7 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          type="plain"
+                          type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
                       </template>
                     </el-table-column>
@@ -301,7 +301,7 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          type="plain"
+                          type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
                       </template>
                     </el-table-column>
@@ -357,7 +357,7 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          type="plain"
+                          type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
                       </template>
                     </el-table-column>
@@ -413,7 +413,7 @@
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
-                          type="plain"
+                          type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
                       </template>
                     </el-table-column>
@@ -431,7 +431,7 @@
               <br>
               <br>
               <el-row>
-                <StuPro :pid="setDetail.id"></StuPro>
+                <StuPro :pnum="problemnum" :unum="groupnum" :pid="setDetail.id"></StuPro>
               </el-row>
               <el-card style="height: 60px">
                 <div style="text-align: left;margin-top: -10px">
@@ -1740,6 +1740,8 @@ export default {
   data(){
     return{
       // getactive:this.$route.params.active,
+      groupnum:1,
+      problemnum:10,
       staticGroups:[],
       staticData:[],
       setstotal:0,
@@ -2159,6 +2161,8 @@ export default {
           this.staticGroups.push(item.exerciseName);
         })
         this.getStudentsInExercise();
+        this.problemnum=res.data.singleChoiceList.length+res.data.multiChoiceList.length+res.data.fillBlankList.length+res.data.questionAnswerList.length;
+        this.groupnum=res.data.groups.length;
       })
     },
     getEveryProCorrectNum(){

@@ -25,7 +25,7 @@ echarts.use([
   HeatmapChart,
   CanvasRenderer
 ]);
-var da=[[]];
+//var da=[[]];
 var dalinks=[{}];
 const layouts = [
   [[0, 0]],
@@ -69,6 +69,7 @@ export default {
         }
       }).then(res=>{
         let endtime0=new String();
+        var da=new Array();
         for(let i=0;i<res.data.length;i++){
           var l=new Array();
           let endtime=res.data[i].endTime.slice(0,10);
@@ -82,238 +83,237 @@ export default {
           }
 
         }
+        function getVirtulData(year) {
+          year = year || '2022';
+          let date = +echarts.number.parseDate(year + '-01-01');
+          let end = +echarts.number.parseDate(+year + 1 + '-01-01');
+          let dayTime = 3600 * 24 * 1000;
+          let data = [];
+          for (let time = date; time < end; time += dayTime) {
+            data.push([
+              echarts.format.formatTime('yyyy-MM-dd', time),
+              Math.floor(Math.random() * 1000)
+            ]);
+          }
+          console.log(data[data.length - 1]);
+          return data;
+        }
+        // const graphData = [
+        //   ['2022-05-01', 260],
+        //   ['2022-05-04', 200],
+        //   ['2022-05-09', 279],
+        //   ['2022-05-13', 847],
+        //   ['2022-05-18', 241],
+        //   ['2022-05-23', 411],
+        //   ['2022-05-27', 985]
+        // ];
+        const graphData1 = [
+          ['2022-05-01', ''],
+          ['2022-05-02', ''],
+          ['2022-05-03', ''],
+          ['2022-05-04', ''],
+          ['2022-05-05', ''],
+          ['2022-05-06', ''],
+          ['2022-05-07', ''],
+          ['2022-05-08', ''],
+          ['2022-05-09', ''],
+          ['2022-05-10', ''],
+          ['2022-05-11', ''],
+          ['2022-05-12', ''],
+          ['2022-05-13', ''],
+          ['2022-05-14', ''],
+          ['2022-05-15', ''],
+          ['2022-05-16', ''],
+          ['2022-05-17', ''],
+          ['2022-05-18', ''],
+          ['2022-05-19', ''],
+          ['2022-05-20', ''],
+          ['2022-05-21', ''],
+          ['2022-05-22', ''],
+          ['2022-05-23', ''],
+          ['2022-05-24', ''],
+          ['2022-05-25', ''],
+          ['2022-05-26', ''],
+          ['2022-05-27', ''],
+          ['2022-05-28', ''],
+          ['2022-05-29', ''],
+          ['2022-05-30', ''],
+          ['2022-05-31', '']
+        ];
+        const graphData2 = [
+          ['2022-05-20',300],
+
+        ];
+        const graphData=this.testdata;
+
+        const links = da.map(function (item, idx) {
+          return {
+            source: idx,
+            target: idx + 1
+          };
+        });
+        links.pop();
+        // if(dalinks===null){
+        //   dalinks=links;
+        // }
+        dalinks=links;
+        console.log(links);
+        option={
+          title: {
+            text: '考试日历',
+          },
+          tooltip: {
+            position: 'top'
+          },
+          visualMap: [
+            {
+              min: 0,
+              max: 1000,
+              calculable: true,
+              seriesIndex: [2, 3, 4],
+              orient: 'horizontal',
+              left: '55%',
+              bottom: 20
+            },
+            {
+              min: 0,
+              max: 1000,
+              inRange: {
+                color: ['grey'],
+                opacity: [0, 0.3]
+              },
+              controller: {
+                inRange: {
+                  opacity: [0.3, 0.6]
+                },
+                outOfRange: {
+                  color: '#ccc'
+                }
+              },
+              seriesIndex: [1],
+              orient: 'horizontal',
+              left: '10%',
+              bottom: 20
+            }
+          ],
+          calendar: [
+            {
+              orient: 'vertical',
+              yearLabel: {
+                margin: 80
+              },
+              monthLabel: {
+                nameMap: 'cn',
+                margin: 20
+              },
+              dayLabel: {
+                firstDay: 1,
+                nameMap: 'cn'
+              },
+              cellSize:  [80,60],
+              range: '2022-05'
+            },
+          ],
+          series: [
+            {
+              type: 'graph',
+              edgeSymbol: ['none', 'arrow'],
+              coordinateSystem: 'calendar',
+              links: [],
+              symbolSize: 10,
+              calendarIndex: 0,
+              label:{
+                show:true,
+                formatter:function (da){
+                  return "考试"
+                }
+              },
+              itemStyle: {
+                emphasis:{
+                  shadowBlur:10,
+                  shadowOffsetX:0,
+                  shadowColor:'rgb(30,144,255,0.5)'
+                }
+              },
+              data: da
+            },{
+              type: 'custom',
+              edgeSymbol: ['none', 'arrow'],
+              coordinateSystem: 'calendar',
+              renderItem: function (params, api) {
+                const cellPoint = api.coord(api.value(0));
+                const cellWidth = params.coordSys.cellWidth;
+                const cellHeight = params.coordSys.cellHeight;
+                //const value = api.value(1);
+                //const events = value && value.split('|');
+                const group = {
+                  type: 'group',
+                  children:
+                    (layouts[1] || []).map(function (
+                      itemLayout,
+                      index
+                    ) {
+                      return {
+                        type: 'path',
+                        shape: {
+                          pathData: pathes[1],
+                          x: -8,
+                          y: -8,
+                          width: 16,
+                          height: 16
+                        },
+                        position: [
+                          cellPoint[0] +
+                          echarts.number.linearMap(
+                            itemLayout[0],
+                            [-0.5, 0.5],
+                            [-cellWidth / 2, cellWidth / 2]
+                          ),
+                          cellPoint[1] +
+                          echarts.number.linearMap(
+                            itemLayout[1],
+                            [-0.5, 0.5],
+                            [-cellHeight / 2 + 20, cellHeight / 2]
+                          )
+                        ],
+                        style: api.style({
+                          fill: colors[1]
+                        })
+                      };
+                    }) || []
+                };
+                group.children.push({
+                  type: 'text',
+                  style: {
+                    x: cellPoint[0],
+                    y: cellPoint[1] - cellHeight / 2 + 15,
+                    text: echarts.format.formatTime('dd', api.value(0)),
+                    fill: '#777',
+                    textFont: api.font({ fontSize: 14 })
+                  }
+                });
+                return group;
+              },
+              symbolSize: 10,
+              calendarIndex: 0,
+              data: graphData1
+            },
+            {
+              type: 'heatmap',
+              coordinateSystem: 'calendar',
+              calendarIndex: 0,
+              tooltip:{
+                formatter:"Today",
+              },
+              data: graphData2
+            },
+          ]
+        }
+        option && myChart.setOption(option);
+
       })
 
-      function getVirtulData(year) {
-        year = year || '2022';
-        let date = +echarts.number.parseDate(year + '-01-01');
-        let end = +echarts.number.parseDate(+year + 1 + '-01-01');
-        let dayTime = 3600 * 24 * 1000;
-        let data = [];
-        for (let time = date; time < end; time += dayTime) {
-          data.push([
-            echarts.format.formatTime('yyyy-MM-dd', time),
-            Math.floor(Math.random() * 1000)
-          ]);
-        }
-        console.log(data[data.length - 1]);
-        return data;
-      }
-      // const graphData = [
-      //   ['2022-05-01', 260],
-      //   ['2022-05-04', 200],
-      //   ['2022-05-09', 279],
-      //   ['2022-05-13', 847],
-      //   ['2022-05-18', 241],
-      //   ['2022-05-23', 411],
-      //   ['2022-05-27', 985]
-      // ];
-      const graphData1 = [
-        ['2022-05-01', ''],
-        ['2022-05-02', ''],
-        ['2022-05-03', ''],
-        ['2022-05-04', ''],
-        ['2022-05-05', ''],
-        ['2022-05-06', ''],
-        ['2022-05-07', ''],
-        ['2022-05-08', ''],
-        ['2022-05-09', ''],
-        ['2022-05-10', ''],
-        ['2022-05-11', ''],
-        ['2022-05-12', ''],
-        ['2022-05-13', ''],
-        ['2022-05-14', ''],
-        ['2022-05-15', ''],
-        ['2022-05-16', ''],
-        ['2022-05-17', ''],
-        ['2022-05-18', ''],
-        ['2022-05-19', ''],
-        ['2022-05-20', ''],
-        ['2022-05-21', ''],
-        ['2022-05-22', ''],
-        ['2022-05-23', ''],
-        ['2022-05-24', ''],
-        ['2022-05-25', ''],
-        ['2022-05-26', ''],
-        ['2022-05-27', ''],
-        ['2022-05-28', ''],
-        ['2022-05-29', ''],
-        ['2022-05-30', ''],
-        ['2022-05-31', '']
-      ];
-      const graphData2 = [
-        ['2022-05-20',600],
 
-      ];
-      const graphData=this.testdata;
-      //console.log(this.testdata);
-      //console.log(graphData);
-      //da=this.testdata;
-      console.log(da);
-      const links = da.map(function (item, idx) {
-        return {
-          source: idx,
-          target: idx + 1
-        };
-      });
-      links.pop();
-      // if(dalinks===null){
-      //   dalinks=links;
-      // }
-      dalinks=links;
-      console.log(links);
-      option={
-        title: {
-          text: '考试日历',
-        },
-        tooltip: {
-          position: 'top'
-        },
-        visualMap: [
-          {
-            min: 0,
-            max: 1000,
-            calculable: true,
-            seriesIndex: [2, 3, 4],
-            orient: 'horizontal',
-            left: '55%',
-            bottom: 20
-          },
-          {
-            min: 0,
-            max: 1000,
-            inRange: {
-              color: ['grey'],
-              opacity: [0, 0.3]
-            },
-            controller: {
-              inRange: {
-                opacity: [0.3, 0.6]
-              },
-              outOfRange: {
-                color: '#ccc'
-              }
-            },
-            seriesIndex: [1],
-            orient: 'horizontal',
-            left: '10%',
-            bottom: 20
-          }
-        ],
-        calendar: [
-          {
-            orient: 'vertical',
-            yearLabel: {
-              margin: 80
-            },
-            monthLabel: {
-              nameMap: 'cn',
-              margin: 20
-            },
-            dayLabel: {
-              firstDay: 1,
-              nameMap: 'cn'
-            },
-            cellSize:  [80,60],
-            range: '2022-05'
-          },
-        ],
-        series: [
-          {
-            type: 'graph',
-            edgeSymbol: ['none', 'arrow'],
-            coordinateSystem: 'calendar',
-            links: dalinks,
-            symbolSize: 10,
-            calendarIndex: 0,
-            label:{
-              show:true,
-              formatter:function (da){
-                return "考试"
-              }
-            },
-            itemStyle: {
-              emphasis:{
-                shadowBlur:10,
-                shadowOffsetX:0,
-                shadowColor:'rgb(30,144,255,0.5)'
-              }
-            },
-            data: da
-          },{
-            type: 'custom',
-            edgeSymbol: ['none', 'arrow'],
-            coordinateSystem: 'calendar',
-            renderItem: function (params, api) {
-              const cellPoint = api.coord(api.value(0));
-              const cellWidth = params.coordSys.cellWidth;
-              const cellHeight = params.coordSys.cellHeight;
-              //const value = api.value(1);
-              //const events = value && value.split('|');
-              const group = {
-                type: 'group',
-                children:
-                  (layouts[1] || []).map(function (
-                    itemLayout,
-                    index
-                  ) {
-                    return {
-                      type: 'path',
-                      shape: {
-                        pathData: pathes[1],
-                        x: -8,
-                        y: -8,
-                        width: 16,
-                        height: 16
-                      },
-                      position: [
-                        cellPoint[0] +
-                        echarts.number.linearMap(
-                          itemLayout[0],
-                          [-0.5, 0.5],
-                          [-cellWidth / 2, cellWidth / 2]
-                        ),
-                        cellPoint[1] +
-                        echarts.number.linearMap(
-                          itemLayout[1],
-                          [-0.5, 0.5],
-                          [-cellHeight / 2 + 20, cellHeight / 2]
-                        )
-                      ],
-                      style: api.style({
-                        fill: colors[1]
-                      })
-                    };
-                  }) || []
-              };
-              group.children.push({
-                type: 'text',
-                style: {
-                  x: cellPoint[0],
-                  y: cellPoint[1] - cellHeight / 2 + 15,
-                  text: echarts.format.formatTime('dd', api.value(0)),
-                  fill: '#777',
-                  textFont: api.font({ fontSize: 14 })
-                }
-              });
-              return group;
-            },
-            symbolSize: 10,
-            calendarIndex: 0,
-            data: graphData1
-          },
-          {
-            type: 'heatmap',
-            coordinateSystem: 'calendar',
-            calendarIndex: 0,
-            tooltip:{
-              formatter:"Today",
-            },
-            data: graphData2
-          },
-        ]
-      }
-      option && myChart.setOption(option);
       //myChart.setOption({
        // )
 

@@ -144,10 +144,10 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px">
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">1</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">{{num[0]}}</span>
                       </el-col>
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">3</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">{{num[1]}}</span>
                       </el-col>
                     </el-row>
                     <el-row>
@@ -160,10 +160,10 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px">
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">1691</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">{{num[2]}}</span>
                       </el-col>
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">397</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">{{num[3]}}</span>
                       </el-col>
                     </el-row>
                     <el-row>
@@ -176,10 +176,10 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px">
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">2</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">{{num[4]}}</span>
                       </el-col>
                       <el-col :span="12">
-                        <span style="font-family: 'Arial Black';font-weight: 200">0</span>
+                        <span style="font-family: 'Arial Black';font-weight: 200">{{num[5]}}</span>
                       </el-col>
                     </el-row>
                   </div>
@@ -768,6 +768,7 @@ export default {
   data(){
     return{
       active:'0',
+      num:[],
       showAnswer:false,
       randomProblems:[],
       thesubjects1:[],
@@ -1345,6 +1346,11 @@ export default {
     }).then(res=>{
       this.subjects1=res.data;
       console.log(this.subjects1);
+    })
+    axios({
+      url:"/problem/tikuInfo",
+    }).then(res=>{
+      this.num=res.data;
     })
     this.getLast5Tests();
     this.getStuInfo();
