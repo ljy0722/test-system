@@ -30,7 +30,7 @@
                             <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
+                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
                               {{item.problemInfo.question}}
                             </el-row>
                             <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
@@ -60,7 +60,7 @@
                             <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
+                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
                               {{item.problemInfo.question}}
                             </el-row>
                             <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
@@ -93,7 +93,7 @@
                             <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
+                            <el-row type="flex" style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
                               {{item.problemInfo.question}}
                             </el-row>
                             <el-input v-model="item.myAnswer"></el-input>
@@ -119,7 +119,7 @@
                             <el-button size="mini" class="i_style">{{index+1}}</el-button>
                           </el-col>
                           <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;height: 40px;">
+                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
                               {{item.problemInfo.question}}
                             </el-row>
                             <el-input v-model="item.myAnswer"></el-input>

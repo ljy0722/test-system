@@ -141,7 +141,7 @@ export default {
           ['2022-05-31', '']
         ];
         const graphData2 = [
-          ['2022-05-20',300],
+          ['2022-05-23',300],
 
         ];
         const graphData=this.testdata;
