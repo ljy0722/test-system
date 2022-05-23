@@ -175,7 +175,7 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
-                width="100">
+                width="110">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
@@ -262,7 +262,7 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
-                width="100">
+                width="110">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
