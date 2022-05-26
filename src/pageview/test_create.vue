@@ -6,10 +6,10 @@
       </el-row>
       <el-row>
         <el-col :span="1" :offset="2">
-          <el-button style="margin-top: 10px;border-radius: 10px" @click="back">返回</el-button>
+          <el-button v-if="next===false" style="margin-top: 10px;border-radius: 10px" @click="back">返回</el-button>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="next===false">
         <el-col style="width: 80%" :offset="2">
           <div align="middle">
             <el-card style="border-radius: 10px;margin-top: 10px">
@@ -917,13 +917,298 @@
             <el-row>
               <el-col :span="22">
                 <div align="middle">
-                  <el-button type="primary" plain @click="submit" style="margin-right: fill">创建题目集</el-button>
+                  <el-button type="primary"  @click="submit" style="margin-right: fill">下一步</el-button>
                 </div>
               </el-col>
             </el-row>
           </div>
 
         </el-col>
+      </el-row>
+      <el-row v-if="next===true">
+        <el-card style="height: 50px;width: 80%;margin-left: 8%">
+          <div style="text-align: left;margin-top: -10px">
+            <i style="font-size: 30px" class="el-icon-tickets"></i>
+            <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">题目</span>
+            <span style="margin-left: 15%;font-size: 15px;font-weight: bold;color: #444444">单选题：{{setDetail.singleChoiceList.length}}题 {{countscore1}}分</span>
+            <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">多选题：{{setDetail.multiChoiceList.length}}题 {{countscore2}}分</span>
+            <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">填空题：{{setDetail.fillBlankList.length}}题 {{countscore3}}分</span>
+            <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">问答题：{{setDetail.questionAnswerList.length}}题 {{countscore4}}分</span>
+            <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">总计：{{setDetail.singleChoiceList.length+setDetail.multiChoiceList.length+setDetail.fillBlankList.length+setDetail.questionAnswerList.length}}题 {{countscore1+countscore2+countscore3+countscore4}}分</span>
+          </div>
+          <el-divider style="font-weight: 500"></el-divider>
+        </el-card>
+
+        <el-tabs type="border-card" style="width: 80%;margin-left: 8%">
+          <el-tab-pane label="单选题" style="margin-bottom: 30px">
+            <el-table
+              :data="setDetail.singleChoiceList"
+              stripe
+              border
+              ref="setDetail.problems.single"
+              style="width: 100%;margin-bottom: 30px;white-space: pre-wrap">
+              <el-table-column
+                prop="subject"
+                label="学科"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="contentType"
+                label="内容"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="question"
+                label="题目"
+                width="270">
+              </el-table-column>
+              <el-table-column
+                prop="answerA"
+                label="选项A"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerB"
+                label="选项B"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerC"
+                label="选项C"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerD"
+                label="选项D"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerE"
+                label="选项E"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answer"
+                label="答案">
+              </el-table-column>
+              <el-table-column
+                prop="score"
+                label="分值">
+              </el-table-column>
+              <el-table-column
+                prop="difficultScore"
+                label="难度"
+                width="50"
+                :formatter="rounding">
+              </el-table-column>
+              <el-table-column
+                prop="source"
+                label="来源"
+                width="150">
+              </el-table-column>
+
+              <el-table-column
+                fixed="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="多选题">
+            <el-table
+              :data="setDetail.multiChoiceList"
+              stripe
+              border
+              ref="setDetail.problems.multi"
+              style="width: 100%">
+              <el-table-column
+                prop="subject"
+                label="学科"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="contentType"
+                label="内容"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="question"
+                label="题目"
+                width="270">
+              </el-table-column>
+              <el-table-column
+                prop="answerA"
+                label="选项A"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerB"
+                label="选项B"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerC"
+                label="选项C"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerD"
+                label="选项D"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answerE"
+                label="选项E"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="answer"
+                label="答案">
+              </el-table-column>
+              <el-table-column
+                prop="score"
+                label="分值">
+              </el-table-column>
+              <el-table-column
+                prop="difficultScore"
+                label="难度"
+                width="50"
+                :formatter="rounding">
+              </el-table-column>
+              <el-table-column
+                prop="source"
+                label="来源"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                fixed="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="填空题">
+            <el-table
+              :data="setDetail.fillBlankList"
+              stripe
+              border
+              ref="setDetail.problems.fill"
+              style="width: 100%">
+              <el-table-column
+                prop="subject"
+                label="学科"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="contentType"
+                label="内容"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="question"
+                label="题目"
+                width="270">
+              </el-table-column>
+              <el-table-column
+                prop="answer"
+                label="答案">
+              </el-table-column>
+              <el-table-column
+                prop="score"
+                label="分值">
+              </el-table-column>
+              <el-table-column
+                prop="difficultScore"
+                label="难度"
+                width="50"
+                :formatter="rounding">
+              </el-table-column>
+              <el-table-column
+                prop="source"
+                label="来源"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                fixed="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="问答题">
+            <el-table
+              :data="setDetail.questionAnswerList"
+              stripe
+              border
+              ref="setDetail.problems.quesans"
+              style="width: 100%">
+              <el-table-column
+                prop="subject"
+                label="学科"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="contentType"
+                label="内容"
+                width="130">
+              </el-table-column>
+              <el-table-column
+                prop="question"
+                label="题目"
+                width="270">
+              </el-table-column>
+              <el-table-column
+                prop="answer"
+                label="答案">
+              </el-table-column>
+              <el-table-column
+                prop="score"
+                label="分值">
+              </el-table-column>
+              <el-table-column
+                prop="difficultScore"
+                label="难度"
+                width="50"
+                :formatter="rounding">
+              </el-table-column>
+              <el-table-column
+                prop="source"
+                label="来源"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                fixed="right">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+        </el-tabs>
+        <el-dialog title="修改分值" :visible.sync="editScore">
+          <el-form label-position="left" label-width="80px" :model="scoreForm">
+            <el-form-item label="分值">
+              <el-input-number v-model="scoreForm.newScore"></el-input-number>
+            </el-form-item>
+          </el-form>
+          <el-button type="primary" @click="changeScore">确定</el-button>
+        </el-dialog>
+        <el-button style="margin-top: 20px" type="primary" @click="finish">创建</el-button>
       </el-row>
       <el-row style="padding: 0">
         <Down style="margin-top: 100px"></Down>
@@ -942,6 +1227,7 @@ import axios from "axios";
 export default {
   data(){
     return {
+      next:false,
       active:0,
       selection1:[],
       selection2:[],
@@ -991,6 +1277,7 @@ export default {
       problemAllMulti:[],
       problemAllFill:[],
       problemAllQa:[],
+      setDetail:{},
       problems:[
         {
           id:'1',
@@ -1056,9 +1343,42 @@ export default {
       wenda:5,
       autoSubject:null,
       autoRange:[],
+      editScore:false,
+      scoreForm:{
+        newScore:''
+      },
+      editData:'',
     }
   },
   computed:{
+    countscore1(){
+      let score=0;
+      for(let i=0;i<this.setDetail.singleChoiceList.length;i++){
+        score+=this.setDetail.singleChoiceList[i].score;
+      }
+      return score;
+    },
+    countscore2(){
+      let score=0;
+      for(let i=0;i<this.setDetail.multiChoiceList.length;i++){
+        score+=this.setDetail.multiChoiceList[i].score;
+      }
+      return score;
+    },
+    countscore3(){
+      let score=0;
+      for(let i=0;i<this.setDetail.fillBlankList.length;i++){
+        score+=this.setDetail.fillBlankList[i].score;
+      }
+      return score;
+    },
+    countscore4(){
+      let score=0;
+      for(let i=0;i<this.setDetail.questionAnswerList.length;i++){
+        score+=this.setDetail.questionAnswerList[i].score;
+      }
+      return score;
+    },
     // table1() {
     //   const search1='单项选择题';
     //   const search2=this.search;
@@ -1138,6 +1458,7 @@ export default {
       this.getUserGroups();
     },
     submit(){
+      this.next=true;
       let now=new Date().Format("yyyy-MM-dd hh:mm:ss");
       console.log(now,this.time1[0].Format("yyyy-MM-dd hh:mm:ss"))
       if(this.time1[0].Format("yyyy-MM-dd hh:mm:ss")<now){
@@ -1197,7 +1518,16 @@ export default {
           })
             .then(res=>{
               alert("创建成功");
-              this.$router.go(-1);
+              //this.$router.go(-1);
+              axios({
+                url:"/exercise/setDetail",
+                params:{
+                  id:res.data,
+                }
+              }).then(res1=>{
+                this.setDetail=res1.data;
+                console.log(this.setDetail);
+              })
             })
         }
         else if(this.method1==='zidong'){
@@ -1224,13 +1554,42 @@ export default {
             },
           }).then(res=>{
             this.$message("创建成功");
-            this.$router.go(-1);
+            //this.$router.go(-1);
+            axios({
+              url:"/exercise/setDetail",
+              params:{
+                id:res.data,
+              }
+            }).then(res1=>{
+              this.setDetail=res1.data;
+              console.log(this.setDetail);
+            })
           })
         }
       }
 
 
       //this.$router.push({path:'/teacher',query:{active:'2'}})
+    },
+
+    modifyScore(index,data){
+      this.editScore=true;
+      this.scoreForm.newScore=data.score;
+      this.editData=data;
+    },
+    changeScore(){
+      this.editScore=false;
+      this.editData.score=this.scoreForm.newScore;
+      axios({
+        url:"/exercise/modifyProblemScore",
+        params:{
+          exerciseId:this.setDetail.id,
+          problemId:this.editData.id,
+          newScore: this.editData.score,
+        }
+      }).then(res=>{
+
+      })
     },
     add(){
       this.dialogVisible=true;
@@ -1345,6 +1704,9 @@ export default {
     },
     getRowKey(row){
       return row.id
+    },
+    finish(){
+      this.$router.push({name:'teacher'})
     }
   },
   created() {

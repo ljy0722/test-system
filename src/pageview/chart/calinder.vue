@@ -85,8 +85,19 @@ export default {
         }
         function getVirtulData(year) {
           year = year || '2022';
-          let date = +echarts.number.parseDate(year + '-01-01');
-          let end = +echarts.number.parseDate(+year + 1 + '-01-01');
+          var today=new Date().Format("yyyy-MM-dd hh:mm:ss");
+          let m=today.slice(5,7);
+          console.log(m);
+          console.log(year  + (+m+1)+'-01')
+          let endday='31';
+          if(m==='01'||m==='03'||m==='05'||m==='07'||m==='08'||m==='10'||m==='12'){
+            endday='32';
+          }
+          else if(m==='02'){
+            endday='29'
+          }
+          let date = +echarts.number.parseDate(year +'-'+ m+'-01');
+          let end = +echarts.number.parseDate(year  +'-'+ m+'-'+endday);
           let dayTime = 3600 * 24 * 1000;
           let data = [];
           for (let time = date; time < end; time += dayTime) {
@@ -98,15 +109,7 @@ export default {
           console.log(data[data.length - 1]);
           return data;
         }
-        // const graphData = [
-        //   ['2022-05-01', 260],
-        //   ['2022-05-04', 200],
-        //   ['2022-05-09', 279],
-        //   ['2022-05-13', 847],
-        //   ['2022-05-18', 241],
-        //   ['2022-05-23', 411],
-        //   ['2022-05-27', 985]
-        // ];
+
         const graphData1 = [
           ['2022-05-01', ''],
           ['2022-05-02', ''],
@@ -140,8 +143,10 @@ export default {
           ['2022-05-30', ''],
           ['2022-05-31', '']
         ];
+        var today=new Date().Format("yyyy-MM-dd hh:mm:ss");
+        let t=today.slice(0,10);
         const graphData2 = [
-          ['2022-05-23',300],
+          [t,300],
 
         ];
         const graphData=this.testdata;
@@ -296,7 +301,7 @@ export default {
               },
               symbolSize: 10,
               calendarIndex: 0,
-              data: graphData1
+              data: getVirtulData(2022)
             },
             {
               type: 'heatmap',

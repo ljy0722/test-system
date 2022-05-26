@@ -218,7 +218,7 @@
           <div v-if="active==='3'">
             <el-row>
               <el-col :span="1">
-                <div style="width: 50px;margin-top: 10px">排序:</div>
+                <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">排序:</div>
               </el-col>
               <el-col :span="3">
                 <el-select v-model="sortvalue" placeholder="排序方式" @change="getStudentExercise">
@@ -232,7 +232,7 @@
                 </el-select>
               </el-col>
               <el-col :span="1" :offset="1">
-                <div style="width: 50px;margin-top: 10px">筛选:</div>
+                <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">筛选:</div>
               </el-col>
               <el-col :span="3">
                 <el-select v-model="shaixuan" placeholder="筛选方式" @change="getStudentExercise">
@@ -246,7 +246,7 @@
                 </el-select>
               </el-col>
               <el-col :span="1" :offset="1">
-                <div style="width: 50px;margin-top: 10px">分类:</div>
+                <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">分类:</div>
               </el-col>
               <el-col :span="3">
                 <el-select v-model="setType" placeholder="分类方式" @change="getStudentExercise">
@@ -288,6 +288,9 @@
             <el-tabs type="border-card" >
               <el-tab-pane label="单选题">
                 <el-row>
+                  <el-col :span="3">
+                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongSingle}}题</span>
+                  </el-col>
                   <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
@@ -391,6 +394,9 @@
               <el-tab-pane label="多选题">
                 <el-row>
                   <el-col :span="3">
+                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongMulti}}题</span>
+                  </el-col>
+                  <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
                         v-for="item in subjects"
@@ -491,6 +497,9 @@
               <el-tab-pane label="填空题">
                 <el-row>
                   <el-col :span="3">
+                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongFill}}题</span>
+                  </el-col>
+                  <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
                         v-for="item in subjects"
@@ -565,6 +574,9 @@
               </el-tab-pane>
               <el-tab-pane label="问答题">
                 <el-row>
+                  <el-col :span="3">
+                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongQa}}题</span>
+                  </el-col>
                   <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
@@ -722,7 +734,7 @@
               <el-col :span="10">
                 <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
               </el-col>
-              <el-col :span="6" :offset="3">
+              <el-col :span="10" :offset="3">
                 <Rader :opinion="theSubjects" :opinion-data="subjectsRate"></Rader>
               </el-col>
             </el-row>
@@ -970,9 +982,9 @@ export default {
       }).then(res=>{
         this.exerciseSets=res.data.data;
         for(let i=0;i<this.exerciseSets.length;i++){
-          if(this.exerciseSets[i].test===false){
-            this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-1)+"0"
-          }
+          // if(this.exerciseSets[i].test===false){
+          //   this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName
+          // }
           console.log(this.exerciseSets[i].endTime);
           this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))).Format("yyyy-MM-dd hh:mm:ss");
           this.exerciseSets[i].startTime=new Date((+new Date(this.exerciseSets[i].startTime))).Format("yyyy-MM-dd hh:mm:ss");
@@ -1019,9 +1031,9 @@ export default {
       }).then(res=>{
         this.exerciseSets=res.data.data;
         for(let i=0;i<this.exerciseSets.length;i++){
-          if(this.exerciseSets[i].test===false){
-            this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-1)+"0"
-          }
+          // if(this.exerciseSets[i].test===false){
+          //   this.exerciseSets[i].exerciseName="练习题"+this.exerciseSets[i].exerciseName.slice(-28,-1)+"0"
+          // }
           console.log(this.exerciseSets[i].endTime);
           this.exerciseSets[i].endTime=new Date((+new Date(this.exerciseSets[i].endTime))).Format("yyyy-MM-dd hh:mm:ss");
           this.exerciseSets[i].startTime=new Date((+new Date(this.exerciseSets[i].startTime))).Format("yyyy-MM-dd hh:mm:ss");

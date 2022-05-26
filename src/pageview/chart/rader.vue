@@ -47,7 +47,7 @@ export default {
           {
             name: '',
             type: 'radar',
-            radius:'30%',
+            radius:'50%',
             data: [
               {
                 value: this.opinionData,

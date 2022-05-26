@@ -175,6 +175,7 @@ export default {
     return {
       //id:this.$route.query.exerciseId,
       setName:'',
+      subject:null,
       exerciseId:null,
       startDoingTime:null,
       isTest:0,
@@ -456,6 +457,9 @@ export default {
             multiChoiceList:this.multiChoiceList,
             fillBlankList:this.fillBlankList,
             questionAnswerList:this.questionAnswerList
+          },
+          params:{
+            subject:this.subject
           }
         }).then(res=>{
           //this.$message("提交成功");
@@ -595,6 +599,7 @@ export default {
     // })
     let exerciseInfo=JSON.parse(this.$route.params.exerciseInfo);
     console.log(exerciseInfo);
+    this.subject=exerciseInfo.subject;
     this.startDoingTime=exerciseInfo.startDoingTime;
     if(exerciseInfo.isTest!==null){
       this.isTest=exerciseInfo.isTest;

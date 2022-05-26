@@ -71,7 +71,7 @@
             <div v-if="setdetail==false">
               <el-row style="margin-top: 80px;">
                 <el-col :span="1">
-                  <div style="width: 50px;margin-top: 10px">排序:</div>
+                  <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">排序:</div>
                 </el-col>
                 <el-col :span="3">
                   <el-select v-model="sortvalue" placeholder="排序方式" @change="getTeacherExercise">
@@ -85,7 +85,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="1" :offset="1">
-                  <div style="width: 50px;margin-top: 10px">筛选:</div>
+                  <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">筛选:</div>
                 </el-col>
                 <el-col :span="3">
                   <el-select v-model="shaixuan" placeholder="筛选方式" @change="getTeacherExercise">
@@ -108,7 +108,7 @@
                          v-bind:key="index"
                          >
                   <el-row style="margin-top: -15px">
-                    <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId)"> {{ i.exerciseName }}</el-button>
+                    <el-button type="text"  style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state)"> {{ i.exerciseName }}</el-button>
                     <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='1'">未开始</span></i>
                     <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='2'">正在进行</span></i>
                     <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.state=='3'">已结束</span></i>
@@ -139,11 +139,11 @@
                 <div style="text-align: left;margin-top: -10px">
                   <i style="font-size: 30px" class="el-icon-tickets"></i>
                   <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">题目</span>
-                  <span style="margin-left: 50%;font-size: 15px;font-weight: bold;color: #444444">单选题：{{setDetail.singleChoiceList.length}}</span>
-                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">多选题：{{setDetail.multiChoiceList.length}}</span>
-                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">填空题：{{setDetail.fillBlankList.length}}</span>
-                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">问答题：{{setDetail.questionAnswerList.length}}</span>
-                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">总计：{{setDetail.singleChoiceList.length+setDetail.multiChoiceList.length+setDetail.fillBlankList.length+setDetail.questionAnswerList.length}}</span>
+                  <span style="margin-left: 15%;font-size: 15px;font-weight: bold;color: #444444">单选题：{{setDetail.singleChoiceList.length}}题 {{countscore1}}分</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">多选题：{{setDetail.multiChoiceList.length}}题 {{countscore2}}分</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">填空题：{{setDetail.fillBlankList.length}}题 {{countscore3}}分</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">问答题：{{setDetail.questionAnswerList.length}}题 {{countscore4}}分</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">总计：{{setDetail.singleChoiceList.length+setDetail.multiChoiceList.length+setDetail.fillBlankList.length+setDetail.questionAnswerList.length}}题 {{countscore1+countscore2+countscore3+countscore4}}分</span>
                 </div>
                 <el-divider style="font-weight: 500"></el-divider>
               </el-card>
@@ -217,6 +217,7 @@
                     </el-table-column>
 
                     <el-table-column
+                      v-if="setstate==='1'"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
@@ -294,6 +295,7 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      v-if="setstate==='1'"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
@@ -346,6 +348,7 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      v-if="setstate==='1'"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
@@ -398,6 +401,7 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
+                      v-if="setstate==='1'"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
@@ -419,7 +423,7 @@
               </el-dialog>
               <br>
               <br>
-              <el-row>
+              <el-row v-if="setstate==='3'">
                 <StuPro :pnum="problemnum" :unum="groupnum" :pid="setDetail.id"></StuPro>
               </el-row>
               <el-card style="height: 60px">
@@ -468,11 +472,13 @@
                   width="250">
                 </el-table-column>
                 <el-table-column
+                  v-if="setstate==='3'"
                   prop="score"
                   label="得分"
                   width="200">
                 </el-table-column>
                 <el-table-column
+                  v-if="setstate==='3'"
                   fixed="right"
                   width="150">
                   <template slot-scope="scope">
@@ -493,10 +499,10 @@
               <el-row style="margin-top: 80px">
                 <el-col :span="24">
 <!--                  <Chart :value1="1" :value2="0" :value3="0" :value4="1"></Chart>-->
-                  <Chart8 v-if="seechart===true" :opinion="['0-10','10-20','20-30','30-40','40-50','50-60','70-80','80-90','90-100']" :opinion-data="rate" ></Chart8>
+                  <Chart8 v-if="setstate==='3'" :opinion="['0-10','10-20','20-30','30-40','40-50','50-60','70-80','80-90','90-100']" :opinion-data="rate" ></Chart8>
                 </el-col>
                 <el-col :span="24">
-                  <chart9 v-if="seechart===true" :opinion="problemids" :opinion-data="problemRate"></chart9>
+                  <chart9 v-if="setstate==='3'" :opinion="problemids" :opinion-data="problemRate"></chart9>
                 </el-col>
                 <br>
               </el-row>
@@ -1119,7 +1125,7 @@
               title="批量新建"
               :visible.sync="dispatch1"
               append-to-body
-              width="80%">
+              width="50%">
               <el-card>
                 <el-upload
                   class="upload-demo"
@@ -1957,7 +1963,8 @@ export default {
       searchTeacherPro:null,
       selectSubject2:null,
       selectRange2:null,
-      searchAllPro:null
+      searchAllPro:null,
+      setstate:null,
     }
   },
   mounted() {
@@ -2170,8 +2177,9 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    viewSet(id){
+    viewSet(id,state){
       this.setdetail=true;
+      this.setstate=state;
       axios({
         url:"/exercise/setDetail",
         params:{
@@ -2577,10 +2585,8 @@ export default {
           order:this.sortvalue
         }
       }).then(res=>{
-        if(res.data.size!==0){
-          this.exerciseSets=res.data.data;
-          this.totalSet=res.data.total;
-        }
+        this.exerciseSets=res.data.data;
+        this.totalSet=res.data.total;
       }).catch(err=>{
 
       });
@@ -2661,6 +2667,34 @@ export default {
 
   },
   computed:{
+    countscore1(){
+      let score=0;
+      for(let i=0;i<this.setDetail.singleChoiceList.length;i++){
+        score+=this.setDetail.singleChoiceList[i].score;
+      }
+      return score;
+    },
+    countscore2(){
+      let score=0;
+      for(let i=0;i<this.setDetail.multiChoiceList.length;i++){
+        score+=this.setDetail.multiChoiceList[i].score;
+      }
+      return score;
+    },
+    countscore3(){
+      let score=0;
+      for(let i=0;i<this.setDetail.fillBlankList.length;i++){
+        score+=this.setDetail.fillBlankList[i].score;
+      }
+      return score;
+    },
+    countscore4(){
+      let score=0;
+      for(let i=0;i<this.setDetail.questionAnswerList.length;i++){
+        score+=this.setDetail.questionAnswerList[i].score;
+      }
+      return score;
+    },
     getsee(){
       this.active='1';
       return true;
