@@ -56,6 +56,9 @@ export default {
           return [item[1], item[0], item[2] || '-'];
         });
       option = {
+        title:{
+          text:'各学生用户组答题情况'
+        },
         tooltip: {
           position: 'top'
         },

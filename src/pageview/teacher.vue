@@ -5,7 +5,7 @@
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
-        <el-aside style="margin-top: 100px" :width="isCollapse ? '64px' : '140px'">
+        <el-aside style="margin-top: 120px" :width="isCollapse ? '64px' : '140px'">
           <div class="toggle-btn" @click="toggleCollapse">|||</div>
           <el-menu class="menuclass" :default-active="active" :collapse-transition="0.3" :collapse="isCollapse" style="border-radius: 10px" unique-opened:collapse="true" @select="handleSelect">
             <el-menu-item index="1" ><i class="el-icon-s-unfold"></i><span slot="title">首页</span></el-menu-item>
@@ -14,7 +14,7 @@
             <el-menu-item index="4"><i class="el-icon-s-custom"></i><span slot="title">用户组</span> </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main>
+        <el-main style="margin-top: 20px">
           <div v-if="active=='1'">
             <el-row>
               <el-col :span="8">
@@ -30,25 +30,22 @@
                       <el-row><span>已结束：   {{setsdone}}</span></el-row>
                     </div>
                   </el-card>
-                  <Chart6 v-if="getsee" :value1="setstodo" :value2="setsdoing" :value3="setsdone" style="margin-top: 60px"></Chart6>
+
                 </div>
               </el-col>
               <el-col :span="8">
-                <div style="background: #f1f4e4;min-height: 685px;border-radius: 10px">
-                  <el-card style="background:#f1f4e4;min-height: 222px;width:100%;margin-top: 80px;border-radius: 10px">
-                    <div slot="header" style="color: #409EFF;font-size: large">
-                      <el-button type="text" @click="active='3'" style="font-size: large;font-weight: 900">我收藏的题目</el-button>
-                    </div>
-                    <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
-                      <el-row><span>总数：     {{totalSingle+totalMulti+totalFill+totalQa}}</span></el-row>
-                      <el-row><span>单项选择题：   {{totalSingle}}</span></el-row>
-                      <el-row><span>多项选择题：  {{totalMulti}}</span></el-row>
-                      <el-row><span>填空题：   {{totalFill}}</span></el-row>
-                      <el-row><span>问答题：   {{totalQa}}</span></el-row>
-                    </div>
-                  </el-card>
-                  <Chart7 v-if="getsee" style="margin-top: 40px"></Chart7>
-                </div>
+                <el-card style="background:#f1f4e4;min-height: 222px;width:100%;margin-top: 80px;border-radius: 10px">
+                  <div slot="header" style="color: #409EFF;font-size: large">
+                    <el-button type="text" @click="active='3'" style="font-size: large;font-weight: 900">我收藏的题目</el-button>
+                  </div>
+                  <div align="left" style="font-family: 黑体;color: gray;font-weight: bold;font-size: large;margin-left: 20%">
+                    <el-row><span>总数：     {{totalSingle+totalMulti+totalFill+totalQa}}</span></el-row>
+                    <el-row><span>单项选择题：   {{totalSingle}}</span></el-row>
+                    <el-row><span>多项选择题：  {{totalMulti}}</span></el-row>
+                    <el-row><span>填空题：   {{totalFill}}</span></el-row>
+                    <el-row><span>问答题：   {{totalQa}}</span></el-row>
+                  </div>
+                </el-card>
               </el-col>
               <el-col :span="8">
                 <el-card style="background:#f5f9da;min-height: 222px;margin-top: 80px;margin-right: 40px;border-radius: 10px">
@@ -62,18 +59,18 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="8">
-
+              <el-col :span="12">
+                <Chart6 v-if="getsee" :value1="setstodo" :value2="setsdoing" :value3="setsdone" style="margin-top: 60px"></Chart6>
+              </el-col>
+              <el-col :span="12">
+                <Chart7 v-if="getsee" style="margin-top: 60px"></Chart7>
               </el-col>
             </el-row>
           </div>
           <div v-if="active=='2'">
             <div v-if="setdetail==false">
               <el-row style="margin-top: 80px;">
-                <el-col :span="2">
-                  <el-button type="primary" align="left"  @click="handleCreate">创建考试</el-button>
-                </el-col>
-                <el-col :span="1" :offset="2">
+                <el-col :span="1">
                   <div style="width: 50px;margin-top: 10px">排序:</div>
                 </el-col>
                 <el-col :span="3">
@@ -100,6 +97,9 @@
                     >
                     </el-option>
                   </el-select>
+                </el-col>
+                <el-col :span="2" :offset="13">
+                  <el-button type="primary" align="right"  @click="handleCreate">创建考试</el-button>
                 </el-col>
               </el-row>
               <el-row>
@@ -139,6 +139,11 @@
                 <div style="text-align: left;margin-top: -10px">
                   <i style="font-size: 30px" class="el-icon-tickets"></i>
                   <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">题目</span>
+                  <span style="margin-left: 50%;font-size: 15px;font-weight: bold;color: #444444">单选题：{{setDetail.singleChoiceList.length}}</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">多选题：{{setDetail.multiChoiceList.length}}</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">填空题：{{setDetail.fillBlankList.length}}</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">问答题：{{setDetail.questionAnswerList.length}}</span>
+                  <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">总计：{{setDetail.singleChoiceList.length+setDetail.multiChoiceList.length+setDetail.fillBlankList.length+setDetail.questionAnswerList.length}}</span>
                 </div>
                 <el-divider style="font-weight: 500"></el-divider>
               </el-card>
@@ -151,11 +156,6 @@
                     border
                     ref="setDetail.problems.single"
                     style="width: 100%;margin-bottom: 30px;white-space: pre-wrap">
-                    <el-table-column
-                      prop="id"
-                      label="题号"
-                      width="100">
-                    </el-table-column>
                     <el-table-column
                       prop="subject"
                       label="学科"
@@ -207,7 +207,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -216,7 +217,7 @@
                     </el-table-column>
 
                     <el-table-column
-                      align="right">
+                      fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
@@ -234,11 +235,6 @@
                     ref="setDetail.problems.multi"
                     style="width: 100%">
                     <el-table-column
-                      prop="id"
-                      label="题号"
-                      width="100">
-                    </el-table-column>
-                    <el-table-column
                       prop="subject"
                       label="学科"
                       width="130">
@@ -289,7 +285,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -297,7 +294,7 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
-                      align="right">
+                      fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
@@ -315,11 +312,6 @@
                     ref="setDetail.problems.fill"
                     style="width: 100%">
                     <el-table-column
-                      prop="id"
-                      label="题号"
-                      width="100">
-                    </el-table-column>
-                    <el-table-column
                       prop="subject"
                       label="学科"
                       width="130">
@@ -345,7 +337,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -353,7 +346,7 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
-                      align="right">
+                      fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
@@ -371,11 +364,6 @@
                     ref="setDetail.problems.quesans"
                     style="width: 100%">
                     <el-table-column
-                      prop="id"
-                      label="题号"
-                      width="100">
-                    </el-table-column>
-                    <el-table-column
                       prop="subject"
                       label="学科"
                       width="130">
@@ -401,7 +389,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -409,7 +398,7 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
-                      align="right">
+                      fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
@@ -519,6 +508,9 @@
                 <el-button type="primary" align="left" style="margin-top: 80px" @click="dispatch=true;addques={}">新建题目</el-button>
               </el-col>
               <el-col :span="2" :offset="1">
+                <el-button type="primary" align="left" style="margin-top: 80px" @click="dispatch1=true">批量新建</el-button>
+              </el-col>
+              <el-col :span="2" :offset="1">
                 <el-button type="primary" align="left" style="margin-top: 80px" @click="dispatch2=true">从题库添加</el-button>
               </el-col>
             </el-row>
@@ -610,7 +602,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -729,7 +722,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -823,7 +817,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -917,7 +912,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="50">
+                      width="50"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -1120,6 +1116,30 @@
               </div>
             </el-dialog>
             <el-dialog
+              title="批量新建"
+              :visible.sync="dispatch1"
+              append-to-body
+              width="80%">
+              <el-card>
+                <el-upload
+                  class="upload-demo"
+                  ref="upload"
+                  :limit="1"
+                  :on-change="handleChange"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :file-list="problemFileList"
+                  accept=".xlsx"
+                  :auto-upload="false"
+                  align="left">
+                  <el-button  size="small" type="primary">点击上传</el-button>
+                  <div slot="tip" align="left" class="el-upload__tip">批量导入说明：只能上传.xslx文件，一次上传一份文件，仅限单选题、多选题、填空题和多选题四种题型,具体格式请下载模板查看</div>
+                  <el-button @click="download" size="small" type="plain">下载模板</el-button>
+                </el-upload>
+                <el-button type="primary" size="small" style="margin-top: 60px;margin-bottom: 20px;float: left" @click="uploadFile">导入题库</el-button>
+              </el-card>
+
+            </el-dialog>
+            <el-dialog
               title="从题库添加"
               :visible.sync="dispatch2"
               append-to-body
@@ -1210,7 +1230,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="55">
+                      width="55"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -1320,7 +1341,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="55">
+                      width="55"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -1406,7 +1428,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="55">
+                      width="55"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -1492,7 +1515,8 @@
                     <el-table-column
                       prop="difficultScore"
                       label="难度"
-                      width="55">
+                      width="55"
+                      :formatter="rounding">
                     </el-table-column>
                     <el-table-column
                       prop="source"
@@ -1578,7 +1602,7 @@
                     :auto-upload="false">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <el-button size="small" type="plain" align="left"  @click="downloadTemplate">下载模板</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传.xlsx文件</div>
+                    <div slot="tip" class="el-upload__tip">可以上传包含学生信息的.xlsx文件创建新用户组，若不上传则创建一个空的用户组</div>
                   </el-upload>
                 </el-form-item>
                 <el-button type="primary" style="margin-left: 45%" @click="createNewUserGroup">创建</el-button>
@@ -1758,7 +1782,9 @@ export default {
       active:'1',
       isCollapse:false,
       dispatch:false,
+      dispatch1:false,
       dispatch2:false,
+      problemFileList:[],
       setdetail:false,
       userGroupDetail:false,
       createUserGroup:false,
@@ -2578,7 +2604,7 @@ export default {
           level:level
         }
       }).then(res=>{
-
+        this.getTeacherProblems();
       })
     },
     exportTest(id){
@@ -2604,7 +2630,35 @@ export default {
       }).catch(err=>{
         console.log(err)
       })
-    }
+    },
+    rounding(row,column) {
+      return parseFloat(row[column.property]).toFixed(2)
+    },
+    download() {
+      window.location.href='/static/problemTemplate.xlsx'
+    },
+    uploadFile(){
+      if(this.fileList.length===0){
+        this.$message.warning('请上传文件');
+      }
+      else{
+        let form=new FormData();
+        form.append('file',this.problemFileList[0]);
+        axios({
+          method:"POST",
+          url:"/problem/importTeacherProblems",
+          headers:{
+            'Content-type':'multipart/form-data'
+          },
+          data:form
+        }).then(res=>{
+          this.ProblemFileList=[];
+        }).catch(err=>{
+
+        });
+      }
+    },
+
   },
   computed:{
     getsee(){

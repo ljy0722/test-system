@@ -5,7 +5,7 @@
         <Top></Top>
       </el-header>
       <el-container style="min-height: 500px;">
-        <el-aside style="margin-top: 100px" :width="isCollapse ? '64px' : '140px'">
+        <el-aside style="margin-top: 120px" :width="isCollapse ? '64px' : '140px'">
           <div class="toggle-btn" @click="toggleCollapse">|||</div>
           <el-menu class="menuclass" :default-active="active" :collapse="isCollapse" @select="handleSelect">
             <el-menu-item index="0"><i class="el-icon-s-home"></i><span slot="title">首页</span></el-menu-item>
@@ -16,19 +16,22 @@
             <el-menu-item index="5"><i class="el-icon-s-grid"></i><span slot="title">数据分析 </span></el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main style="margin-top: 80px;min-height: 600px">
-          <div v-if="active==='0'">
-            <el-col :span="17">
+        <el-main style="margin-top: 100px;min-height: 600px">
+          <div v-if="active==='0'" style="margin-top: 10px">
+            <el-col :span="15">
               <calinder></calinder>
+            </el-col>
+            <el-col :span="2">
+              <span style="font-size: 18px;font-weight: 600;font-family: 黑体">随机测</span>
             </el-col>
             <el-col :span="6">
               <div class="block" @click="showAnswer=true">
                 <el-carousel :autoplay=false trigger="click" height="400px" @change="showAnswer=false" class="random">
                   <el-carousel-item  v-for="item in randomProblems" :key="item">
-                    <div style="text-align: left">
+                    <div style="text-align: center">
                       <p class="small" style="font-size: 16px;font-weight: 700;margin-top: 20px;margin-left: 10px;margin-right: 10px">{{ item.question }}</p>
                     </div>
-                    <el-divider></el-divider>
+                    <el-divider style="margin-top: 0"></el-divider>
                     <el-row style="margin-top: 20px;font-weight: 600;font-size: 14px">
                         <div style="color: grey;text-align: center">A:{{ item.answerA }}</div>
                     </el-row>
@@ -61,7 +64,7 @@
             <el-row>
               <el-col :span="16">
                 <el-card id="create-exercise" style="width: 90%;margin-left: 10%" align="left">
-                  <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R'">
+                  <div slot="header" style="background: lightgray;font-size: x-large;font-family: 'Adobe 黑体 Std R';font-weight: 600">
                     <span>练习生成选项</span>
                   </div>
 
@@ -130,7 +133,7 @@
               </el-col>
               <el-col :span="6">
                 <el-card style="height: 50%;margin-left: 10%">
-                  <div slot="header" class="clearfix" style="background: lightgray;height: border-box">
+                  <div slot="header" class="clearfix" style="background: lightgray;height: border-box;font-weight: 600">
                     <span >系统题库中当前有：</span>
                   </div>
                   <div style="font-size: 14px">
@@ -314,13 +317,9 @@
                 <el-table
                   :data="wrongProblemSingle"
                   stripe
+                  border
                   ref="wrongProblem"
                   style="width: 100%;white-space: pre-line">
-                  <el-table-column
-                    prop="id"
-                    label="题号"
-                    width="100">
-                  </el-table-column>
                   <el-table-column
                     prop="subject"
                     label="学科"
@@ -328,7 +327,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="130">
                   </el-table-column>
                   <el-table-column
@@ -419,13 +418,9 @@
                 <el-table
                   :data="wrongProblemMulti"
                   stripe
+                  border
                   ref="wrongProblem"
                   style="width: 100%">
-                  <el-table-column
-                    prop="id"
-                    label="题号"
-                    width="100">
-                  </el-table-column>
                   <el-table-column
                     prop="subject"
                     label="学科"
@@ -433,7 +428,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="130">
                   </el-table-column>
                   <el-table-column
@@ -523,13 +518,9 @@
                 <el-table
                   :data="wrongProblemFill"
                   stripe
+                  border
                   ref="wrongProblem"
                   style="width: 100%">
-                  <el-table-column
-                    prop="id"
-                    label="题号"
-                    width="100">
-                  </el-table-column>
                   <el-table-column
                     prop="subject"
                     label="学科"
@@ -537,7 +528,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="130">
                   </el-table-column>
                   <el-table-column
@@ -602,13 +593,9 @@
                 <el-table
                   :data="wrongProblemQa"
                   stripe
+                  border
                   ref="wrongProblem"
                   style="width: 100%">
-                  <el-table-column
-                    prop="id"
-                    label="题号"
-                    width="100">
-                  </el-table-column>
                   <el-table-column
                     prop="subject"
                     label="学科"
@@ -616,7 +603,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="contentType"
-                    label="内容"
+                    label="考点"
                     width="130">
                   </el-table-column>
                   <el-table-column
@@ -652,7 +639,7 @@
           </div>
           <div v-if="active==='5'" align="left">
             <el-row>
-              <span style="font-size: x-large">做题数据</span>
+              <span style="font-size: 25px;font-weight: 600;font-family: 黑体">做题数据</span>
             </el-row>
             <el-row>
               <el-col :span="8">
@@ -717,7 +704,7 @@
             <br>
             <br>
             <el-row>
-              <span style="font-size: x-large;margin-top: 20px">分析与总结</span>
+              <span style="font-size: 25px;font-weight: 600;font-family: 黑体">分析与总结</span>
             </el-row>
 
             <el-row>

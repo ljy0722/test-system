@@ -39,7 +39,7 @@
                             </el-row>
                           </el-col>
                         </el-row>
-                        <el-row>
+                        <el-row style="height:40px">
                           <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">多项选择题</h2>
                           <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
                             <span>共</span>

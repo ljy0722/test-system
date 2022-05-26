@@ -3,7 +3,7 @@
     <div style="margin-bottom: 50px;margin-top: 100px">
       <span style="font-size: xx-large;font-weight: bolder">中医药在线考试系统</span>
     </div>
-    <div class="login-wrap">
+    <div class="login-wrap" style="margin-bottom: 200px">
       <el-row type="flex" justify="center">
         <el-form ref="loginForm" :model="user" :rules="rules" status-icon label-width="110px">
           <h3>注册</h3>
@@ -144,9 +144,9 @@ export default {
 <style scoped>
 .login {
   width: 100%;
-  height: 740px;
+  height: 100%;
   background: url("../assets/images/lgbgnew.jpg") no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   overflow: hidden;
 }
 .login-wrap {

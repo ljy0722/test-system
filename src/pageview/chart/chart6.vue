@@ -1,6 +1,6 @@
 <template>
-  <div class="test2" style="width:300px;height:400px;">
-    <div id="myChart6" style="width:100%;height:278px;float:left;"></div>
+  <div class="test2" style="width:100%;height:400px;">
+    <div id="myChart6" style="width:100%;height:278px;"></div>
   </div>
 </template>
 
@@ -49,9 +49,10 @@ export default {
         ]
         this.myChart6.setOption({
           title: {
-            text: '', // 主标题
+            text: '考试情况概览', // 主标题
             subtext: '', // 副标题
-            x: 'left' // x轴方向对齐方式
+            x: 'left',
+            y:'top'// x轴方向对齐方式
           },
           tooltip: {
             trigger: 'item',

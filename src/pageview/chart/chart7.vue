@@ -1,5 +1,5 @@
 <template>
-  <div class="test2" style="width:350px;height:400px;">
+  <div class="test2" style="width:100%;height:400px;">
     <div id="myChart7" style="width:100%;height:278px;"></div>
   </div>
 </template>
@@ -51,7 +51,7 @@ export default {
 
         this.myChart7.setOption({
           title: {
-            text: '', // 主标题
+            text: '收藏题目概览', // 主标题
             subtext: '', // 副标题
             x: 'left' // x轴方向对齐方式
           },
