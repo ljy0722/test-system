@@ -18,8 +18,8 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item-group style="background-color: #f0f0f0" align="left">
-                <el-menu-item index="1" ><i class="el-icon-user-solid"></i>查看所有学生</el-menu-item>
-                <el-menu-item index="2" ><i class="el-icon-s-custom"></i>查看所有教师</el-menu-item>
+                <el-menu-item index="1" ><i class="el-icon-user-solid"></i>查看学生</el-menu-item>
+                <el-menu-item index="2" ><i class="el-icon-s-custom"></i>查看教师</el-menu-item>
                 <el-menu-item index="3"><i class="el-icon-s-check"></i>待审核教师 </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
@@ -38,6 +38,19 @@
         </el-aside>
         <el-main style="margin-top: 50px">
           <div v-if="active==='0'">
+            <el-card style="width: 100%">
+              <div slot="header" align="left">
+                <span style="font-size: large;font-weight: 600">使用情况概览</span>
+              </div>
+              <div>
+                <el-row>
+                  <Sub></Sub>
+                </el-row>
+                <el-row>
+                  <UserPer></UserPer>
+                </el-row>
+              </div>
+            </el-card>
             <el-card style="width: 100%;">
               <div slot="header" align="left">
                 <span style="font-size: large;font-weight: 600">用户情况概览</span>
@@ -75,68 +88,76 @@
             <el-card style="width: 100%;">
               <div slot="header" align="left">
                 <span style="font-size: large;font-weight: 600">题库情况概览</span>
+                <span style="margin-left: 15%;font-size: 15px;font-weight: bold;color: #444444">学科：{{num1[0]}}</span>
+                <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">考点：{{num1[1]}}</span>
+                <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">单选题：{{num1[2]}}题</span>
+                <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">多选题：{{num1[3]}}题</span>
+                <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">填空题：{{num1[4]}}题</span>
+                <span style="margin-left: 2%;font-size: 15px;font-weight: bold;color: #444444">问答题：{{num1[5]}}题</span>
               </div>
               <div>
                 <el-row>
-                  <el-col :span="10">
-                    <el-row style="color: grey;text-align: left">
-                    <span>
-                      各题型数量
-                    </span>
-                    </el-row>
-                    <br>
-                    <br>
-                    <el-row align="left">
-                      <el-col :span="5" >
-                        <span style="margin-top: 30px">选择科目</span>
-                      </el-col>
-                      <el-col :span="10">
-                        <el-select v-model="tikusubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(0)">
-                          <el-option
-                            v-for="item in subjects"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                        </el-select>
-                      </el-col>
-                    </el-row>
-                    <el-row align="left" style="margin-top: 30px">
-                      <el-col :span="5" >
-                        <span style="margin-top: 30px">选择考点</span>
-                      </el-col>
-                      <el-col :span="10">
-                        <el-select v-model="tikurange" placeholder="选择考点" style="float: left" align="left" @change="gettikuinfo">
-                          <el-option
-                            v-for="item in ranges"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                        </el-select>
-                      </el-col>
-                    </el-row>
-                  </el-col>
-                  <el-col :span="10">
-<!--                    <Tiku :a="totalAllSingle" :b="totalAllMulti" :c="totalAllFill" :d="totalAllQa"></Tiku>-->
-                    <div class="test2" style="width:100%;height:300px;">
-                      <div id="tiku1" style="width:100%;height:100%"></div>
-                    </div>
-                  </el-col>
+                  <el-row align="left">
+                    <el-col :span="3" >
+                      <span style="margin-top: 30px">选择科目</span>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-select v-model="tikusubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(0)">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="3" >
+                      <span style="margin-top: 30px">选择考点</span>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-select v-model="tikurange" placeholder="选择考点" style="float: left" align="left" @change="gettikuinfo">
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+                    </el-col>
+                  </el-row>
+                  <el-row style="margin-top: 5%">
+                    <el-col :span="10">
+                      <!--                    <Tiku :a="totalAllSingle" :b="totalAllMulti" :c="totalAllFill" :d="totalAllQa"></Tiku>-->
+                      <div class="test2" style="width:100%;height:300px;">
+                        <div id="tiku1" style="width:100%;height:100%"></div>
+                      </div>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-row>
+                        <!--                      <Diff style="margin-top: 20px"></Diff>-->
+                        <div class="test2" style="width:80%;height:300px;">
+                          <div id="diff" style="width:100%;height:100%"></div>
+                        </div>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+
                 </el-row>
                 <el-row>
-                  <el-col :span="12">
-                    <el-row style="float: left;color: grey">
-                      题目难度分布
-                    </el-row>
-                    <el-row>
-                      <Diff style="margin-top: 20px"></Diff>
-                    </el-row>
-                  </el-col>
+
                 </el-row>
               </div>
             </el-card>
 
           </div>
           <div v-if="active==='1'">
+            <el-row>
+              <el-col :span="6">
+                <el-input v-model="studentSearch" placeholder="请根据用户ID或姓名中的关键字进行查找"></el-input>
+              </el-col>
+              <el-col :span="2" :offset="1">
+                <el-button  type="primary" @click="getAllUsers">搜索</el-button>
+              </el-col>
+            </el-row>
+
             <el-table
               :data="users"
               border
@@ -175,12 +196,16 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
-                width="110">
+                width="200">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     type="primary"
                     @click="modifyUser(scope.row)">修改信息</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteUser(scope.row.userId)">删除用户</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -219,6 +244,14 @@
             </el-dialog>
           </div>
           <div v-if="active=='2'">
+            <el-row>
+              <el-col :span="6">
+                <el-input v-model="teacherSearch" placeholder="请根据用户ID或姓名中的关键字进行查找"></el-input>
+              </el-col>
+              <el-col :span="2" :offset="1">
+                <el-button  type="primary" @click="getAllTeachers">搜索</el-button>
+              </el-col>
+            </el-row>
             <el-table
               :data="teacher"
               border
@@ -262,12 +295,16 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
-                width="110">
+                width="200">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     type="primary"
                     @click="modifyUser(scope.row)">修改信息</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteUser(scope.row.userId)">删除用户</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -306,6 +343,14 @@
             </el-dialog>
           </div>
           <div v-if="active=='3'">
+            <el-row>
+              <el-col :span="6">
+                <el-input v-model="tocheckSearch" placeholder="请根据用户ID或姓名中的关键字进行查找"></el-input>
+              </el-col>
+              <el-col :span="2" :offset="1">
+                <el-button  type="primary" @click="getTocheckTeachers">搜索</el-button>
+              </el-col>
+            </el-row>
             <el-table
               :data="teacher2Check"
               border
@@ -1255,12 +1300,24 @@
                     <el-row>
                       <el-col :span="10">
                         <el-form-item label="学科">
-                          <el-input v-model="addques.subject_new"></el-input>
+                          <el-select v-model="addques.subject_new" allow-create filterable @change="getRange(3)">
+                            <el-option
+                              v-for="item in subjects"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                       <el-col :span="10" :offset="1">
                         <el-form-item label="考点">
-                          <el-input v-model="addques.content_type_new"></el-input>
+                          <el-select v-model="addques.content_type_new" allow-create filterable>
+                            <el-option
+                              v-for="item in ranges"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                     </el-row>
@@ -1304,12 +1361,24 @@
                     <el-row>
                       <el-col :span="10">
                         <el-form-item label="学科">
-                          <el-input v-model="addques.subject_new"></el-input>
+                          <el-select v-model="addques.subject_new" allow-create filterable @change="getRange(3)">
+                            <el-option
+                              v-for="item in subjects"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                       <el-col :span="10" :offset="1">
                         <el-form-item label="考点">
-                          <el-input v-model="addques.content_type_new"></el-input>
+                          <el-select v-model="addques.content_type_new" allow-create filterable>
+                            <el-option
+                              v-for="item in ranges"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                     </el-row>
@@ -1353,12 +1422,24 @@
                     <el-row>
                       <el-col :span="10">
                         <el-form-item label="学科">
-                          <el-input v-model="addques.subject_new"></el-input>
+                          <el-select v-model="addques.subject_new" allow-create filterable @change="getRange(3)">
+                            <el-option
+                              v-for="item in subjects"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                       <el-col :span="10" :offset="1">
                         <el-form-item label="考点">
-                          <el-input v-model="addques.content_type_new"></el-input>
+                          <el-select v-model="addques.content_type_new" allow-create filterable>
+                            <el-option
+                              v-for="item in ranges"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                     </el-row>
@@ -1377,12 +1458,24 @@
                     <el-row>
                       <el-col :span="10">
                         <el-form-item label="学科">
-                          <el-input v-model="addques.subject_new"></el-input>
+                          <el-select v-model="addques.subject_new" allow-create filterable @change="getRange(3)">
+                            <el-option
+                              v-for="item in subjects"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                       <el-col :span="10" :offset="1">
                         <el-form-item label="考点">
-                          <el-input v-model="addques.content_type_new"></el-input>
+                          <el-select v-model="addques.content_type_new" allow-create filterable>
+                            <el-option
+                              v-for="item in ranges"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"></el-option>
+                          </el-select>
                         </el-form-item>
                       </el-col>
                     </el-row>
@@ -1443,6 +1536,8 @@ import UserChart from './chart/userchart'
 import ProblemNumChart from './chart/problemchart'
 import Tiku from './chart/tiku'
 import Diff from './chart/difficultchart'
+import Sub from './chart/subjectUse'
+import UserPer from './chart/userPerMonth'
 import axios from "axios";
 export default {
   name: "super_user",
@@ -1452,9 +1547,11 @@ export default {
       active:'0',
       isCollapse:false,
       num:[],
+      num1:[],
       mychart:'',
-      tikusubject:'',
-      tikurange:'',
+      mychart1:'',
+      tikusubject:null,
+      tikurange:null,
       totalUser:1,
       pageUser:1,
       totalTeacher:1,
@@ -1557,15 +1654,72 @@ export default {
           label:'问答题'
         },
       ],
+      studentSearch:null,
+      teacherSearch:null,
+      tocheckSearch:null,
+      simple:1,
+      normal:1,
+      difficult:1,
     }
   },
   mounted() {
     this.$nextTick(this.drawLine());
+    this.$nextTick(this.drawLine1());
   },
   components:{
-    Top,Down,UserChart,ProblemNumChart,Tiku,Diff
+    Top,Down,UserChart,ProblemNumChart,Tiku,Diff,Sub,UserPer
   },
   methods:{
+    getDifficult(){
+      axios({
+        url:"/problem/diff",
+        params:{
+          subject:this.tikusubject,
+          content:this.tikurange
+        }
+      }).then(res=>{
+        this.simple=res.data[0];
+        this.normal=res.data[1];
+        this.difficult=res.data[2];
+      })
+    },
+    drawLine1(){
+      this.mychart1 = this.$echarts.init(document.getElementById('diff'));
+      var option;
+      option = {
+        title: {
+          text: '题目难度分布',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'right'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: this.simple, name: '简单' },
+              { value: this.normal, name: '一般' },
+              { value: this.difficult, name: '困难' },
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      this.mychart1.setOption(option,true);
+    },
     drawLine(){
       this.mychart = this.$echarts.init(document.getElementById('tiku1'));
       var option;
@@ -1649,6 +1803,7 @@ export default {
         url:"/user/alluser",
         params:{
           page:this.pageUser,
+          keyWord:this.studentSearch
         }
       })
         .then(res=>{
@@ -1664,6 +1819,7 @@ export default {
         url:"/user/teachers",
         params:{
           page:this.pageTeacher,
+          keyWord:this.teacherSearch,
         }
       })
         .then(res=>{
@@ -1679,6 +1835,7 @@ export default {
         url:"/user/tocheck",
         params:{
           page:this.pageTocheck,
+          keyWord:this.tocheckSearch
         }
       })
         .then(res=>{
@@ -1968,6 +2125,9 @@ export default {
       if (n===0){
         sub=this.tikusubject;
       }
+      if(n===3){
+        sub=this.addques.subject_new;
+      }
       axios({
         url:"/problem/ranges",
         params:{
@@ -1994,7 +2154,36 @@ export default {
         this.totalAllQa=qa.data.total;
       }))
       this.drawLine();
+
+      this.getDifficult();
+      this.drawLine1();
       this.$forceUpdate();
+    },
+    deleteUser(id){
+      this.$confirm('确认删除此用户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axios({
+          url:"/user/deleteUsers",
+          params:{
+            id:id
+          }
+        }).then(res=>{
+          this.getAllUsers();
+          this.getAllTeachers();
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   },
   computed: {
@@ -2107,6 +2296,11 @@ export default {
     })
     this.getAllproblems();
     this.getTocheckTeachers();
+    axios({
+      url:"/problem/tikuInfo",
+    }).then(res=>{
+      this.num1=res.data;
+    })
 
     //console.log(this.num);
   }

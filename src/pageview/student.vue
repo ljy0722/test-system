@@ -86,7 +86,7 @@
                     <h3>选择考点</h3>
                     <el-row>
                       <span>考点:</span>
-                      <el-select style="margin-left: 7%;width: 30%" v-model="exercise.range" multiple>
+                      <el-select style="margin-left: 7%;width: 30%" v-model="exercise.range" multiple @change="getProblemNum">
                         <el-option
                           v-for="item in ranges1"
                           :key="item.value"
@@ -103,18 +103,22 @@
                     <el-row>
                       <span>单项选择题:</span>
                       <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input-number>
+                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有<span style="font-weight: 500">{{singleNum}}</span>题</span>
                     </el-row>
                     <el-row>
                       <span>多项选择题:</span>
                       <el-input-number controls-position="right"  min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.duoxuan" placeholder="多选题数量"></el-input-number>
+                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{multiNum}}题</span>
                     </el-row>
                     <el-row>
                       <span>填空题:</span>
                       <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="exercise.tiankong" placeholder="填空题数量"></el-input-number>
+                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{fillNum}}题</span>
                     </el-row>
                     <el-row>
                       <span>问答题:</span>
                       <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="exercise.wenda" placeholder="问答题数量"></el-input-number>
+                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{qaNum}}题</span>
                     </el-row>
                   </div>
                   <el-divider></el-divider>
@@ -734,7 +738,28 @@
               <el-col :span="10">
                 <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
               </el-col>
-              <el-col :span="10" :offset="3">
+              <el-col :span="4" :offset="3">
+                <el-table
+                  :data="correctRate"
+                  stripe
+                  size="small"
+                  height="400px">
+                  <el-table-column
+                    prop="range"
+                    label="考点"
+                    width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="rate"
+                    label="正确率(%)"
+                    width="100"
+                    :formatter="rounding">
+                  </el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10">
                 <Rader :opinion="theSubjects" :opinion-data="subjectsRate"></Rader>
               </el-col>
             </el-row>
@@ -767,6 +792,10 @@ export default {
   data(){
     return{
       active:'0',
+      singleNum:null,
+      multiNum:null,
+      fillNum:null,
+      qaNum:null,
       num:[],
       showAnswer:false,
       randomProblems:[],
@@ -803,7 +832,7 @@ export default {
         duoxuan:5,
         tiankong:5,
         wenda:5,
-        subject:'',
+        subject:null,
         range:[],
         time:20,
         startTimeS:'',
@@ -873,7 +902,8 @@ export default {
         },
       ],
       theSubjects:[],
-      subjectsRate:[]
+      subjectsRate:[],
+      correctRate:[]
     }
   },
   methods:{
@@ -930,6 +960,7 @@ export default {
           this.theSubjects.push(item.contentType);
           let rate=(parseInt(item.correctNum)*100)/(parseInt(item.correctNum)+parseInt(item.wrongNum));
           this.subjectsRate.push(rate);
+          this.correctRate.push({range:item.contentType,rate:rate});
         });
         //this.subjectsRate=[60,70,80];
         this.computeNext();
@@ -1328,7 +1359,25 @@ export default {
         this.yaxis=res.data;
         //this.yaxis=[50,60,90,70,65];
       })
-    }
+    },
+    getProblemNum(){
+      axios({
+        url:"/problem/problemNum",
+        method:"POST",
+        data:this.exercise,
+        headers:{
+          'Content-type':'application/json'
+        },
+      }).then(res=>{
+        this.singleNum=res.data[0];
+        this.multiNum=res.data[1];
+        this.fillNum=res.data[2];
+        this.qaNum=res.data[3];
+      })
+    },
+    rounding(row,column) {
+      return parseFloat(row[column.property]).toFixed(2)
+    },
 
   },
   components:{Top,Down,Chart3,Chart4,Chart5,Calinder,Rader},
@@ -1355,6 +1404,7 @@ export default {
     this.getStuInfo();
     this.getRandomProblems();
     this.getStudentTests();
+    this.getProblemNum();
   }
 }
 </script>

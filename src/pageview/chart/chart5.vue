@@ -55,7 +55,7 @@ export default {
           data: this.opinion,
           axisLabel:{
             interval:0,
-            rotate:30
+            rotate:-30
           }
         },
         yAxis: {},

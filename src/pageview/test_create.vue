@@ -70,7 +70,7 @@
                   <p style="margin-left: 20px">   选择考点</p>
                   <el-row>
                     <span style="margin-left: 20px">考点:</span>
-                    <el-select v-model="autoRange" multiple style="margin-left: 8%">
+                    <el-select v-model="autoRange" multiple style="margin-left: 8%" @change="getProblemNum">
                       <el-option
                         v-for="item in ranges"
                         :key="item.value"
@@ -87,18 +87,22 @@
                   <el-row>
                     <span>单项选择题:</span>
                     <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="danxuan"  placeholder="单选题数量"></el-input-number>
+                    <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有<span style="font-weight: 500">{{singleNum}}</span>题</span>
                   </el-row>
                   <el-row>
                     <span>多项选择题:</span>
                     <el-input-number controls-position="right"  min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="duoxuan" placeholder="多选题数量"></el-input-number>
+                    <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{multiNum}}题</span>
                   </el-row>
                   <el-row>
                     <span>填空题:</span>
                     <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="tiankong" placeholder="填空题数量"></el-input-number>
+                    <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{fillNum}}题</span>
                   </el-row>
                   <el-row>
                     <span>问答题:</span>
                     <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="wenda" placeholder="问答题数量"></el-input-number>
+                    <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{qaNum}}题</span>
                   </el-row>
                 </div>
 
@@ -1008,12 +1012,17 @@
               </el-table-column>
 
               <el-table-column
-                fixed="right">
+                fixed="right"
+                width="180">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     type="primary"
                     @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteProblem(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1085,12 +1094,17 @@
                 width="150">
               </el-table-column>
               <el-table-column
-                fixed="right">
+                fixed="right"
+                width="180">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     type="primary"
                     @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteProblem(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1137,12 +1151,17 @@
                 width="150">
               </el-table-column>
               <el-table-column
-                fixed="right">
+                fixed="right"
+                width="180">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     type="primary"
                     @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteProblem(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1189,12 +1208,17 @@
                 width="150">
               </el-table-column>
               <el-table-column
-                fixed="right">
+                fixed="right"
+                width="180">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     type="primary"
                     @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteProblem(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1209,6 +1233,7 @@
           <el-button type="primary" @click="changeScore">确定</el-button>
         </el-dialog>
         <el-button style="margin-top: 20px" type="primary" @click="finish">创建</el-button>
+        <el-button style="margin-top: 20px" type="danger" @click="cancel">取消</el-button>
       </el-row>
       <el-row style="padding: 0">
         <Down style="margin-top: 100px"></Down>
@@ -1228,6 +1253,10 @@ export default {
   data(){
     return {
       next:false,
+      singleNum:null,
+      multiNum:null,
+      fillNum:null,
+      qaNum:null,
       active:0,
       selection1:[],
       selection2:[],
@@ -1311,6 +1340,17 @@ export default {
         }
       ],
 
+      exercise:{
+        danxuan:5,
+        duoxuan:5,
+        tiankong:5,
+        wenda:5,
+        subject:null,
+        range:[],
+        time:20,
+        startTimeS:'',
+        endTimeS:'',
+      },
       problemSelection:[],
       search:null,
       searchstu:'',
@@ -1348,6 +1388,7 @@ export default {
         newScore:''
       },
       editData:'',
+      addSelection:[]
     }
   },
   computed:{
@@ -1485,19 +1526,23 @@ export default {
           })
           this.selection5.forEach(e=>{
             var pro={"id":e.id,"type":'单项选择题'}
-            this.problemSelection.push(pro)
+            this.problemSelection.push(pro);
+            this.addSelection.push(pro);
           })
           this.selection6.forEach(e=>{
             var pro={"id":e.id,"type":'多项选择题'}
-            this.problemSelection.push(pro)
+            this.problemSelection.push(pro);
+            this.addSelection.push(pro);
           })
           this.selection7.forEach(e=>{
             var pro={"id":e.id,"type":'填空题'}
-            this.problemSelection.push(pro)
+            this.problemSelection.push(pro);
+            this.addSelection.push(pro);
           })
           this.selection8.forEach(e=>{
             var pro={"id":e.id,"type":'问答题'}
-            this.problemSelection.push(pro)
+            this.problemSelection.push(pro);
+            this.addSelection.push(pro);
           })
           console.log(this.problemSelection);
           this.time1[0]=new Date((+new Date(this.time1[0]))+8*3600*1000);
@@ -1507,6 +1552,7 @@ export default {
           manual["time1"]=this.time1;
           manual["time2"]=this.time2;
           manual["problemSelection"]=this.problemSelection;
+          manual["addSelection"]=this.addSelection;
           manual["grantGroup"]=this.grantGroup;
           axios({
             url:"/exercise/new",
@@ -1517,7 +1563,6 @@ export default {
             }
           })
             .then(res=>{
-              alert("创建成功");
               //this.$router.go(-1);
               axios({
                 url:"/exercise/setDetail",
@@ -1707,6 +1752,71 @@ export default {
     },
     finish(){
       this.$router.push({name:'teacher'})
+    },
+    getProblemNum(){
+      this.exercise.subject=this.autoSubject;
+      this.exercise.range=this.autoRange;
+      axios({
+        url:"/problem/problemNum",
+        method:"POST",
+        data:this.exercise,
+        headers:{
+          'Content-type':'application/json'
+        },
+      }).then(res=>{
+        this.singleNum=res.data[0];
+        this.multiNum=res.data[1];
+        this.fillNum=res.data[2];
+        this.qaNum=res.data[3];
+      })
+    },
+    rounding(row,column) {
+      return parseFloat(row[column.property]).toFixed(2)
+    },
+    deleteProblem(id){
+      axios({
+        url:"/exercise/deleteProblemFromExer",
+        params:{
+          problemId:id,
+          exerciseId:this.setDetail.id
+        }
+      }).then(res=>{
+        axios({
+          url:"/exercise/setDetail",
+          params:{
+            id:this.setDetail.id,
+          }
+        }).then(res1=>{
+          this.setDetail=res1.data;
+          console.log(this.setDetail);
+        })
+      })
+    },
+    cancel(){
+      this.$confirm('确定取消该场考试?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axios({
+          url:"/exercise/cancel",
+          params:{
+            id:this.setDetail.id
+          }
+        }).then(res=>{
+          this.$router.push({name:'teacher'})
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+
     }
   },
   created() {
@@ -1714,6 +1824,7 @@ export default {
     this.getAllproblems();
     this.getSubjects();
     this.getUserGroups();
+    this.getProblemNum();
   }
 }
 </script>

@@ -130,9 +130,23 @@
             <div v-if="setdetail==true" style="margin-top: 80px">
               <el-button type="plain" style="float: left" size="mini" @click="setdetail=false;seechart=false">返回</el-button>
               <el-button
+                v-if="setstate==='3'"
                 size="mini" icon="el-icon-download"
+                type="primary"
                 style="float: left"
                 @click="exportTest(setDetail.id)">导出考试信息</el-button>
+              <el-button
+                v-if="setstate==='3'"
+                size="mini"
+                type="success"
+                style="float: left"
+                @click="rejudge(setDetail.id)">重新评判</el-button>
+              <el-button
+                v-if="setstate==='1'"
+                size="mini"
+                type="danger"
+                style="float: left"
+                @click="cancel">取消考试</el-button>
               <span style="font-size: x-large;font-weight: bold;margin-left: -6%">{{ setDetail.setname }}</span>
 
               <el-card style="height: 50px">
@@ -157,6 +171,11 @@
                     ref="setDetail.problems.single"
                     style="width: 100%;margin-bottom: 30px;white-space: pre-wrap">
                     <el-table-column
+                      prop="order"
+                      label="题号"
+                      width="70">
+                    </el-table-column>
+                    <el-table-column
                       prop="subject"
                       label="学科"
                       width="130">
@@ -217,13 +236,18 @@
                     </el-table-column>
 
                     <el-table-column
-                      v-if="setstate==='1'"
+                      v-if="setstate==='1'||setstate==='3'"
+                      width="180"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
                           type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                        <el-button
+                          size="mini"
+                          type="danger"
+                          @click="deleteProblem(scope.row.id)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -235,6 +259,11 @@
                     border
                     ref="setDetail.problems.multi"
                     style="width: 100%">
+                    <el-table-column
+                      prop="order"
+                      label="题号"
+                      width="70">
+                    </el-table-column>
                     <el-table-column
                       prop="subject"
                       label="学科"
@@ -295,13 +324,18 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
-                      v-if="setstate==='1'"
+                      v-if="setstate==='1'||setstate==='3'"
+                      width="180"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
                           type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                        <el-button
+                          size="mini"
+                          type="danger"
+                          @click="deleteProblem(scope.row.id)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -314,6 +348,11 @@
                     ref="setDetail.problems.fill"
                     style="width: 100%">
                     <el-table-column
+                      prop="order"
+                      label="题号"
+                      width="70">
+                    </el-table-column>
+                    <el-table-column
                       prop="subject"
                       label="学科"
                       width="130">
@@ -348,13 +387,18 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
-                      v-if="setstate==='1'"
+                      v-if="setstate==='1'||setstate==='3'"
+                      width="180"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
                           type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                        <el-button
+                          size="mini"
+                          type="danger"
+                          @click="deleteProblem(scope.row.id)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -367,6 +411,11 @@
                     ref="setDetail.problems.quesans"
                     style="width: 100%">
                     <el-table-column
+                      prop="order"
+                      label="题号"
+                      width="70">
+                    </el-table-column>
+                    <el-table-column
                       prop="subject"
                       label="学科"
                       width="130">
@@ -401,13 +450,18 @@
                       width="150">
                     </el-table-column>
                     <el-table-column
-                      v-if="setstate==='1'"
+                      v-if="setstate==='1'||setstate==='3'"
+                      width="180"
                       fixed="right">
                       <template slot-scope="scope">
                         <el-button
                           size="mini"
                           type="primary"
                           @click="modifyScore(scope.$index,scope.row)">修改分值</el-button>
+                        <el-button
+                          size="mini"
+                          type="danger"
+                          @click="deleteProblem(scope.row.id)">删除</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -430,8 +484,8 @@
                 <div style="text-align: left;margin-top: -10px">
                   <i style="font-size: 30px" class="el-icon-share"></i>
                   <span style="margin-left: 2%;font-size: 23px;font-weight: bold;color: #444444">用户组</span>
-                  <span style="margin-left: 50%">筛选：</span>
-                  <el-select style="margin-right: 10px;width: 20%" v-model="chooseGroup" @change="seeAnalyse(chooseGroup)" placeholder="选择用户组">
+                  <span style="margin-left: 50%">选择用户组：</span>
+                  <el-select style="margin-right: 10px;width: 20%" v-model="chooseGroup" @change="getStudentsInExercise" placeholder="选择用户组">
                     <el-option
                       v-for="(item,index) in setDetail.groups"
                       :key="item.groupId"
@@ -499,10 +553,10 @@
               <el-row style="margin-top: 80px">
                 <el-col :span="24">
 <!--                  <Chart :value1="1" :value2="0" :value3="0" :value4="1"></Chart>-->
-                  <Chart8 v-if="setstate==='3'" :opinion="['0-10','10-20','20-30','30-40','40-50','50-60','70-80','80-90','90-100']" :opinion-data="rate" ></Chart8>
+                  <Chart8 v-if="setstate==='3'&&seechart===true" :opinion="['0-10','10-20','20-30','30-40','40-50','50-60','70-80','80-90','90-100']" :opinion-data="rate" ></Chart8>
                 </el-col>
                 <el-col :span="24">
-                  <chart9 v-if="setstate==='3'" :opinion="problemids" :opinion-data="problemRate"></chart9>
+                  <chart9 v-if="setstate==='3'&&seechart===true" :opinion="problemids" :opinion-data="problemRate"></chart9>
                 </el-col>
                 <br>
               </el-row>
@@ -974,12 +1028,26 @@
                 <el-row>
                   <el-col :span="10">
                     <el-form-item label="学科">
-                      <el-input v-model="addques.subject_new"></el-input>
+                      <el-select v-model="addques.subject_new" allow-create filterable @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+<!--                      <el-input v-model="addques.subject_new"></el-input>-->
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
                     <el-form-item label="考点">
-                      <el-input v-model="addques.content_type_new"></el-input>
+                      <el-select v-model="addques.content_type_new" allow-create filterable>
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
+<!--                      <el-input v-model="addques.content_type_new"></el-input>-->
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -1023,12 +1091,24 @@
                 <el-row>
                   <el-col :span="10">
                     <el-form-item label="学科">
-                      <el-input v-model="addques.subject_new"></el-input>
+                      <el-select v-model="addques.subject_new" allow-create filterable @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
                     <el-form-item label="考点">
-                      <el-input v-model="addques.content_type_new"></el-input>
+                      <el-select v-model="addques.content_type_new" allow-create filterable>
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -1072,12 +1152,24 @@
                 <el-row>
                   <el-col :span="10">
                     <el-form-item label="学科">
-                      <el-input v-model="addques.subject_new"></el-input>
+                      <el-select v-model="addques.subject_new" allow-create filterable @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
                     <el-form-item label="考点">
-                      <el-input v-model="addques.content_type_new"></el-input>
+                      <el-select v-model="addques.content_type_new" allow-create filterable>
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -1096,12 +1188,24 @@
                 <el-row>
                   <el-col :span="10">
                     <el-form-item label="学科">
-                      <el-input v-model="addques.subject_new"></el-input>
+                      <el-select v-model="addques.subject_new" allow-create filterable @change="getRanges">
+                        <el-option
+                          v-for="item in subjects"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="1">
                     <el-form-item label="考点">
-                      <el-input v-model="addques.content_type_new"></el-input>
+                      <el-select v-model="addques.content_type_new" allow-create filterable>
+                        <el-option
+                          v-for="item in ranges"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"></el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -2208,6 +2312,7 @@ export default {
       })
     },
     getStudentsInExercise(){
+      this.seechart=false;
       axios({
         url:"user/groupInExercise",
         params:{
@@ -2664,6 +2769,73 @@ export default {
         });
       }
     },
+    deleteProblem(id){
+      axios({
+        url:"/exercise/deleteProblemFromExer",
+        params:{
+          problemId:id,
+          exerciseId:this.setDetail.id
+        }
+      }).then(res=>{
+        axios({
+          url:"/exercise/setDetail",
+          params:{
+            id:this.setDetail.id,
+          }
+        }).then(res1=>{
+          this.setDetail=res1.data;
+          console.log(this.setDetail);
+        })
+      })
+    },
+    cancel(){
+      this.$confirm('确定取消该场考试，并删除考试信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axios({
+          url:"/exercise/cancel",
+          params:{
+            id:this.setDetail.id
+          }
+        }).then(res=>{
+          this.$router.push({name:'teacher'})
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.active='2';
+        this.setdetail=false;
+        this.getTeacherExercise();
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+
+    },
+    rejudge(id){
+      axios({
+        url:"/test/rejudge",
+        params:{
+          exerciseId:id,
+        }
+      }).then(res=>{
+        this.$message("重新评判成功");
+        axios({
+          url:"/exercise/setDetail",
+          params:{
+            id:this.setDetail.id,
+          }
+        }).then(res1=>{
+          this.setDetail=res1.data;
+          console.log(this.setDetail);
+        })
+      })
+    }
 
   },
   computed:{
