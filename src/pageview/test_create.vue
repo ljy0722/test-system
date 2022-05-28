@@ -55,7 +55,7 @@
                   <p style="margin-left: 20px">   选择科目</p>
                   <el-row>
                     <span style="margin-left: 20px">科目:</span>
-                    <el-select v-model="autoSubject" @change="getRanges" style="margin-left: 8%">
+                    <el-select v-model="autoSubject" @change="getRanges(0)" style="margin-left: 8%">
                       <el-option
                         v-for="item in subjects"
                         :key="item.value"
@@ -119,7 +119,7 @@
                   <el-tab-pane label="单选题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -147,20 +147,17 @@
                     <el-table
                       :data="SingleProblem"
                       ref="list1"
+                      border
+                      stripe
                       style="width: 100%"
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange1"
                       >
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -229,7 +226,7 @@
                   <el-tab-pane label="多选题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -256,19 +253,16 @@
                     <el-table
                       :data="MultiProblem"
                       ref="list2"
+                      border
+                      stripe
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange2"
                       style="width: 100%">
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -337,7 +331,7 @@
                   <el-tab-pane label="填空题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -364,19 +358,16 @@
                     <el-table
                       :data="FillProblem"
                       ref="list3"
+                      border
+                      stripe
                       style="width: 100%"
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange3">
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -420,7 +411,7 @@
                   <el-tab-pane label="问答题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -447,19 +438,16 @@
                     <el-table
                       :data="QaProbelm"
                       ref="list4"
+                      border
+                      stripe
                       style="width: 100%"
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange4">
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -478,6 +466,7 @@
                       </el-table-column>
                       <el-table-column
                         prop="answer"
+                        width="350"
                         label="答案">
                       </el-table-column>
                       <el-table-column
@@ -508,7 +497,7 @@
                   <el-tab-pane label="单选题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -529,27 +518,24 @@
                         <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
                       <el-col :span="1" :offset="1">
-                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                        <el-button type="primary" @click="getAllproblems">搜索</el-button>
                       </el-col>
                     </el-row>
 
                     <el-table
                       :data="problemAllSinlge"
                       ref="list5"
+                      border
+                      stripe
                       style="width: 100%"
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange5"
                     >
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -618,7 +604,7 @@
                   <el-tab-pane label="多选题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -639,25 +625,22 @@
                         <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
                       <el-col :span="1" :offset="1">
-                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                        <el-button type="primary" @click="getAllproblems">搜索</el-button>
                       </el-col>
                     </el-row>
                     <el-table
                       :data="problemAllMulti"
-                      ref="list5"
+                      ref="list6"
+                      border
+                      stripe
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange6"
                       style="width: 100%">
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -726,7 +709,7 @@
                   <el-tab-pane label="填空题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -747,25 +730,22 @@
                         <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
                       <el-col :span="1" :offset="1">
-                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                        <el-button type="primary" @click="getAllproblems">搜索</el-button>
                       </el-col>
                     </el-row>
                     <el-table
                       :data="problemAllFill"
                       ref="list7"
+                      border
+                      stripe
                       style="width: 100%"
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange7">
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -809,7 +789,7 @@
                   <el-tab-pane label="问答题">
                     <el-row>
                       <el-col :span="3">
-                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges">
+                        <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
                             :key="item.value"
@@ -830,25 +810,22 @@
                         <el-input v-model="searchAllPro" placeholder="题目关键字搜索" style="margin-left: 20px"></el-input>
                       </el-col>
                       <el-col :span="1" :offset="1">
-                        <el-button type="primary" @click="getTeacherProblems">搜索</el-button>
+                        <el-button type="primary" @click="getAllproblems">搜索</el-button>
                       </el-col>
                     </el-row>
                     <el-table
                       :data="problemAllQa"
                       ref="list8"
+                      border
+                      stripe
                       style="width: 100%"
                       :row-key="getRowKey"
                       @selection-change="handleSeletionChange8">
                       <el-table-column
-                        fixed="left"
+                        fixed="right"
                         type="selection"
                         width="55"
                         :reserve-selection="true">
-                      </el-table-column>
-                      <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="100">
                       </el-table-column>
                       <el-table-column
                         prop="subject"
@@ -867,6 +844,7 @@
                       </el-table-column>
                       <el-table-column
                         prop="answer"
+                        width="350"
                         label="答案">
                       </el-table-column>
                       <el-table-column
@@ -1709,11 +1687,18 @@ export default {
         this.subjects=res.data;
       })
     },
-    getRanges(){
+    getRanges(n){
+      let sub=this.autoRange;
+      if(n===1){
+        sub=this.selectSubject1;
+      }
+      if(n===2){
+        sub=this.selectSubject2;
+      }
       axios({
         url:"/problem/rangesnopub",
         params:{
-          subject:this.autoSubject
+          subject:sub
         }
       }).then(res=>{
         this.ranges=res.data;
