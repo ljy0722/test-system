@@ -691,7 +691,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change1"
+                      @current-change="change1"
                       layout="prev, pager, next"
                       :total="totalSingle">
                     </el-pagination>
@@ -811,7 +811,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change2"
+                      @current-change="change2"
                       layout="prev, pager, next"
                       :total="totalMulti">
                     </el-pagination>
@@ -906,7 +906,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change3"
+                      @current-change="change3"
                       layout="prev, pager, next"
                       :total="totalFill">
                     </el-pagination>
@@ -1001,7 +1001,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change4"
+                      @current-change="change4"
                       layout="prev, pager, next"
                       :total="totalQa">
                     </el-pagination>
@@ -1360,7 +1360,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change5"
+                      @current-change="change5"
                       layout="prev, pager, next"
                       :total="totalAllSingle">
                     </el-pagination>
@@ -1471,7 +1471,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change6"
+                      @current-change="change6"
                       layout="prev, pager, next"
                       :total="totalAllMulti">
                     </el-pagination>
@@ -1558,7 +1558,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change7"
+                      @current-change="change7"
                       layout="prev, pager, next"
                       :total="totalAllFill">
                     </el-pagination>
@@ -1645,7 +1645,7 @@
                   </el-table>
                   <div class="block">
                     <el-pagination
-                      :current-change="change8"
+                      @current-change="change8"
                       layout="prev, pager, next"
                       :total="totalAllQa">
                     </el-pagination>
@@ -1682,7 +1682,7 @@
             <el-row>
               <div class="block" style="margin-top: 50px">
                 <el-pagination
-                  :current-change="change9"
+                  @current-change="change9"
                   :hide-on-single-page="true"
                   layout="prev, pager, next"
                   :total="totalGroup">
@@ -1767,7 +1767,7 @@
             </el-table>
             <div class="block">
               <el-pagination
-                :current-change="change10"
+                @current-change="change10"
                 layout="prev, pager, next"
                 :total="totalUser">
               </el-pagination>
@@ -1818,7 +1818,7 @@
               </el-table>
               <div class="block">
                 <el-pagination
-                  :current-change="change12"
+                  @current-change="change12"
                   layout="prev, pager, next"
                   :total="totalSearchUser">
                 </el-pagination>
