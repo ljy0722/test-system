@@ -6,122 +6,8 @@
     <el-main style="margin-top: 80px">
       <el-row style="display: block;">
         <el-row class="backstyle" >
-          <el-col :span="18" style="min-height: 1px;">
-            <el-container>
-              <el-container>
-                <el-main class="content_style" style="margin-right: 15px;">
-                  <el-container>
-                    <el-header class="other_header" style="height: 40px;line-height: 40px;text-align: center; color:black;font-weight: bold ;">
-                      {{ setName }}</el-header>
-                    <el-main>
-                      <el-row style="background: #ffffff;border-radius: 10px">
-                        <el-row>
-                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">单项选择题</h2>
-                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
-                            <span>共</span>
-                            <i>{{ singleChoiceList.length }}</i>
-                            <span>题</span>
-                          </p>
-                        </el-row>
-                        <el-divider></el-divider>
-                        <el-row :class="`classa${index+1}`" v-for="(item,index) in singleChoiceList" :key="'single'+index" style="margin-bottom: 20px;">
-                          <el-col :span="2">
-                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
-                          </el-col>
-                          <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
-                              {{item.problemInfo.question}}
-                            </el-row>
-                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
-                              <a @click="gotobutton1(index)">
-                                <el-radio v-model="item.myAnswer" :label="citem.outanswer">{{citem.outcome}}</el-radio>
-                              </a>
-                            </el-row>
-                          </el-col>
-                        </el-row>
-                        <el-row style="height:40px">
-                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">多项选择题</h2>
-                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
-                            <span>共</span>
-                            <i>{{ multiChoiceList.length }}</i>
-                            <span>题</span>
-                          </p>
-                        </el-row>
-                        <el-divider></el-divider>
-                        <el-row :class="`classb${index+1}`" v-for="(item,index) in multiChoiceList" :key="'multi'+index" style="margin-bottom: 20px;">
-                          <el-col :span="2">
-                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
-                          </el-col>
-                          <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
-                              {{item.problemInfo.question}}
-                            </el-row>
-                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
-                              <a @click="gotobutton2(index)">
-                                <el-checkbox-group v-model="item.myAnswer">
-                                  <el-checkbox  :label="citem.outanswer">{{citem.outcome}}</el-checkbox>
-                                </el-checkbox-group>
-
-                              </a>
-                            </el-row>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">填空题</h2>
-                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
-                            <span>共</span>
-                            <i>{{ fillBlankList.length }}</i>
-                            <span>题</span>
-                          </p>
-                        </el-row>
-                        <el-divider></el-divider>
-                        <el-row :class="`classc${index+1}`" v-for="(item,index) in fillBlankList" :key="'fill'+index" style="margin-bottom: 20px;">
-                          <el-col :span="2">
-                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
-                          </el-col>
-                          <el-col :span="21">
-                            <el-row type="flex" style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
-                              {{item.problemInfo.question}}
-                            </el-row>
-                            <el-input v-model="item.myAnswer"></el-input>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">问答题</h2>
-                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 30px;width: 70px;line-height: 30px">
-                            <span>共</span>
-                            <i>{{ questionAnswerList.length }}</i>
-                            <span>题</span>
-                          </p>
-                        </el-row>
-                        <el-divider></el-divider>
-                        <el-row :class="`classd${index+1}`" v-for="(item,index) in questionAnswerList" :key="'question'+index" style="margin-bottom: 20px;">
-                          <el-col :span="2">
-                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
-                          </el-col>
-                          <el-col :span="21">
-                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
-                              {{item.problemInfo.question}}
-                            </el-row>
-                            <el-input v-model="item.myAnswer"></el-input>
-                          </el-col>
-                        </el-row>
-                        <el-row style="margin-top: 60px;text-align: center;">
-                          <el-col>
-                            <div>
-                              <el-button @click="submit" type="primary" round>提交</el-button>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </el-row>
-                    </el-main>
-                  </el-container>
-                </el-main>
-              </el-container>
-            </el-container>
-          </el-col>
           <el-col :span="6">
-            <el-container style="background: #EEE8D5;border-radius: 10px;margin-right: 50px;margin-top: -80px;height: 80%;position: fixed">
+            <el-container style="background: #EEE8D5;border-radius: 10px;margin-right: 50px;margin-top: 40px;height: 60%;position: fixed">
               <el-header class="header_style" style="line-height: 40px;height: 40px;background-color: lightblue"><span style="font-size: large;font-family: 'Adobe 黑体 Std R'">答题卡</span><span style="margin-left: 15px;color: red">{{resTime}}</span></el-header>
               <el-main class="content_style">
                 <el-row style="margin-top: -15px;">
@@ -154,6 +40,119 @@
               </el-main>
             </el-container>
           </el-col>
+          <el-col :span="18" :offset="6" style="min-height: 1px;">
+            <el-container>
+              <el-container>
+                <el-main class="content_style" style="margin-right: 15px;">
+                  <el-container>
+                    <el-main>
+                      <el-row style="background: #ffffff;border-radius: 10px">
+                        <el-row style="height: 35px">
+                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">单项选择题</h2>
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 20px;width: 70px;line-height: 20px">
+                            <span>共</span>
+                            <i>{{ singleChoiceList.length }}</i>
+                            <span>题</span>
+                          </p>
+                        </el-row>
+                        <el-divider></el-divider>
+                        <el-row :class="`classa${index+1}`" v-for="(item,index) in singleChoiceList" :key="'single'+index" style="margin-bottom: 20px;">
+                          <el-col :span="2">
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
+                          </el-col>
+                          <el-col :span="21">
+                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
+                              {{item.problemInfo.question}}
+                            </el-row>
+                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
+                              <a @click="gotobutton1(index)">
+                                <el-radio v-model="item.myAnswer" :label="citem.outanswer">{{citem.outcome}}</el-radio>
+                              </a>
+                            </el-row>
+                          </el-col>
+                        </el-row>
+                        <el-row style="height:35px">
+                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">多项选择题</h2>
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 20px;width: 70px;line-height: 20px">
+                            <span>共</span>
+                            <i>{{ multiChoiceList.length }}</i>
+                            <span>题</span>
+                          </p>
+                        </el-row>
+                        <el-divider></el-divider>
+                        <el-row :class="`classb${index+1}`" v-for="(item,index) in multiChoiceList" :key="'multi'+index" style="margin-bottom: 20px;">
+                          <el-col :span="2">
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
+                          </el-col>
+                          <el-col :span="21">
+                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
+                              {{item.problemInfo.question}}
+                            </el-row>
+                            <el-row style="margin-top: 20px;" v-for="(citem,indx) in item.problemInfo.result" :key="indx">
+                              <a @click="gotobutton2(index)">
+                                <el-checkbox-group v-model="item.myAnswer">
+                                  <el-checkbox  :label="citem.outanswer">{{citem.outcome}}</el-checkbox>
+                                </el-checkbox-group>
+
+                              </a>
+                            </el-row>
+                          </el-col>
+                        </el-row>
+                        <el-row style="height: 35px">
+                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">填空题</h2>
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 20px;width: 70px;line-height: 20px">
+                            <span>共</span>
+                            <i>{{ fillBlankList.length }}</i>
+                            <span>题</span>
+                          </p>
+                        </el-row>
+                        <el-divider></el-divider>
+                        <el-row :class="`classc${index+1}`" v-for="(item,index) in fillBlankList" :key="'fill'+index" style="margin-bottom: 20px;">
+                          <el-col :span="2">
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
+                          </el-col>
+                          <el-col :span="21">
+                            <el-row type="flex" style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
+                              {{item.problemInfo.question}}
+                            </el-row>
+                            <el-input v-model="item.myAnswer"></el-input>
+                          </el-col>
+                        </el-row>
+                        <el-row style="height: 35px">
+                          <h2 style="padding: 0 30px;float: left;display: block;margin-bottom: 5px">问答题</h2>
+                          <p style="background: #ade1f7;font-size: medium;display: block;margin-left: 200px;color: white;border-radius: 30px;padding: 10px 30px;height: 20px;width: 70px;line-height: 20px">
+                            <span>共</span>
+                            <i>{{ questionAnswerList.length }}</i>
+                            <span>题</span>
+                          </p>
+                        </el-row>
+                        <el-divider></el-divider>
+                        <el-row :class="`classd${index+1}`" v-for="(item,index) in questionAnswerList" :key="'question'+index" style="margin-bottom: 20px;">
+                          <el-col :span="2">
+                            <el-button size="mini" class="i_style">{{index+1}}</el-button>
+                          </el-col>
+                          <el-col :span="21">
+                            <el-row style="border-bottom: 1px solid rgb(228,228,228);line-height: 40px;min-height: 40px;">
+                              {{item.problemInfo.question}}
+                            </el-row>
+                            <el-input v-model="item.myAnswer"></el-input>
+                          </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 60px;text-align: center;">
+                          <el-col>
+                            <div>
+                              <el-button @click="submit" type="primary" round>提交</el-button>
+                            </div>
+                          </el-col>
+                        </el-row>
+                      </el-row>
+                    </el-main>
+                  </el-container>
+                </el-main>
+              </el-container>
+            </el-container>
+          </el-col>
+
         </el-row>
       </el-row>
       <el-backtop></el-backtop>
