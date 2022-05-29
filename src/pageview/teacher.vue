@@ -1682,6 +1682,9 @@
                       <el-button type="text" size="mini" style="color: gray;font-size: large" @click="checkGroupDetail(i.groupId)">{{ i.groupName }}</el-button>
                     </el-row>
                     <el-row>
+                      <span style="font-size: small;color: grey;font-weight: 600">人数：{{i.studentNumber}}</span>
+                    </el-row>
+                    <el-row>
                       <div style="display: flex;margin-top: 20px">
                         <el-button style="display: flex" type="primary" size="mini"  @click="checkGroupDetail(i.groupId)">查看</el-button>
                         <el-button style="display: flex" type="danger" size="mini"  @click="deleteGroup(i.groupId)">删除</el-button>

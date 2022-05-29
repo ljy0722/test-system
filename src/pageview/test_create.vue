@@ -1700,7 +1700,7 @@ export default {
       })
     },
     getRanges(n){
-      let sub=this.autoRange;
+      let sub=this.autoSubject;
       if(n===1){
         sub=this.selectSubject1;
       }
