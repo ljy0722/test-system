@@ -26,7 +26,7 @@ export default {
       }).then(res=>{
         option = {
           title:{
-            text:'每月用户人次'
+            text:'每月答题人次'
           },
           xAxis: {
             type: 'category',

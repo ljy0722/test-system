@@ -102,8 +102,8 @@ export default {
           let data = [];
           for (let time = date; time < end; time += dayTime) {
             data.push([
-              echarts.format.formatTime('yyyy-MM-dd', time),
-              Math.floor(Math.random() * 1000)
+              echarts.format.formatTime('yyyy-MM-dd', time),''
+              // Math.floor(Math.random() * 1000)
             ]);
           }
           console.log(data[data.length - 1]);

@@ -26,7 +26,7 @@ export default {
       }).then(res=>{
         option = {
           title:{
-            text:'各科目使用情况'
+            text:'科目关注情况'
           },
           xAxis: {
             type: 'category',

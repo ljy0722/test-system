@@ -30,7 +30,7 @@
               </template>
               <el-menu-item-group style="background-color: #f0f0f0" align="left">
                 <el-menu-item index="4"><i class="el-icon-document-remove"></i>待审核题目 </el-menu-item>
-                <el-menu-item index="5"><i class="el-icon-document"></i>题库管理 </el-menu-item>
+                <el-menu-item index="5"><i class="el-icon-document"></i>题库浏览 </el-menu-item>
                 <el-menu-item index="6"><i class="el-icon-circle-plus"></i>习题上传 </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
@@ -76,7 +76,7 @@
                             <span style="color: #40f23a;font-weight: 400;font-size: 20px">无消息</span>
                           </div>
                           <div v-if="totalTocheck!==0">
-                            <span style="color: #f23a3a;font-weight: 400;font-size: 20px"><i class="el-icon-s-flag"></i>当前有未审核教师{{totalTocheck}}人，请前往审核！</span>
+                            <span @click="active='3'" style="color: #f23a3a;font-weight: 400;font-size: 20px;cursor: pointer"><i class="el-icon-s-flag"></i>当前有未审核教师{{totalTocheck}}人，请前往审核！</span>
                           </div>
                         </el-card>
                       </div>
@@ -1283,7 +1283,7 @@
               <el-col :span="12">
                 <el-card style="width:100%;margin-left: 5%;margin-bottom: 50px">
                   <div slot="header" align="left">
-                    <span>管理员新建题目</span>
+                    <span>新建单题</span>
                   </div>
                   <div align="left">
                     <span style="font-weight: 200;font-size: small">选择题型</span>
@@ -1496,7 +1496,7 @@
               <el-col :span="12">
                 <el-card  style="width: 80%;margin-left: 20%">
                   <div slot="header" align="left">
-                    <span>批量导入题库</span>
+                    <span>批量导入</span>
                   </div>
                   <el-upload
                     class="upload-demo"
@@ -1657,9 +1657,9 @@ export default {
       studentSearch:null,
       teacherSearch:null,
       tocheckSearch:null,
-      simple:1,
-      normal:1,
-      difficult:1,
+      simple:134,
+      normal:3056,
+      difficult:452,
     }
   },
   mounted() {
@@ -1681,6 +1681,7 @@ export default {
         this.simple=res.data[0];
         this.normal=res.data[1];
         this.difficult=res.data[2];
+        this.drawLine1();
       })
     },
     drawLine1(){
@@ -2091,6 +2092,7 @@ export default {
         method:"POST",
         data:this.addques
       }).then(res=>{
+        this.addques=null;
       })
     },
     toggleCollapse(){
@@ -2152,12 +2154,14 @@ export default {
         this.totalAllMulti=multi.data.total;
         this.totalAllFill=fill.data.total;
         this.totalAllQa=qa.data.total;
-      }))
-      this.drawLine();
+        this.$forceUpdate();
+        this.drawLine();
 
-      this.getDifficult();
-      this.drawLine1();
-      this.$forceUpdate();
+        this.getDifficult();
+        //this.drawLine1();
+        this.$forceUpdate();
+      }))
+
     },
     deleteUser(id){
       this.$confirm('确认删除此用户?', '提示', {
@@ -2296,6 +2300,7 @@ export default {
     })
     this.getAllproblems();
     this.getTocheckTeachers();
+    this.gettikuinfo();
     axios({
       url:"/problem/tikuInfo",
     }).then(res=>{

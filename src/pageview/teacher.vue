@@ -70,7 +70,7 @@
           <div v-if="active=='2'">
             <div v-if="setdetail==false">
               <el-row style="margin-top: 80px;">
-                <el-col :span="1">
+                <el-col :span="2">
                   <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">排序:</div>
                 </el-col>
                 <el-col :span="3">
@@ -84,7 +84,7 @@
                     </el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="1" :offset="1">
+                <el-col :span="2" :offset="1">
                   <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">筛选:</div>
                 </el-col>
                 <el-col :span="3">
@@ -98,7 +98,7 @@
                     </el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="2" :offset="13">
+                <el-col :span="2" :offset="11">
                   <el-button type="primary" align="right"  @click="handleCreate">创建考试</el-button>
                 </el-col>
               </el-row>
@@ -121,6 +121,7 @@
               <div class="block" style="float: right;margin-bottom: -200px">
                 <el-pagination
                   @current-change="change"
+                  :current-page="pageSet"
                   layout="prev, pager, next"
                   :page-size=20
                   :total="totalSet">
@@ -432,6 +433,7 @@
                     </el-table-column>
                     <el-table-column
                       prop="answer"
+                      width="270"
                       label="答案">
                     </el-table-column>
                     <el-table-column
@@ -545,6 +547,7 @@
               <div class="block">
                 <el-pagination
                   @current-change="change11"
+                  :current-page="pageSetUser"
                   :hide-on-single-page="true"
                   layout="prev, pager, next"
                   :total="totalSetUser">
@@ -692,6 +695,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change1"
+                      :current-page="pageSingle"
                       layout="prev, pager, next"
                       :total="totalSingle">
                     </el-pagination>
@@ -812,6 +816,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change2"
+                      :current-page="pageMulti"
                       layout="prev, pager, next"
                       :total="totalMulti">
                     </el-pagination>
@@ -907,6 +912,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change3"
+                      :current-page="pageFill"
                       layout="prev, pager, next"
                       :total="totalFill">
                     </el-pagination>
@@ -967,6 +973,7 @@
                     </el-table-column>
                     <el-table-column
                       prop="answer"
+                      width="300"
                       label="答案">
                     </el-table-column>
                     <el-table-column
@@ -1002,6 +1009,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change4"
+                      :current-page="pageQa"
                       layout="prev, pager, next"
                       :total="totalQa">
                     </el-pagination>
@@ -1361,6 +1369,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change5"
+                      :current-page="pageAllSingle"
                       layout="prev, pager, next"
                       :total="totalAllSingle">
                     </el-pagination>
@@ -1472,6 +1481,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change6"
+                      :current-page="pageAllMulti"
                       layout="prev, pager, next"
                       :total="totalAllMulti">
                     </el-pagination>
@@ -1559,6 +1569,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change7"
+                      :current-page="pageAllFill"
                       layout="prev, pager, next"
                       :total="totalAllFill">
                     </el-pagination>
@@ -1620,7 +1631,7 @@
                     <el-table-column
                       prop="answer"
                       label="答案"
-                      width="180">
+                      width="300">
                     </el-table-column>
                     <el-table-column
                       prop="difficultScore"
@@ -1646,6 +1657,7 @@
                   <div class="block">
                     <el-pagination
                       @current-change="change8"
+                      :current-page="pageAllQa"
                       layout="prev, pager, next"
                       :total="totalAllQa">
                     </el-pagination>
@@ -1683,6 +1695,7 @@
               <div class="block" style="margin-top: 50px">
                 <el-pagination
                   @current-change="change9"
+                  :current-page="pageGroup"
                   :hide-on-single-page="true"
                   layout="prev, pager, next"
                   :total="totalGroup">
@@ -1768,6 +1781,7 @@
             <div class="block">
               <el-pagination
                 @current-change="change10"
+                :current-page="pageUser"
                 layout="prev, pager, next"
                 :total="totalUser">
               </el-pagination>
@@ -1819,6 +1833,7 @@
               <div class="block">
                 <el-pagination
                   @current-change="change12"
+                  :current-page="pageSearchUser"
                   layout="prev, pager, next"
                   :total="totalSearchUser">
                 </el-pagination>
@@ -2144,6 +2159,10 @@ export default {
         this.totalAllMulti=multi.data.total;
         this.totalAllFill=fill.data.total;
         this.totalAllQa=qa.data.total;
+        this.pageAllSingle=single.data.pageNum;
+        this.pageAllMulti=multi.data.pageNum;
+        this.pageAllFill=fill.data.pageNum;
+        this.pageAllQa=qa.data.pageNum;
         console.log(this.totalAllSingle);
       }))
     },
@@ -2162,6 +2181,10 @@ export default {
         this.totalMulti=multi.data.total;
         this.totalFill=fill.data.total;
         this.totalQa=qa.data.total;
+        this.pageSingle=single.data.pageNum;
+        this.pageMulti=multi.data.pageNum;
+        this.pageFill=fill.data.pageNum;
+        this.pageQa=qa.data.pageNum;
       }))
     },
     downloadTemplate(){
@@ -2692,6 +2715,7 @@ export default {
       }).then(res=>{
         this.exerciseSets=res.data.data;
         this.totalSet=res.data.total;
+        this.pageSet=res.data.pageNum;
       }).catch(err=>{
 
       });

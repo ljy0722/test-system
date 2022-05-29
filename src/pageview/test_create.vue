@@ -217,6 +217,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change1"
+                        :current-page="pageSingle"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalSingle">
@@ -322,6 +323,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change2"
+                        :current-page="pageMulti"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalMulti">
@@ -402,6 +404,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change3"
+                        :current-page="pageFill"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalFill">
@@ -483,6 +486,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change4"
+                        :current-page="pageQa"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalQa">
@@ -595,6 +599,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change11"
+                        :current-page="pageAllSingle"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalAllSingle">
@@ -700,6 +705,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change22"
+                        :current-page="pageAllMulti"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalAllMulti">
@@ -780,6 +786,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change33"
+                        :current-page="pageAllFill"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalAllFill">
@@ -861,6 +868,7 @@
                     <div class="block">
                       <el-pagination
                         @current-change="change44"
+                        :current-page="pageAllQa"
                         :hide-on-single-page="true"
                         layout="prev, pager, next"
                         :total="totalAllQa">
@@ -1678,6 +1686,10 @@ export default {
         this.totalMulti=multi.data.total;
         this.totalFill=fill.data.total;
         this.totalQa=qa.data.total;
+        this.pageSingle=single.data.pageNum;
+        this.pageMulti=multi.data.pageNum;
+        this.pageFill=fill.data.pageNum;
+        this.pageQa=qa.data.pageNum;
       }))
     },
     getSubjects(){
@@ -1729,6 +1741,10 @@ export default {
         this.totalAllMulti=multi.data.total;
         this.totalAllFill=fill.data.total;
         this.totalAllQa=qa.data.total;
+        this.pageAllSingle=single.data.pageNum;
+        this.pageAllMulti=multi.data.pageNum;
+        this.pageAllFill=fill.data.pageNum;
+        this.pageAllQa=qa.data.pageNum;
         console.log(this.totalAllSingle);
       }))
     },

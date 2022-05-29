@@ -72,7 +72,7 @@
                     <h3>选择科目</h3>
                     <el-row>
                       <span>学科：</span>
-                      <el-select style="margin-left: 5%;width: 30%" v-model="exercise.subject"  @change="getRange1">
+                      <el-select style="margin-left: 5%;width: 30%" v-model="exercise.subject"  @change="exerciseRange">
                         <el-option
                           v-for="item in subjects1"
                           :key="item.value"
@@ -102,23 +102,23 @@
                     <p style="font-size: 10px;color: grey">若系统在该考点下的某题型数量小于您所选择的数量，将提供最大数量</p>
                     <el-row>
                       <span>单项选择题:</span>
-                      <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input-number>
-                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有<span style="font-weight: 500">{{singleNum}}</span>题</span>
+                      <el-input-number :disabled="exercise.danxuan===0" controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.danxuan"  placeholder="单选题数量"></el-input-number>
+                      <span v-if="exercise.subject!==null" style="font-size: 10px;color: grey">所选科目、考点在题库中共有<span style="font-weight: 500">{{singleNum}}</span>题</span>
                     </el-row>
                     <el-row>
                       <span>多项选择题:</span>
                       <el-input-number controls-position="right"  min="0" max="20" style="width: 30%;margin-bottom: 6px" v-model="exercise.duoxuan" placeholder="多选题数量"></el-input-number>
-                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{multiNum}}题</span>
+                      <span v-if="exercise.subject!==null" style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{multiNum}}题</span>
                     </el-row>
                     <el-row>
                       <span>填空题:</span>
                       <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="exercise.tiankong" placeholder="填空题数量"></el-input-number>
-                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{fillNum}}题</span>
+                      <span v-if="exercise.subject!==null" style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{fillNum}}题</span>
                     </el-row>
                     <el-row>
                       <span>问答题:</span>
                       <el-input-number controls-position="right" min="0" max="20" style="width: 30%;margin-bottom: 6px;margin-left: 33px" v-model="exercise.wenda" placeholder="问答题数量"></el-input-number>
-                      <span style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{qaNum}}题</span>
+                      <span v-if="exercise.subject!==null" style="font-size: 10px;color: grey">所选科目、考点在题库中共有{{qaNum}}题</span>
                     </el-row>
                   </div>
                   <el-divider></el-divider>
@@ -138,7 +138,7 @@
               <el-col :span="6">
                 <el-card style="height: 50%;margin-left: 10%">
                   <div slot="header" class="clearfix" style="background: lightgray;height: border-box;font-weight: 600">
-                    <span >系统题库中当前有：</span>
+                    <span >题库情况概览</span>
                   </div>
                   <div style="font-size: 14px">
                     <el-row>
@@ -203,7 +203,7 @@
             >
               <el-row style="margin-top: -15px">
                 <el-button type="text"   style="font-size: large;font-size: 17px;color: dodgerblue;margin-left: 20px;float: left" @click="viewSet(i.exerciseId,i.state,i.timeState,i.endTime)"> {{ i.exerciseName }}</el-button>
-<!--                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='1'">未开始</span></i>-->
+                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: yellowgreen;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='1'">未开始</span></i>
                 <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: dodgerblue;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='2'">正在进行</span></i>
 <!--                <i><span style="float: right;font-family: 'Adobe 宋体 Std L';font-size: small;background-color: #868686;color: white;padding: 0 10px;border-radius: 20%" v-if="i.timeState==='3'">已结束</span></i>-->
               </el-row>
@@ -213,6 +213,7 @@
             </el-card>
             <el-pagination
               @current-change="change00"
+              :current-page="pageTests"
               page-size="20"
               :hide-on-single-page="true"
               layout="prev, pager, next"
@@ -221,7 +222,7 @@
           </div>
           <div v-if="active==='3'">
             <el-row>
-              <el-col :span="1">
+              <el-col :span="2">
                 <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">排序:</div>
               </el-col>
               <el-col :span="3">
@@ -235,7 +236,7 @@
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col :span="1" :offset="1">
+              <el-col :span="2" :offset="1">
                 <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">筛选:</div>
               </el-col>
               <el-col :span="3">
@@ -249,7 +250,7 @@
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col :span="1" :offset="1">
+              <el-col :span="2" :offset="1">
                 <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">分类:</div>
               </el-col>
               <el-col :span="3">
@@ -281,6 +282,7 @@
             <div class="block">
               <el-pagination
                 @current-change="change0"
+                :current-page="pageSets"
                 :hide-on-single-page="true"
                 layout="prev, pager, next"
                 :page-size=20
@@ -292,9 +294,6 @@
             <el-tabs type="border-card" >
               <el-tab-pane label="单选题">
                 <el-row>
-                  <el-col :span="3">
-                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongSingle}}题</span>
-                  </el-col>
                   <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
@@ -318,6 +317,9 @@
                   </el-col>
                   <el-col :span="1" :offset="1">
                     <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
+                  </el-col>
+                  <el-col :span="3" :offset="2">
+                    <span style="line-height: 30px;text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：<span style="color: red">{{totalWrongSingle}}</span>题</span>
                   </el-col>
                 </el-row>
 
@@ -389,6 +391,7 @@
                 <div class="block">
                   <el-pagination
                     @current-change="change1"
+                    :current-page="pageWrongSingle"
                     :hide-on-single-page="true"
                     layout="prev, pager, next"
                     :total="totalWrongSingle">
@@ -397,9 +400,6 @@
               </el-tab-pane>
               <el-tab-pane label="多选题">
                 <el-row>
-                  <el-col :span="3">
-                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongMulti}}题</span>
-                  </el-col>
                   <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
@@ -423,6 +423,9 @@
                   </el-col>
                   <el-col :span="1" :offset="1">
                     <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
+                  </el-col>
+                  <el-col :span="3" :offset="2">
+                    <span style="line-height: 30px;text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：<span style="color: red">{{totalWrongMulti}}</span>题</span>
                   </el-col>
                 </el-row>
                 <el-table
@@ -492,6 +495,7 @@
                 <div class="block">
                   <el-pagination
                     @current-change="change2"
+                    :current-page="pageWrongMulti"
                     :hide-on-single-page="true"
                     layout="prev, pager, next"
                     :total="totalWrongMulti">
@@ -500,9 +504,6 @@
               </el-tab-pane>
               <el-tab-pane label="填空题">
                 <el-row>
-                  <el-col :span="3">
-                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongFill}}题</span>
-                  </el-col>
                   <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
@@ -526,6 +527,9 @@
                   </el-col>
                   <el-col :span="1" :offset="1">
                     <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
+                  </el-col>
+                  <el-col :span="3" :offset="2">
+                    <span style="line-height: 30px;text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：<span style="color: red">{{totalWrongFill}}</span>题</span>
                   </el-col>
                 </el-row>
                 <el-table
@@ -570,6 +574,7 @@
                 <div class="block">
                   <el-pagination
                     @current-change="change3"
+                    :current-page="pageWrongFill"
                     :hide-on-single-page="true"
                     layout="prev, pager, next"
                     :total="totalWrongFill">
@@ -578,9 +583,6 @@
               </el-tab-pane>
               <el-tab-pane label="问答题">
                 <el-row>
-                  <el-col :span="3">
-                    <span style="text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：{{totalWrongQa}}题</span>
-                  </el-col>
                   <el-col :span="3">
                     <el-select v-model="searchSubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(searchSubject)">
                       <el-option
@@ -604,6 +606,9 @@
                   </el-col>
                   <el-col :span="1" :offset="1">
                     <el-button type="primary" @click="getWrongQuestion">搜索</el-button>
+                  </el-col>
+                  <el-col :span="3" :offset="2">
+                    <span style="line-height: 30px;text-align: left;font-size: 15px;font-weight: bold;color: #444444">共有错题：<span style="color: red">{{totalWrongQa}}</span>题</span>
                   </el-col>
                 </el-row>
                 <el-table
@@ -644,6 +649,7 @@
                 <div class="block">
                   <el-pagination
                     @current-change="change4"
+                    :current-page="pageWrongQa"
                     :hide-on-single-page="true"
                     layout="prev, pager, next"
                     :total="totalWrongQa">
@@ -658,7 +664,7 @@
               <span style="font-size: 25px;font-weight: 600;font-family: 黑体">做题数据</span>
             </el-row>
             <el-row>
-              <el-col :span="8">
+              <el-col :span="10">
                 <br>
                 <el-card class="exer-info" style="width: 100%">
                   <el-button type="text" style="font-size: 50px" @click="gotoTest">{{user.test_num}}</el-button>
@@ -680,7 +686,7 @@
                   </div>
                 </el-card>
               </el-col>
-              <el-col :span="8" :offset="1">
+              <el-col :span="10" :offset="1">
                 <el-row>
                   <el-card class="exer-info" style="width: 100%;margin-top: 22px;height: 135px">
                     <el-row>
@@ -738,7 +744,7 @@
               <el-col :span="10">
                 <Chart5 :opinion="theSubjects" :opinion-data="subjectsRate"></Chart5>
               </el-col>
-              <el-col :span="4" :offset="3">
+              <el-col :span="8" :offset="3">
                 <el-table
                   :data="correctRate"
                   stripe
@@ -747,19 +753,19 @@
                   <el-table-column
                     prop="range"
                     label="考点"
-                    width="100">
+                    width="200">
                   </el-table-column>
                   <el-table-column
                     prop="rate"
                     label="正确率(%)"
-                    width="100"
+                    width="150"
                     :formatter="rounding">
                   </el-table-column>
                 </el-table>
               </el-col>
             </el-row>
-            <el-row>
-              <el-col :span="10">
+            <el-row style="margin-top: 30px">
+              <el-col :span="10" :offset="6">
                 <Rader :opinion="theSubjects" :opinion-data="subjectsRate"></Rader>
               </el-col>
             </el-row>
@@ -1003,12 +1009,9 @@ export default {
     },
     getStudentTests(){
       axios({
-        url:"/exercise/getStudentExercise",
+        url:"/exercise/getStudentTest",
         params:{
-          pageNum:this.pageTests,
-          test:true,
-          state:1,
-          order:4
+          page:this.pageTests,
         }
       }).then(res=>{
         this.exerciseSets=res.data.data;
@@ -1041,6 +1044,7 @@ export default {
         }
 
         this.totalTests=res.data.total;
+        this.pageTests=res.data.pageNum;
         this.haveTest=false;
         for(let i=0;i<this.exerciseSets.length;i++){
           if(this.exerciseSets[i].state==='U'){
@@ -1090,11 +1094,12 @@ export default {
         }
 
         this.totalSets=res.data.total;
+        this.pageSets=res.data.pageNum;
       })
     },
     viewSet(id,state,timeState,end) {
       if(timeState==='1'){
-        alert("题目集未到开放时间！");
+        this.$message("题目集未到开放时间！");
       }
       else if(timeState==='2'&&state==='U'){
         this.$message("请勿中途退出考试！")
@@ -1132,7 +1137,7 @@ export default {
         })
       }
       else if(state==='P'){
-        alert("考试未结束，无法查看信息");
+        this.$message("考试未结束，无法查看信息");
       }
       else{
         axios({
@@ -1159,7 +1164,7 @@ export default {
               fill:JSON.stringify(res.data.fillBlankList),
               qa:JSON.stringify(res.data.questionAnswerList)}})
         }).catch(err=>{
-          alert("您未参加该场考试，无法查看信息");
+          this.$message("您未参加该场考试，无法查看信息");
         })
       }
     },
@@ -1167,33 +1172,40 @@ export default {
       this.isCollapse=!this.isCollapse;
     },
     submitTestRequirement(){
-      this.exercise.startTimeS='2022-1-1 22:30:00'
-      this.exercise.endTimeS='2030-1-1 20:00:00'
-      axios({
-        url:"/exercise/createExercise",
-        method:"POST",
-        data:this.exercise,
-        headers:{
-          'Content-type':'application/json'
-        },
-      })
-        .then(res=>{
-          var now=new Date();
-          var hh=now.getHours()+parseInt(parseInt(this.exercise.time)/60);
-          var mm=now.getMinutes()+parseInt(this.exercise.time)%60;
-          var ss=now.getSeconds();
-          if(mm>=60){
-            mm=mm-60;
-            hh=hh+1;
-          }
-          if(hh>=24){
-            hh=hh-24;
-          }
-          var endTime=("0"+hh).slice(-2)+":"+("0"+mm).slice(-2)+":"+("0"+ss).slice(-2);
-          this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
-        })
       console.log(this.exercise)
-      //this.$router.push({path:'/test',query:{time:this.exercise.time}})
+      if(this.exercise.subject===null||this.exercise.range===[]||(this.exercise.danxuan===0&&this.exercise.duoxuan===0&&this.exercise.tiankong===0&&this.exercise.wenda===0)){
+        this.$message("请选择创建练习选项，题量不能为零")
+      }
+      else {
+        this.exercise.startTimeS='2022-1-1 22:30:00'
+        this.exercise.endTimeS='2030-1-1 20:00:00'
+        axios({
+          url:"/exercise/createExercise",
+          method:"POST",
+          data:this.exercise,
+          headers:{
+            'Content-type':'application/json'
+          },
+        })
+          .then(res=>{
+            var now=new Date();
+            var hh=now.getHours()+parseInt(parseInt(this.exercise.time)/60);
+            var mm=now.getMinutes()+parseInt(this.exercise.time)%60;
+            var ss=now.getSeconds();
+            if(mm>=60){
+              mm=mm-60;
+              hh=hh+1;
+            }
+            if(hh>=24){
+              hh=hh-24;
+            }
+            var endTime=("0"+hh).slice(-2)+":"+("0"+mm).slice(-2)+":"+("0"+ss).slice(-2);
+            this.$router.push({name:'test',params:{endTime:endTime,exerciseInfo:JSON.stringify(res.data)}});
+          })
+        console.log(this.exercise)
+        //this.$router.push({path:'/test',query:{time:this.exercise.time}})
+      }
+
     },
     getAnswerInfo() {
       //分页查询所有试卷信息
@@ -1216,6 +1228,10 @@ export default {
         this.totalWrongMulti=multi.data.total;
         this.totalWrongFill=fill.data.total;
         this.totalWrongQa=qa.data.total;
+        this.pageWrongSingle=single.data.pageNum;
+        this.pageWrongMulti=multi.data.pageNum;
+        this.pageWrongFill=fill.data.pageNum;
+        this.pageWrongQa=qa.data.pageNum;
         //console.log("返回错题")
       }))
     },
@@ -1373,15 +1389,38 @@ export default {
         this.multiNum=res.data[1];
         this.fillNum=res.data[2];
         this.qaNum=res.data[3];
+        this.exercise.danxuan=5;
+        this.exercise.duoxuan=5;
+        this.exercise.tiankong=5;
+        this.exercise.wenda=5;
+        if(this.exercise.danxuan>this.singleNum){
+          this.exercise.danxuan=this.singleNum;
+        }
+        if(this.exercise.duoxuan>this.multiNum){
+          this.exercise.duoxuan=this.multiNum;
+        }
+        if(this.exercise.tiankong>this.fillNum){
+          this.exercise.tiankong=this.fillNum;
+        }
+        if(this.exercise.wenda>this.qaNum){
+          this.exercise.wenda=this.qaNum;
+        }
       })
     },
     rounding(row,column) {
       return parseFloat(row[column.property]).toFixed(2)
     },
+    exerciseRange(){
+      this.getRange1();
+      this.exercise.range=[];
+    }
 
   },
   components:{Top,Down,Chart3,Chart4,Chart5,Calinder,Rader},
   computed:{
+  },
+  watch:{
+
   },
   created() {
     axios({
