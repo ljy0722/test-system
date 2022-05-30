@@ -1,6 +1,6 @@
 <template>
   <div className="test2" style="width:100%;height:300px;">
-    <div id="stupro" style="width:100%;height:250px;float:left;"></div>
+    <div id="stupro" style="width:100%;height:300px;"></div>
   </div>
 </template>
 
@@ -38,6 +38,7 @@ export default {
           hours.push(i.toString());
         }
         let le=res.data.length/this.pnum;
+        console.log(le)
         var days=new Array();
         for(let i=1;i<=le;i++){
           days.push(i.toString());
@@ -56,7 +57,8 @@ export default {
         })
         option = {
           title:{
-            text:'各学生用户组答题情况'
+            text:'各学生用户组答题情况（颜色越深答对人数越多）',
+
           },
           tooltip: {
             position: 'top'
@@ -86,7 +88,8 @@ export default {
             calculable: true,
             orient: 'horizontal',
             left: 'center',
-            bottom: '15%'
+            bottom: '15%',
+
           },
           series: [
             {

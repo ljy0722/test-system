@@ -28,6 +28,10 @@ export default {
           title:{
             text:'科目关注情况'
           },
+          tooltip: {
+            trigger: 'axis',
+            formatter: '{b} : {c}'
+          },
           xAxis: {
             type: 'category',
             // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

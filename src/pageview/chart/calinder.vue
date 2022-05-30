@@ -170,6 +170,9 @@ export default {
           tooltip: {
             position: 'top'
           },
+          legend:{
+            show:false
+          },
           visualMap: [
             {
               min: 0,
@@ -178,7 +181,8 @@ export default {
               seriesIndex: [2, 3, 4],
               orient: 'horizontal',
               left: '55%',
-              bottom: 20
+              bottom: 20,
+              show:false
             },
             {
               min: 0,
@@ -198,7 +202,8 @@ export default {
               seriesIndex: [1],
               orient: 'horizontal',
               left: '10%',
-              bottom: 20
+              bottom: 20,
+              show:false
             }
           ],
           calendar: [
