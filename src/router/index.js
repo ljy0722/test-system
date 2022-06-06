@@ -105,7 +105,7 @@ const router = new Router({
     //   component:TakeTest
     // }
   ],
-  //mode:"history"
+  mode:"history"
 })
 router.beforeEach((to, from, next) => {
   // 默认requiresAuth为false才不需要登录，其他都要

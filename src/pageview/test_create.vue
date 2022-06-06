@@ -111,7 +111,7 @@
               <br>
 
               <div class="step2.2" v-if="method1=='shoudong'">
-                <el-row>
+                <el-row style="text-align:left;margin-top:-20px;margin-bottom:5px">
                   <el-col :span="2">
                   <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">学科:</div>
                 </el-col>
@@ -143,7 +143,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -251,7 +251,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -357,7 +357,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -438,7 +438,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -525,7 +525,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -633,7 +633,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -739,7 +739,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
@@ -820,7 +820,7 @@
                             :value="item.value"></el-option>
                         </el-select>
                       </el-col> -->
-                      <el-col :span="3" :offset="1">
+                      <el-col :span="3">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
                             v-for="item in ranges"
