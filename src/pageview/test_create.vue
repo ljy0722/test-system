@@ -1736,6 +1736,8 @@ export default {
     getProblemRange(){
       this.getRanges(1);
       this.getRanges(2);
+      this.getTeacherProblems();
+      this.getAllproblems();
     },
     getUserGroups() {
       axios({
@@ -1749,10 +1751,10 @@ export default {
     },
     getAllproblems(){
       axios.all([
-        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'单项选择题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'多项选择题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'填空题'}}),
-        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:this.searchAllPro,subject:this.selectSubject2,contentType:this.selectRange2,type:'问答题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllSingle,keyWords:this.searchAllPro,subject:this.selectSubject1,contentType:this.selectRange2,type:'单项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllMulti,keyWords:this.searchAllPro,subject:this.selectSubject1,contentType:this.selectRange2,type:'多项选择题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllFill,keyWords:this.searchAllPro,subject:this.selectSubject1,contentType:this.selectRange2,type:'填空题'}}),
+        axios({url:"/problem/all_problem",params:{page:this.pageAllQa,keyWords:this.searchAllPro,subject:this.selectSubject1,contentType:this.selectRange2,type:'问答题'}}),
       ]).then(axios.spread((single,multi,fill,qa)=>{
         this.problemAllSinlge=single.data.data;
         this.problemAllMulti=multi.data.data;
