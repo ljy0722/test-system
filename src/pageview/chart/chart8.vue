@@ -49,28 +49,28 @@ export default {
           orient: 'vertical',
           x: 'right',
           y: 'top',
-          data: ['得分情况']
+          //data: ['得分情况']
         },
         xAxis: {
           data: this.opinion
         },
         yAxis: {},
         series: [{
-          name: '人数',
+          //name: '人数',
           type: 'bar',
           data: this.opinionData,
-          itemStyle: {
-            emphasis: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(255, 0, 0, 0.5)'
-            },
-            color: function (params) {
-              // 自定义颜色
-              var colorList = ['#37eaf0', '#37eaf0','#37eaf0']
-              return colorList[params.dataIndex]
-            }
-          }
+          // itemStyle: {
+          //   emphasis: {
+          //     shadowBlur: 10,
+          //     shadowOffsetX: 0,
+          //     shadowColor: 'rgba(255, 0, 0, 0.5)'
+          //   },
+          //   color: function (params) {
+          //     // 自定义颜色
+          //     var colorList = ['#37eaf0', '#37eaf0','#37eaf0']
+          //     return colorList[params.dataIndex]
+          //   }
+          // }
         }]
       })
     }

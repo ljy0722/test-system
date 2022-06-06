@@ -61,11 +61,14 @@ export default {
       //this.myChart = this.$echarts.init(document.getElementById('calinder'))
       var myChart=echarts.init(charmDom);
       var option;
+      var today=new Date().Format("yyyy-MM-dd hh:mm:ss");
+      let y=today.slice(0,4);
+      let m=today.slice(5,7);
       axios({
         url:"/test/test1month",
         params:{
-          year:'2022',
-          month:'05',
+          year:y,
+          month:m,
         }
       }).then(res=>{
         let endtime0=new String();
@@ -143,7 +146,7 @@ export default {
           ['2022-05-30', ''],
           ['2022-05-31', '']
         ];
-        var today=new Date().Format("yyyy-MM-dd hh:mm:ss");
+        
         let t=today.slice(0,10);
         const graphData2 = [
           [t,300],
@@ -221,7 +224,8 @@ export default {
                 nameMap: 'cn'
               },
               cellSize:  [80,60],
-              range: '2022-05'
+              range:today.slice(0,7)
+              //range: '2022-05'
             },
           ],
           series: [

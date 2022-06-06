@@ -102,7 +102,7 @@
                       <span style="margin-top: 30px">选择科目</span>
                     </el-col>
                     <el-col :span="5">
-                      <el-select v-model="tikusubject" placeholder="选择学科" style="float: left" align="left" @change="getRange(0)">
+                      <el-select v-model="tikusubject" placeholder="选择学科" style="float: left" align="left" @change="changeSubject">
                         <el-option
                           v-for="item in subjects"
                           :key="item.value"
@@ -114,13 +114,16 @@
                       <span style="margin-top: 30px">选择考点</span>
                     </el-col>
                     <el-col :span="5">
-                      <el-select v-model="tikurange" placeholder="选择考点" style="float: left" align="left" @change="gettikuinfo">
+                      <el-select v-model="tikurange" placeholder="选择考点" style="float: left" align="left" >
                         <el-option
                           v-for="item in ranges"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value"></el-option>
                       </el-select>
+                    </el-col>
+                    <el-col :span="3">
+                      <el-button type="primary" @click="gettikuinfo">确定</el-button>
                     </el-col>
                   </el-row>
                   <el-row style="margin-top: 5%">
@@ -2188,6 +2191,10 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+    changeSubject(){
+      this.getRange(0);
+      this.tikurange=[];
     }
   },
   computed: {
