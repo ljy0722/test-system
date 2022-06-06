@@ -104,7 +104,7 @@
                 <el-col :span="3">
                   <el-select v-model="teacherSubject" placeholder="选择学科" @change="getTeacherExercise">
                     <el-option
-                      v-for="item in subjects1"
+                      v-for="item in subjects"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
