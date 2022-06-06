@@ -98,7 +98,21 @@
                     </el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="2" :offset="11">
+                <el-col :span="2" :offset="1">
+                  <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">学科:</div>
+                </el-col>
+                <el-col :span="3">
+                  <el-select v-model="teacherSubject" placeholder="选择学科" @change="getTeacherExercise">
+                    <el-option
+                      v-for="item in subjects1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="2" :offset="5">
                   <el-button type="primary" align="right"  @click="handleCreate">创建考试</el-button>
                 </el-col>
               </el-row>
@@ -1892,6 +1906,7 @@ export default {
   data(){
     return{
       // getactive:this.$route.params.active,
+      teacherSubject:null,
       groupnum:1,
       problemnum:10,
       staticGroups:[],
@@ -2713,7 +2728,8 @@ export default {
         params:{
           pageNum:this.pageSet,
           state:Number(this.shaixuan)-1,
-          order:this.sortvalue
+          order:this.sortvalue,
+          subject:this.teacherSubject
         }
       }).then(res=>{
         this.exerciseSets=res.data.data;

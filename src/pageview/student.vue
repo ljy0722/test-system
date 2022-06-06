@@ -264,6 +264,20 @@
                   </el-option>
                 </el-select>
               </el-col>
+              <el-col :span="2" :offset="1">
+                <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">学科:</div>
+              </el-col>
+              <el-col :span="3">
+                <el-select v-model="studentSubject" placeholder="选择学科" @change="getStudentExercise">
+                  <el-option
+                    v-for="item in subjects"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-col>
             </el-row>
             <el-card style="margin-bottom: 5px;height: 60px"
                      v-for="(i,index) in exerciseSets"
@@ -798,6 +812,7 @@ export default {
   data(){
     return{
       active:'0',
+      studentSubject:null,
       singleNum:null,
       multiNum:null,
       fillNum:null,
@@ -1061,7 +1076,8 @@ export default {
           pageNum:this.pageSets,
           test:this.setType,
           state:Number(this.shaixuan)-1,
-          order:this.sortvalue
+          order:this.sortvalue,
+          subject:this.studentSubject
         }
       }).then(res=>{
         this.exerciseSets=res.data.data;

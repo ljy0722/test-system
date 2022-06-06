@@ -111,6 +111,22 @@
               <br>
 
               <div class="step2.2" v-if="method1=='shoudong'">
+                <el-row>
+                  <el-col :span="2">
+                  <div style="margin-top: 10px;font-size: 18px;font-weight: 600;font-family: 黑体">学科:</div>
+                </el-col>
+                <el-col :span="3">
+                  <el-select v-model="selectSubject1" placeholder="选择学科" @change="getProblemRange">
+                    <el-option
+                      v-for="item in subjects"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-col>
+                </el-row>
                 <el-row style="text-align: left;font-size: 16px;font-weight: 700;height: 30px">
                   <span style="margin-top: -30px">我收藏的题目</span>
                 </el-row>
@@ -118,7 +134,7 @@
                 <el-tabs type="border-card" >
                   <el-tab-pane label="单选题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
@@ -126,7 +142,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -226,7 +242,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="多选题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
@@ -234,7 +250,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -332,7 +348,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="填空题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
@@ -340,7 +356,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -413,7 +429,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="问答题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject1" placeholder="选择学科" style="float: left" align="left" @change="getRanges(1)">
                           <el-option
                             v-for="item in subjects"
@@ -421,7 +437,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange1" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -500,7 +516,7 @@
                 <el-tabs type="border-card" >
                   <el-tab-pane label="单选题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
@@ -508,7 +524,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -608,7 +624,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="多选题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
@@ -616,7 +632,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -714,7 +730,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="填空题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
@@ -722,7 +738,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -795,7 +811,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="问答题">
                     <el-row>
-                      <el-col :span="3">
+                      <!-- <el-col :span="3">
                         <el-select v-model="selectSubject2" placeholder="选择学科" style="float: left" align="left" @change="getRanges(2)">
                           <el-option
                             v-for="item in subjects"
@@ -803,7 +819,7 @@
                             :label="item.label"
                             :value="item.value"></el-option>
                         </el-select>
-                      </el-col>
+                      </el-col> -->
                       <el-col :span="3" :offset="1">
                         <el-select v-model="selectRange2" placeholder="选择范围" style="float: left" align="left">
                           <el-option
@@ -1540,6 +1556,7 @@ export default {
           manual["problemSelection"]=this.problemSelection;
           manual["addSelection"]=this.addSelection;
           manual["grantGroup"]=this.grantGroup;
+          manual["subject"]=this.selectSubject1;
           axios({
             url:"/exercise/new",
             method:"POST",
@@ -1715,6 +1732,10 @@ export default {
       }).then(res=>{
         this.ranges=res.data;
       })
+    },
+    getProblemRange(){
+      this.getRanges(1);
+      this.getRanges(2);
     },
     getUserGroups() {
       axios({
